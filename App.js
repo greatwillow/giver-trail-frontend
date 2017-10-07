@@ -39,6 +39,7 @@ export default class App extends Component {
       isLoading: true
     }
   }
+  //Comment
 
   componentDidMount() {
     return fetch('https://facebook.github.io/react-native/movies.json')
