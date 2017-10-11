@@ -1,4 +1,8 @@
-This project was bootstrapped with [Create React Native App](https://github.com/react-community/create-react-native-app).
+## About Givertrail
+
+Givertrail is an App designed to connect hikers and climbers with causes they care about.  This is the React-Native front-end for this app.  It has been initially bootstrapped with [Create React Native App](https://github.com/react-community/create-react-native-app).
+
+## About Create React Native App
 
 Below you'll find information about performing common tasks. The most recent version of this guide is available [here](https://github.com/react-community/create-react-native-app/blob/master/react-native-scripts/template/README.md).
 
