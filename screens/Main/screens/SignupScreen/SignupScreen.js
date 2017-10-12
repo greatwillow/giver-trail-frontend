@@ -7,6 +7,7 @@ import { SCREEN_WIDTH } from '../../../../styles/dimensions';
 import {
   StyleSheet,
   Text,
+  TouchableHighlight,
   View,
 } from 'react-native';
 
@@ -17,6 +18,12 @@ class SignupScreen extends Component {
         <Text style={styles.textStyle}>
           Sign Up!
         </Text>
+        <TouchableHighlight
+          onPress={() => {this.props.navigation.navigate('causes')}}
+          style={{width: 300, height: 100, backgroundColor: 'blue'}}
+          underlayColor='green'>
+          <Text>Go to User Registration!</Text>
+        </TouchableHighlight>
       </View>
     );
   }

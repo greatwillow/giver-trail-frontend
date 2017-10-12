@@ -7,16 +7,23 @@ import { SCREEN_WIDTH } from '../../../../styles/dimensions';
 import {
   StyleSheet,
   Text,
+  TouchableHighlight,
   View,
 } from 'react-native';
 
-class UserRegistrationScreen extends Component {
+class SignupScreen extends Component {
   render() {
     return (
       <View style={styles.layoutStyle}>
         <Text style={styles.textStyle}>
-          Register!
+          Statistics!
         </Text>
+        <TouchableHighlight
+          onPress={() => {this.props.navigation.navigate('causes')}}
+          style={{width: 300, height: 100, backgroundColor: 'blue'}}
+          underlayColor='green'>
+          <Text>Go to User Registration!</Text>
+        </TouchableHighlight>
       </View>
     );
   }
@@ -27,7 +34,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    width: SCREEN_WIDTH,
+    width: SCREEN_WIDTH
   },
   textStyle: {
     fontSize: 30,
@@ -36,4 +43,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default UserRegistrationScreen;
+export default SignupScreen;
