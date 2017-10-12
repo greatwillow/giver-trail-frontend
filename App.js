@@ -7,41 +7,31 @@ import {
   View,
   TouchableOpacity,
 } from 'react-native';
-import { StackNavigator } from 'react-navigation';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
 
-import WalkthroughScreen from './screens/Welcome/screens/WalkthroughScreen';
-import LoginScreen from './screens/Main/screens/Login/LoginScreen';
-import SignupScreen from './screens/Main/screens/Signup/SignupScreen';
-import UserRegistrationScreen from './screens/Main/screens/UserRegistration/UserRegistrationScreen';
+import AppWithNavigation from './navigators/AppNavigator';
+import AppReducer from './data/appReducer'
 
-// class MainScreen extends Component {
-//   render() {
-//     return (
-//       <View style={styles.container}>
-//         <Text>Open up App.js to start working on your app!</Text>
-//         <Text>Changes you make will automatically reload.</Text>
-//         <Text>Shake your phone to open the developer menu.</Text>
-//         <TouchableOpacity
-//             style={{width: 300, height: 100}}
-//             onPress={() => {this.props.navigation.navigate('walkthrough')}}
-//            >
-//           <Text>Welcome Page</Text>
-//         </TouchableOpacity>
-//       </View>
-//     );
-//   }
-// }
+class App extends Component {
+  store = createStore(AppReducer)
 
-const MainNavigator = StackNavigator({
-  // main: { screen: MainScreen },
-  walkthrough: { screen: WalkthroughScreen },
-  login: { screen: LoginScreen },
-  signup: { screen: SignupScreen },
-  registration: { screen: UserRegistrationScreen },
+  render() {
+    return (
+      <Provider store={this.store}>
+        <AppWithNavigation />
+      </Provider>
+    );
+  }
 
-});
+}
 
-export default MainNavigator;
+
+
+
+
+
+export default App;
 
 const styles = StyleSheet.create({
   container: {
@@ -73,20 +63,20 @@ const styles = StyleSheet.create({
 //   //Comment
 //
 //   componentDidMount() {
-//     return fetch('https://facebook.github.io/react-native/movies.json')
-//       .then((response) => response.json())
-//       .then((responseJson) => {
-//         let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-//         this.setState({
-//           isLoading: false,
-//           dataSource: ds.cloneWithRows(responseJson.movies),
-//         }, function() {
-//           // do something with new state
-//         });
-//       })
-//       .catch((error) => {
-//         console.error(error);
-//       });
+    // return fetch('https://facebook.github.io/react-native/movies.json')
+    //   .then((response) => response.json())
+    //   .then((responseJson) => {
+    //     let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    //     this.setState({
+    //       isLoading: false,
+    //       dataSource: ds.cloneWithRows(responseJson.movies),
+    //     }, function() {
+    //       // do something with new state
+    //     });
+    //   })
+    //   .catch((error) => {
+    //     console.error(error);
+    //   });
 //   }
 //   render() {
 //     if (this.state.isLoading) {

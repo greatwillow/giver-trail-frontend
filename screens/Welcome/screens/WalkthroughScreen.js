@@ -9,7 +9,7 @@ import {
 import { SCREEN_WIDTH } from '../../../styles/dimensions';
 
 const WALKTHROUGH_DATA = [
-{ text: 'Welcome to the Givertrail Project', color: '#03A9F4' },
+{ text: 'Welcome hello to the Givertrail Project', color: '#03A9F4' },
 { text: 'Where every step makes the World Better', color: '#009688' },
 { text: 'Sign Up now and Make a Difference', color: '#03A9F4' }
 ];
@@ -38,6 +38,31 @@ class WalkthroughScreen extends Component {
     }
   }
 
+  fetchRequestTest() {
+    console.log('pressed');
+
+    const testUser = {
+      "_id": "ahsjkf32u4823n32nr2j3r",
+      "email": "gregory@gmail.com",
+      "password": "12345678",
+      "firstName": "Gregory",
+      "lastName": "Denys"
+    }
+
+    return fetch('https://damp-tor-16286.herokuapp.com/user/create-user', {method: 'POST', body: 'testUser'})
+      .then(
+        (response) => {
+          if(response.status == 200) return response.json();
+          else throw new Error('Something wrong with the server!');
+      })
+      .then((responseJson) => {
+        console.log(responseJson);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
   renderWalkthrough() {
     return WALKTHROUGH_DATA.map((page, index) => {
       return (
@@ -45,6 +70,12 @@ class WalkthroughScreen extends Component {
           key={page.text}
           style={[styles.layoutStyle, { backgroundColor: page.color }]}
         >
+          <TouchableHighlight
+            onPress={() => {this.fetchRequestTest()}}
+            style={{width: 200, height: 60, backgroundColor: 'red'}}
+            underlayColor='blue'>
+              <Text>Fetch</Text>
+          </TouchableHighlight>
           <Text style={styles.textStyle}>{page.text}</Text>
           {this.renderLastWalkthroughScreen(index)}
         </View>
@@ -74,7 +105,8 @@ const styles = {
   },
   textStyle: {
     fontSize: 30,
-    color: 'white'
+    color: 'white',
+
   },
 };
 
