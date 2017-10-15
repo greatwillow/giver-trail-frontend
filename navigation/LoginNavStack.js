@@ -5,11 +5,11 @@ import WalkthroughScreen from '../screens/Welcome/screens/WalkthroughScreen';
 import LoginScreen from '../screens/Main/screens/LoginScreen/LoginScreen';
 import SignupScreen from '../screens/Main/screens/SignupScreen/SignupScreen';
 import UserRegistrationScreen from '../screens/Main/screens/UserRegistrationScreen/UserRegistrationScreen';
-import DrawerScreen from '../screens/Main/screens/DrawerScreen/DrawerScreen';
 
-import MainInsetNavigator from './MainInsetNavigator';
+import MainInsetNavStack from './MainInsetNavStack';
 
 const navigationOptions = {
+  initialRouteName: 'walkthrough',
   headerStyle: {
     backgroundColor: '#000',
     height: 50,
@@ -23,20 +23,14 @@ const navigationOptions = {
   headerTintColor: '#FFFFFF',
 };
 
-const AppNavigator = StackNavigator({
-  walkthrough: { screen: WalkthroughScreen },
-  login: { screen: LoginScreen },
-  signup: { screen: SignupScreen },
-  registration: { screen: UserRegistrationScreen },
-  // dashboard:
-  //   {
-  //     screen: StackNavigator({
-        // drawer: { screen: DrawerScreen },
-        mainInsetNav: { screen: MainInsetNavigator }
-    //   })
-    // }
+const LoginNavStack = StackNavigator({
+  walkthrough:      { screen: WalkthroughScreen },
+  login:            { screen: LoginScreen },
+  signup:           { screen: SignupScreen },
+  registration:     { screen: UserRegistrationScreen },
+  mainInsetNavStack: { screen: MainInsetNavStack }
 }, {
   navigationOptions
 });
 
-export default AppNavigator;
+export default LoginNavStack;

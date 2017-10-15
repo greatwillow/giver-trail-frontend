@@ -4,6 +4,10 @@ import React, { Component } from 'react';
 
 import { SCREEN_WIDTH } from '../../../../styles/dimensions';
 
+import TestButton from '../../../../components/TestButton'
+import Icon from 'react-native-vector-icons/Ionicons';
+
+
 import {
   StyleSheet,
   Text,
@@ -11,12 +15,18 @@ import {
 } from 'react-native';
 
 class UserProfileScreen extends Component {
+  static navigationOptions = {
+    drawerLabel: 'User Profile',
+    drawerIcon: <Icon name="ios-person" size={30} color="#4F8EF7" />,
+    headerMode: 'none',
+  }
   render() {
     return (
       <View style={styles.layoutStyle}>
         <Text style={styles.textStyle}>
            User Profile!
         </Text>
+        <TestButton onPress={() => {this.props.navigation.navigate('DrawerOpen')}} textInput={"open drawer"} />
       </View>
     );
   }
