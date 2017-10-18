@@ -12,9 +12,3 @@ export const headerStyle = {
   width: SCREEN_WIDTH,
   backgroundColor: commonColors.GREEN
 };
-
-export const headerRight = (
-  <View style={{ justifyContent: "center", alignItems: "center" }}>
-    <Icon name="menu" size={40} color="white" />
-  </View>
-);

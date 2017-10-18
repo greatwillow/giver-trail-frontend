@@ -1,13 +1,12 @@
 "use strict";
 
-import { React } from "react";
+import React, { Component } from "react";
 import { Text, View } from "react-native";
 import {
   StackNavigator,
   TabNavigator,
   DrawerNavigator
 } from "react-navigation";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 import UserProfileScreen from "../screens/Main/screens/UserProfileScreen/UserProfileScreen";
 import MapScreen from "../screens/Main/screens/MapScreen/MapScreen";
@@ -15,8 +14,9 @@ import StatisticsScreen from "../screens/Main/screens/StatisticsScreen/Statistic
 import CauseListScreen from "../screens/Main/screens/CauseListScreen/CauseListScreen";
 import CauseDetailScreen from "../screens/Main/screens/CauseDetailScreen/CauseDetailScreen";
 import DrawerScreen from "../screens/Main/screens/DrawerScreen/DrawerScreen";
+import MenuIcon from "../screens/Main/screens/DrawerScreen/MenuIcon";
 
-import { headerStyle, headerRight } from "../styles/mainInsetHeaderStyle";
+import { headerStyle } from "../styles/mainInsetHeaderStyle";
 import commonColors from "../styles/colors";
 import { SCREEN_HEIGHT } from "../styles/dimensions";
 
@@ -73,10 +73,10 @@ const MainInsetNavStack = DrawerNavigator(
         },
         {
           //StackNavigator Navigation Options
-          navigationOptions: {
+          navigationOptions: ({ navigation }) => ({
             headerStyle: headerStyle,
-            headerRight: headerRight
-          }
+            headerRight: <MenuIcon navigation={navigation} />
+          })
         }
       )
     }

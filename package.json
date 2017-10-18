@@ -5,7 +5,8 @@
   "devDependencies": {
     "jest-expo": "^21.0.2",
     "react-native-scripts": "1.5.0",
-    "react-test-renderer": "16.0.0-alpha.12"
+    "react-test-renderer": "16.0.0-alpha.12",
+    "redux-logger": "^3.0.6"
   },
   "main": "./node_modules/react-native-scripts/build/bin/crna-entry.js",
   "scripts": {
@@ -22,10 +23,13 @@
     "expo": "^21.0.0",
     "react": "16.0.0-alpha.12",
     "react-native": "^0.48.4",
-    "react-native-drawer": "^2.5.0",
+    "react-native-keyboard-aware-scroll-view": "^0.3.0",
+    "react-native-list-popover": "^1.0.5",
+    "react-native-modal-selector": "0.0.20",
     "react-native-vector-icons": "^4.4.2",
     "react-navigation": "^1.0.0-beta.13",
     "react-redux": "^5.0.6",
-    "redux": "^3.7.2"
+    "redux": "^3.7.2",
+    "redux-offline": "^2.0.0"
   }
 }

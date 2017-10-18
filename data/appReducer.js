@@ -1,13 +1,12 @@
 "use strict";
 
-import { combineReducers, createStore, applyMiddleware, compose } from "redux";
+import { combineReducers } from "redux";
+import navReducer from "./navigation/reducer";
+import userReducer from "./users/reducer";
 
-import navReducer from "./navigation/navReducer";
+const appReducer = combineReducers({
+  nav: navReducer,
+  user: userReducer
+});
 
-export default () => {
-  const rootReducer = combineReducers({
-    nav: navReducer
-  });
-
-  return createStore(rootReducer);
-};
+export default appReducer;

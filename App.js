@@ -5,11 +5,13 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
 
+import Expo from "expo";
+
 import AppNavReduxWrapper from "./navigation/AppNavReduxWrapper";
-import appReducer from "./data/appReducer";
+import appStore from "./data/appStore";
 
 class App extends Component {
-  store = appReducer();
+  store = appStore;
 
   render() {
     return (
@@ -30,3 +32,5 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   }
 });
+
+Expo.registerRootComponent(App);

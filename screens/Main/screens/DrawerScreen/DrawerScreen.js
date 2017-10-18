@@ -8,14 +8,12 @@ import { NavigationActions } from "react-navigation";
 
 export default class DrawerScreen extends Component {
   logout = () => {
-    // This will reset back to loginStack
-    // https://github.com/react-community/react-navigation/issues/1127
-    const actionToDispatch = NavigationActions.reset({
+    const logoutNavAction = NavigationActions.reset({
       index: 0,
-      key: null, // black magic
+      key: null,
       actions: [NavigationActions.navigate({ routeName: "loginNavStack" })]
     });
-    this.props.navigation.dispatch(actionToDispatch);
+    this.props.navigation.dispatch(logoutNavAction);
   };
 
   render() {

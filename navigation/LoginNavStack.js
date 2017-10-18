@@ -3,10 +3,10 @@
 import React from "react";
 import { StackNavigator, TabNavigator } from "react-navigation";
 
-import WalkthroughScreen from "../screens/Welcome/screens/WalkthroughScreen";
-import LoginScreen from "../screens/Main/screens/LoginScreen/LoginScreen";
-import SignupScreen from "../screens/Main/screens/SignupScreen/SignupScreen";
-import UserRegistrationScreen from "../screens/Main/screens/UserRegistrationScreen/UserRegistrationScreen";
+import WalkthroughScreen from "../screens/Welcome/screens/WalkthroughScreen/WalkthroughScreen";
+import LoginScreen from "../screens/Welcome/screens/LoginScreen/LoginScreen";
+import SignupScreen from "../screens/Welcome/screens/SignupScreen/SignupScreen";
+import UserRegistrationScreen from "../screens/Welcome/screens/UserRegistrationScreen/UserRegistrationScreen";
 
 import MainInsetNavStack from "./MainInsetNavStack";
 

@@ -1,42 +1,64 @@
 import React, { Component } from "react";
 import {
+  Dimensions,
+  Image,
   View,
   Text,
   ScrollView,
   TouchableHighlight,
-  Dimensions
+  TouchableOpacity
 } from "react-native";
-import { SCREEN_WIDTH } from "../../../styles/dimensions";
+import { SCREEN_WIDTH } from "../../../../styles/dimensions";
+import { Font } from "expo";
+
+import ButtonGeneric from "../../../../components/ButtonGeneric";
 
 const WALKTHROUGH_DATA = [
-  { text: "Welcome hello to the Givertrail Project", color: "#03A9F4" },
-  { text: "Where every step makes the World Better", color: "#009688" },
-  { text: "Sign Up now and Make a Difference", color: "#03A9F4" }
+  {
+    key: 1,
+    text: "Welcome to the Givertrail Project",
+    color: "#03A9F4",
+    backgroundImageFile: require("../../../../assets/images/girl-head-mountain.jpg")
+  },
+  {
+    key: 2,
+    text: "Where every step makes the World Better",
+    color: "#009688",
+    backgroundImageFile: require("../../../../assets/images/mountain-and-shoes.jpeg")
+  },
+  {
+    key: 3,
+    text: "Sign Up now and Make a Difference",
+    color: "#03A9F4",
+    backgroundImageFile: require("../../../../assets/images/bw-backpacker.jpeg")
+  }
 ];
 
 class WalkthroughScreen extends Component {
+  state = {
+    fontLoaded: false
+  };
+  async componentDidMount() {
+    await Font.loadAsync({
+      "titillium-light": require("../../../../assets/fonts/TitilliumWeb-Light.ttf")
+    });
+    this.setState({ fontLoaded: true });
+  }
+
+  _onPressLogin = () => {
+    this.props.navigation.navigate("login");
+  };
+
+  _onPressSignup = () => {
+    this.props.navigation.navigate("signup");
+  };
+
   renderLastWalkthroughScreen(index) {
     if (index === WALKTHROUGH_DATA.length - 1) {
       return (
         <View>
-          <TouchableHighlight
-            onPress={() => {
-              this.props.navigation.navigate("signup");
-            }}
-            style={{ width: 300, height: 100, backgroundColor: "blue" }}
-            underlayColor="green"
-          >
-            <Text>Go to Sign Up!</Text>
-          </TouchableHighlight>
-          <TouchableHighlight
-            onPress={() => {
-              this.props.navigation.navigate("login");
-            }}
-            style={{ width: 300, height: 100, backgroundColor: "blue" }}
-            underlayColor="green"
-          >
-            <Text>Go to Login!</Text>
-          </TouchableHighlight>
+          <ButtonGeneric text={"Login!"} onPress={this._onPressLogin} />
+          <ButtonGeneric text={"Signup!"} onPress={this._onPressSignup} />
         </View>
       );
     }
@@ -46,8 +68,9 @@ class WalkthroughScreen extends Component {
     console.log("pressed post");
 
     const TEST_USER = {
-      email: "gradfasdy@gmail.com",
-      password: "12345678"
+      email: "fasdy@gmail.com",
+      password: "12345678",
+      pointsEarned: 7484
     };
     const USER_POST_URI =
       "https://damp-tor-16286.herokuapp.com/users/create-user";
@@ -105,22 +128,21 @@ class WalkthroughScreen extends Component {
   renderWalkthrough() {
     return WALKTHROUGH_DATA.map((page, index) => {
       return (
-        <View
-          key={page.text}
-          style={[styles.layoutStyle, { backgroundColor: page.color }]}
+        <Image
+          key={page.key}
+          source={page.backgroundImageFile}
+          style={styles.backgroundImage}
         >
-          <TouchableHighlight
-            onPress={() => {
-              this.fetchRequestPostTest();
-            }}
-            style={{ width: 200, height: 60, backgroundColor: "red" }}
-            underlayColor="blue"
+          <Text
+            style={[
+              { fontFamily: this.state.fontLoaded ? "titillium-light" : null },
+              styles.textStyle
+            ]}
           >
-            <Text>Fetch</Text>
-          </TouchableHighlight>
-          <Text style={styles.textStyle}>{page.text}</Text>
+            {page.text}
+          </Text>
           {this.renderLastWalkthroughScreen(index)}
-        </View>
+        </Image>
       );
     });
   }
@@ -135,15 +157,19 @@ class WalkthroughScreen extends Component {
 }
 
 const styles = {
-  layoutStyle: {
+  backgroundImage: {
     flex: 1,
+    width: SCREEN_WIDTH,
+    height: null,
+    resizeMode: "cover",
     justifyContent: "center",
-    alignItems: "center",
-    width: SCREEN_WIDTH
+    alignItems: "center"
   },
   textStyle: {
     fontSize: 30,
-    color: "white"
+    color: "black",
+    backgroundColor: "rgba(0,0,0,0)",
+    textAlign: "center"
   }
 };
 
