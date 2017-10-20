@@ -7,11 +7,11 @@ import { Provider } from "react-redux";
 
 import Expo from "expo";
 
-import AppNavReduxWrapper from "./navigation/AppNavReduxWrapper";
-import appStore from "./data/appStore";
+import AppNavReduxWrapper from "./app/navigation/AppNavReduxWrapper";
+import configureStore from "./app/data/configureStore";
 
 class App extends Component {
-  store = appStore;
+  store = configureStore;
 
   render() {
     return (
