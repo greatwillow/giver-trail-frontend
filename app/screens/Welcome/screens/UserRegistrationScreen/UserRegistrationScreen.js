@@ -8,13 +8,14 @@ import commonColors from "../../../../constants/colors";
 import ModalList from "../../../../components/ModalList";
 import ButtonGeneric from "../../../../components/ButtonGeneric";
 import provinceData from "../../../../assets/pureData/provinceData";
+import ModalGooglePlaceSearch from "./ModalGooglePlaceSearch";
 
 class UserRegistrationScreen extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      modalVisible: false,
+      modalVisibleProvinces: false,
+      modalVisibleGoogleSearch: false,
       chosenProvince: null
     };
   }
@@ -24,14 +25,26 @@ class UserRegistrationScreen extends Component {
 
   _onPressProvinceListView = () => {
     this.setState({
-      modalVisible: true
+      modalVisibleProvinces: true
     });
   };
 
   _onPressProvinceItem = e => {
     this.setState({
       chosenProvince: e.value,
-      modalVisible: false
+      modalVisibleProvinces: false
+    });
+  };
+
+  _onPressGoogleSearchView = () => {
+    this.setState({
+      modalVisibleGoogleSearch: true
+    });
+  };
+
+  _onPressGoogleSearchUnview = () => {
+    this.setState({
+      modalVisibleGoogleSearch: false
     });
   };
 
@@ -39,9 +52,13 @@ class UserRegistrationScreen extends Component {
     return (
       <View style={styles.layoutStyle}>
         <ModalList
-          modalVisible={this.state.modalVisible}
+          modalVisible={this.state.modalVisibleProvinces}
           data={provinceData}
           onPress={this._onPressProvinceItem}
+        />
+        <ModalGooglePlaceSearch
+          modalVisible={this.state.modalVisibleGoogleSearch}
+          onPress={this._onPressGoogleSearchUnview}
         />
         <ButtonGeneric
           onPress={this._onPressProvinceListView}
@@ -55,7 +72,7 @@ class UserRegistrationScreen extends Component {
           }}
         />
         <ButtonGeneric
-          onPress={this._onPressProvinceListView}
+          onPress={this._onPressGoogleSearchView}
           text={"Pick Your City!"}
         />
 

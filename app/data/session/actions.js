@@ -1,16 +1,14 @@
 import * as actionTypes from "../../constants/actionTypes";
 
+
+
 function postNewUser(userEmail, userPassword) {
-  // console.log("pressed post");
-  // console.log("type of email is: ", typeof userEmail);
-  // console.log("type of email is: ", typeof userEmail.toString());
-  // console.log("type of pass is: ", typeof userPassword);
-  // console.log("type of pass is: ", typeof userPassword.toString());
+  const email = userEmail.userEmail;
+  const password = userPassword.userPassword;
 
   const TEST_USER = {
-    email: userEmail.toString(),
-    password: userPassword.toString(),
-    pointsEarned: 7484
+    email: email,
+    password: password
   };
 
   const USER_POST_URI =
@@ -26,13 +24,10 @@ function postNewUser(userEmail, userPassword) {
     body: JSON.stringify(TEST_USER)
   })
     .then(res => {
-      console.log("response is: ", res);
-      console.log(res.status);
-      console.log(res.statusText);
       if (res.status == 200) {
-        return res.json();
+        const XAUTH_TOKEN = res.headers.map['x-auth'][0]
+        return console.log("RESPONSE", XAUTH_TOKEN, res);
       } else {
-        console.log(res.text());
         throw new Error("Something wrong with the server!");
       }
     })

@@ -12,7 +12,6 @@ import ButtonGeneric from "./ButtonGeneric";
 class ModalList extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       modalVisible: this.props.modalVisible
     };

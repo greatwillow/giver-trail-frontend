@@ -16,10 +16,6 @@ class UserProfileScreen extends Component {
     return (
       <View style={styles.layoutStyle}>
         <Text style={styles.textStyle}>User Profile!</Text>
-        <ButtonGeneric
-          onPress={this._onPressDrawerToggle}
-          text={"open drawer"}
-        />
       </View>
     );
   }

@@ -23,25 +23,31 @@ class SignupScreen extends Component {
     super(props);
     this.state = {
       modalVisible: true,
-      userEmail: "",
-      userEmailValid: true,
+      userEmail: null,
+      userEmailValid: null,
       showInvalidEmailUI: false,
       userPassword: "",
-      userPasswordValid: true,
+      userPasswordValid: null,
       showInvalidPasswordUI: false,
       RetypedUserPassword: "",
-      userRetypedPasswordValid: true,
+      userRetypedPasswordValid: null,
       showInvalidRetypedPasswordUI: false
     };
   }
 
   _onPressSignup = () => {
-    this.setState({ modalVisible: false });
-    this.props.navigation.navigate("userRegistration");
-    this.props.userSignup(
-      { userEmail: this.state.userEmail },
-      { userPassword: this.state.userPassword }
-    );
+    if (
+      this.state.userEmailValid &&
+      this.state.userPasswordValid &&
+      this.state.userRetypedPasswordValid
+    ) {
+      this.setState({ modalVisible: false });
+      this.props.navigation.navigate("userRegistration");
+      this.props.userSignup(
+        { userEmail: this.state.userEmail },
+        { userPassword: this.state.userPassword }
+      );
+    }
   };
 
   _handleEmailTextChange = input => {
@@ -51,9 +57,6 @@ class SignupScreen extends Component {
     } else {
       this.setState({ userEmailValid: false, userEmail: input });
     }
-    console.log("user input ", input);
-    console.log("user email ", this.state.userEmail);
-    console.log("user emailvalid ", this.state.userEmailValid);
   };
 
   _handleEmailSubmit = () => {
