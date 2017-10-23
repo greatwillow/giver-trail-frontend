@@ -2,13 +2,21 @@
 
 import React, { Component } from "react";
 
-import { Image, Modal, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  KeyboardAvoidingView,
+  Modal,
+  StyleSheet,
+  Text,
+  View
+} from "react-native";
 
-import ButtonGeneric from "../../../../components/ButtonGeneric";
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../../../constants/dimensions";
 import commonColors from "../../../../constants/colors";
+
 //-------------GOOGLE PLACES
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import GooglePlacesAutocomplete from "../../../../utils/GooglePlacesAutocomplete";
+//import { GooglePlacesAutocomplete } from "";
 import { googlePlacesAutocompleteAPIKey } from "../../../../constants/apiKeys";
 const homePlace = {
   description: "Home",
@@ -20,7 +28,7 @@ const workPlace = {
 };
 //--------------
 
-class ModalGooglePlaceSearch extends Component {
+class ModalCitySearch extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -34,6 +42,12 @@ class ModalGooglePlaceSearch extends Component {
     });
   }
 
+  _onRequestClose = () => {
+    this.setState({
+      modalVisible: false
+    });
+  };
+
   _renderListItem = ({ item }) => {
     return (
       <ModalListItem
@@ -43,23 +57,31 @@ class ModalGooglePlaceSearch extends Component {
       />
     );
   };
+
+  _onPressGetCity = (data, details) => {
+    this.setState({
+      modalVisible: false
+    });
+  };
+
   render() {
     return (
       <View>
-        <Modal visible={this.state.modalVisible}>
+        <Modal
+          visible={this.state.modalVisible}
+          onRequestClose={this._onRequestClose}
+        >
           <View style={styles.outerContainer}>
             <View style={styles.innerContainer}>
               <View style={styles.listContainer}>
                 <GooglePlacesAutocomplete
                   placeholder="Search for your City!"
                   minLength={2}
-                  autoFocus={true}
-                  returnKeyType={"search"}
                   listViewDisplayed="auto"
                   fetchDetails={true}
                   renderDescription={row => row.description}
                   onPress={(data, details = null) => {
-                    console.log("GOOGLE", data, details);
+                    this._onPressGetCity(data, details);
                   }}
                   getDefaultValue={() => ""}
                   query={{
@@ -70,7 +92,6 @@ class ModalGooglePlaceSearch extends Component {
                   nearbyPlacesAPI="GooglePlacesSearch"
                   GooglePlacesSearchQuery={{
                     rankby: "distance"
-                    //  types: "food"
                   }}
                   filterReverseGeocodingByTypes={[
                     "locality",
@@ -89,14 +110,13 @@ class ModalGooglePlaceSearch extends Component {
                       height: 40
                     },
                     listView: {
-                      height: SCREEN_HEIGHT / 2 - 200
+                      height: SCREEN_HEIGHT / 9
                     }
                   }}
                 />
-                <ButtonGeneric onPress={this.props.onPress} />
               </View>
             </View>
-            <View style={{ flex: 1 }} />
+            <View style={{ height: 50 }} />
           </View>
         </Modal>
       </View>
@@ -111,7 +131,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: SCREEN_WIDTH,
     height: SCREEN_HEIGHT,
-    backgroundColor: "rgba(0, 0, 0, 0.7)"
+    backgroundColor: "rgba(0, 0, 0, 0)"
   },
   innerContainer: {
     flex: 1,
@@ -125,13 +145,11 @@ const styles = StyleSheet.create({
     borderRadius: 10
   },
   listContainer: {
-    backgroundColor: "white",
-    width: SCREEN_WIDTH / 6 * 5 - 40,
-    height: SCREEN_HEIGHT / 2 - 40,
     borderRadius: 10,
+    margin: 15,
     alignItems: "center",
     justifyContent: "center"
   }
 });
 
-export default ModalGooglePlaceSearch;
+export default ModalCitySearch;

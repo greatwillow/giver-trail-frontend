@@ -7,44 +7,60 @@ import { SCREEN_WIDTH } from "../../../../constants/dimensions";
 import commonColors from "../../../../constants/colors";
 import ModalList from "../../../../components/ModalList";
 import ButtonGeneric from "../../../../components/ButtonGeneric";
-import provinceData from "../../../../assets/pureData/provinceData";
-import ModalGooglePlaceSearch from "./ModalGooglePlaceSearch";
+import ageData from "../../../../assets/pureData/ageData";
+import ModalCitySearch from "./ModalCitySearch";
+import ModalImageSelector from "./ModalImageSelector";
+import TextFontTitillium from "../../../../components/TextFontTitillium";
 
 class UserRegistrationScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      modalVisibleProvinces: false,
-      modalVisibleGoogleSearch: false,
-      chosenProvince: null
+      modalAgeSearchVisible: false,
+      modalCitySearchVisible: false,
+      modalImageSelectorVisible: false,
+      chosenAge: null
     };
   }
+
   _onPressRegister = () => {
     this.props.navigation.navigate("drawer");
   };
 
-  _onPressProvinceListView = () => {
+  _onPressAgeSearchView = () => {
     this.setState({
-      modalVisibleProvinces: true
+      modalAgeSearchVisible: true
     });
   };
 
-  _onPressProvinceItem = e => {
+  _onPressAgeSearchClose = e => {
     this.setState({
-      chosenProvince: e.value,
-      modalVisibleProvinces: false
+      chosenAge: e.value,
+      modalAgeSearchVisible: false
     });
   };
 
-  _onPressGoogleSearchView = () => {
+  _onPressCitySearchView = () => {
     this.setState({
-      modalVisibleGoogleSearch: true
+      modalCitySearchVisible: true
     });
   };
 
-  _onPressGoogleSearchUnview = () => {
+  _onPressCitySearchClose = () => {
     this.setState({
-      modalVisibleGoogleSearch: false
+      modalCitySearchVisible: false
+    });
+  };
+
+  _onPressImageSelectorView = () => {
+    this.setState({
+      modalImageSelectorVisible: true
+    });
+  };
+
+  _onPressImageSelectorClose = () => {
+    this.setState({
+      modalImageSelectorVisible: false
     });
   };
 
@@ -52,31 +68,67 @@ class UserRegistrationScreen extends Component {
     return (
       <View style={styles.layoutStyle}>
         <ModalList
-          modalVisible={this.state.modalVisibleProvinces}
-          data={provinceData}
-          onPress={this._onPressProvinceItem}
+          modalVisible={this.state.modalAgeSearchVisible}
+          data={ageData}
+          onPress={this._onPressAgeSearchClose}
         />
-        <ModalGooglePlaceSearch
-          modalVisible={this.state.modalVisibleGoogleSearch}
-          onPress={this._onPressGoogleSearchUnview}
+        <ModalCitySearch
+          modalVisible={this.state.modalCitySearchVisible}
+          onPress={this._onPressCitySearchClose}
         />
-        <ButtonGeneric
-          onPress={this._onPressProvinceListView}
-          text={"Pick Your Province!"}
-          style={{
-            borderWidth: 2,
-            borderColor: commonColors.GREEN
-          }}
-          textStyle={{
-            color: commonColors.GREEN
-          }}
+        <ModalImageSelector
+          modalVisible={this.state.modalImageSelectorVisible}
+          onPress={this._onPressImageSelectorClose}
         />
-        <ButtonGeneric
-          onPress={this._onPressGoogleSearchView}
-          text={"Pick Your City!"}
-        />
+        {/*----------- AGE SELECTION -----------*/}
 
-        <ButtonGeneric onPress={this._onPressRegister} text={"Let's Go!"} />
+        <View style={{ flexDirection: "row" }}>
+          <View style={styles.numberContainer}>
+            <TextFontTitillium style={styles.numberText}>1</TextFontTitillium>
+          </View>
+          <ButtonGeneric
+            onPress={this._onPressAgeSearchView}
+            text={"Pick Your Age Range!"}
+            style={styles.customButton}
+            textStyle={styles.customButtonText}
+          />
+        </View>
+        {/*----------- CITY SELECTION -----------*/}
+        <View style={{ flexDirection: "row" }}>
+          <View style={styles.numberContainer}>
+            <TextFontTitillium style={styles.numberText}>2</TextFontTitillium>
+          </View>
+          <ButtonGeneric
+            onPress={this._onPressCitySearchView}
+            text={"Pick Your City!"}
+            style={styles.customButton}
+            textStyle={styles.customButtonText}
+          />
+        </View>
+        {/*----------- PASSIONS SELECTION -----------*/}
+        <View style={{ flexDirection: "row" }}>
+          <View style={styles.numberContainer}>
+            <TextFontTitillium style={styles.numberText}>3</TextFontTitillium>
+          </View>
+          <ButtonGeneric
+            onPress={this._onPressImageSelectorView}
+            text={"Pick Your Passion!"}
+            style={styles.customButton}
+            textStyle={styles.customButtonText}
+          />
+        </View>
+        {/*----------- NAVIGATE FORWARD -----------*/}
+        <View style={{ flexDirection: "row" }}>
+          <View style={styles.numberContainer}>
+            <TextFontTitillium style={styles.numberText}>4</TextFontTitillium>
+          </View>
+          <ButtonGeneric
+            onPress={this._onPressRegister}
+            text={"Let's Go!!"}
+            style={styles.customButton}
+            textStyle={styles.customButtonText}
+          />
+        </View>
       </View>
     );
   }
@@ -88,11 +140,39 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width: SCREEN_WIDTH,
-    backgroundColor: "white"
+    backgroundColor: "white",
+    paddingBottom: 100
   },
-  textStyle: {
-    fontSize: 30,
-    color: commonColors.GREEN
+  customButton: {
+    borderWidth: 2,
+    borderColor: commonColors.GREEN,
+    width: SCREEN_WIDTH / 6 * 4,
+    height: SCREEN_WIDTH / 6,
+    margin: 15,
+    padding: 12,
+    marginLeft: 0,
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  customButtonText: {
+    color: commonColors.DARK_GREY
+  },
+  numberContainer: {
+    borderWidth: 1,
+    height: SCREEN_WIDTH / 6,
+    width: SCREEN_WIDTH / 6,
+    borderColor: commonColors.PINK,
+    borderRadius: SCREEN_WIDTH / 12,
+    padding: 15,
+    margin: 15,
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  numberText: {
+    fontSize: SCREEN_WIDTH / 12,
+    color: commonColors.DARK_GREY,
+    alignSelf: "center",
+    justifyContent: "center"
   }
 });
 

@@ -60,7 +60,8 @@ class TextInputSingleLine extends Component {
 const styles = StyleSheet.create({
   textInputSingleLine: {
     backgroundColor: "white",
-    marginBottom: 25,
+    marginBottom: 5,
+    marginTop: 5,
     padding: 5,
     paddingLeft: 10,
     borderRadius: 5,

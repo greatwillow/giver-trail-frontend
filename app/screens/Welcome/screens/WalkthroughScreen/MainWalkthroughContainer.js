@@ -2,7 +2,14 @@
 
 import React, { Component } from "react";
 
-import { Image, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  Platform,
+  StyleSheet,
+  StatusBar,
+  Text,
+  View
+} from "react-native";
 
 import { SCREEN_WIDTH } from "../../../../constants/dimensions";
 import { Font } from "expo";
@@ -21,22 +28,31 @@ class MainWalkthroughContainer extends Component {
 
   render() {
     return (
-      <Image
-        key={this.props.key}
-        source={this.props.backgroundImageFile}
-        style={[styles.backgroundImage, this.props.backgroundImageStyle]}
-      >
-        <Text
-          style={[
-            { fontFamily: this.state.fontLoaded ? "titillium-light" : null },
-            styles.textStyle,
-            this.props.textStyle
-          ]}
+      <View style={{ flex: 1 }}>
+        <Image
+          key={this.props.key}
+          source={this.props.backgroundImageFile}
+          style={[styles.backgroundImage, this.props.backgroundImageStyle]}
         >
-          {this.props.text}
-        </Text>
-        {this.props.children}
-      </Image>
+          <View style={styles.statusBar}>
+            <StatusBar
+              backgroundColor={"transparent"}
+              translucent
+              hidden={true}
+            />
+          </View>
+          <Text
+            style={[
+              { fontFamily: this.state.fontLoaded ? "titillium-light" : null },
+              styles.textStyle,
+              this.props.textStyle
+            ]}
+          >
+            {this.props.text}
+          </Text>
+          {this.props.children}
+        </Image>
+      </View>
     );
   }
 }
@@ -55,6 +71,11 @@ const styles = {
     color: "black",
     backgroundColor: "rgba(0,0,0,0)",
     textAlign: "center"
+  },
+  statusBar: {
+    height: Platform.OS === "ios" ? 20 : StatusBar.currentHeight,
+    backgroundColor: "rgba(0,0,0,0)",
+    width: SCREEN_WIDTH
   }
 };
 

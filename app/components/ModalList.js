@@ -2,7 +2,15 @@
 
 import React, { Component } from "react";
 
-import { FlatList, Modal, StyleSheet, Text, View } from "react-native";
+import {
+  FlatList,
+  Modal,
+  Platform,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View
+} from "react-native";
 
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../constants/dimensions";
 import commonColors from "../constants/colors";
@@ -23,6 +31,12 @@ class ModalList extends Component {
     });
   }
 
+  _onRequestClose = () => {
+    this.setState({
+      modalVisible: false
+    });
+  };
+
   _renderListItem = ({ item }) => {
     return (
       <ModalListItem
@@ -36,7 +50,10 @@ class ModalList extends Component {
   render() {
     return (
       <View>
-        <Modal visible={this.state.modalVisible}>
+        <Modal
+          visible={this.state.modalVisible}
+          onRequestClose={this._onRequestClose}
+        >
           <View style={styles.outerContainer}>
             <View style={styles.innerContainer}>
               <View style={styles.listContainer}>

@@ -4,8 +4,23 @@ import React, { Component } from "react";
 import { Text, StyleSheet, TouchableHighlight } from "react-native";
 
 import { SCREEN_WIDTH } from "../constants/dimensions";
+import { Font } from "expo";
 
 class ButtonGeneric extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      fontLoaded: false
+    };
+  }
+
+  async componentDidMount() {
+    await Font.loadAsync({
+      "titillium-light": require("../assets/fonts/TitilliumWeb-Light.ttf")
+    });
+    this.setState({ fontLoaded: true });
+  }
+
   render() {
     return (
       <TouchableHighlight
@@ -13,7 +28,13 @@ class ButtonGeneric extends Component {
         underlayColor={"gray"}
         onPress={this.props.onPress}
       >
-        <Text style={[styles.buttonText, this.props.textStyle]}>
+        <Text
+          style={[
+            { fontFamily: this.state.fontLoaded ? "titillium-light" : null },
+            styles.buttonText,
+            this.props.textStyle
+          ]}
+        >
           {this.props.text ? this.props.text : "Text Needed!"}{" "}
         </Text>
       </TouchableHighlight>
@@ -29,6 +50,7 @@ var styles = StyleSheet.create({
     borderRadius: 5,
     justifyContent: "center",
     alignItems: "center",
+    alignSelf: "center",
     marginTop: 10,
     padding: 5
   },

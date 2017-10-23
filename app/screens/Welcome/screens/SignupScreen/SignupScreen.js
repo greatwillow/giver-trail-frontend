@@ -3,20 +3,26 @@
 import React, { Component } from "react";
 import {
   Image,
+  KeyboardAvoidingView,
   Modal,
+  Platform,
+  StatusBar,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View
 } from "react-native";
 import { connect } from "react-redux";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+
+import { NavigationActions } from "react-navigation";
 
 import commonColors from "../../../../constants/colors";
 import { SCREEN_WIDTH } from "../../../../constants/dimensions";
 import * as actions from "../../../../data/appActions";
 import TextInputSingleLine from "../../../../components/TextInputSingleLine";
 import ButtonGeneric from "../../../../components/ButtonGeneric";
+import TextFontTitillium from "../../../../components/TextFontTitillium";
 
 class SignupScreen extends Component {
   constructor(props) {
@@ -36,18 +42,26 @@ class SignupScreen extends Component {
   }
 
   _onPressSignup = () => {
-    if (
-      this.state.userEmailValid &&
-      this.state.userPasswordValid &&
-      this.state.userRetypedPasswordValid
-    ) {
-      this.setState({ modalVisible: false });
-      this.props.navigation.navigate("userRegistration");
-      this.props.userSignup(
-        { userEmail: this.state.userEmail },
-        { userPassword: this.state.userPassword }
-      );
-    }
+    // if (
+    //   this.state.userEmailValid &&
+    //   this.state.userPasswordValid &&
+    //   this.state.userRetypedPasswordValid
+    // ) {
+    this.setState({ modalVisible: false });
+    this.props.navigation.navigate("userRegistration");
+    //   this.props.userSignup(
+    //     { userEmail: this.state.userEmail },
+    //     { userPassword: this.state.userPassword }
+    //   );
+    // }
+  };
+
+  _onRequestClose = () => {
+    this.setState({
+      modalVisible: false
+    });
+    const backAction = NavigationActions.back({ key: "login" });
+    this.props.navigation.dispatch(backAction);
   };
 
   _handleEmailTextChange = input => {
@@ -97,62 +111,73 @@ class SignupScreen extends Component {
 
   render() {
     return (
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={this.state.modalVisible}
-      >
-        <Image
-          source={require("../../../../assets/images/hooded-sitter.jpeg")}
-          style={styles.backgroundImage}
+      <View style={{ flex: 1 }}>
+        <View style={styles.statusBar}>
+          <StatusBar
+            backgroundColor={"transparent"}
+            translucent
+            hidden={true}
+          />
+        </View>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={this.state.modalVisible}
+          onRequestClose={this._onRequestClose}
         >
-          <KeyboardAwareScrollView
-            resetScrollToCoords={{ x: 0, y: 0 }}
-            contentContainerStyle={styles.layoutStyle}
+          <Image
+            source={require("../../../../assets/images/hooded-sitter.jpeg")}
+            style={styles.backgroundImage}
           >
-            <View style={styles.titleContainer}>
-              <Text style={styles.textStyle}>Sign Up!</Text>
-            </View>
-            <View style={{ flex: 2 }}>
-              <TextInputSingleLine
-                autoFocuse={true}
-                placeholder={"Email Address"}
-                keyboardType={"email-address"}
-                onChangeText={this._handleEmailTextChange}
-                onEndEditing={this._handleEmailSubmit}
-                invalid={this.state.showInvalidEmailUI}
-                invalidText={"Invalid Email!"}
-              />
-              <TextInputSingleLine
-                placeholder={"Password"}
-                secureTextEntry={true}
-                onChangeText={this._handlePasswordTextChange}
-                onEndEditing={this._handlePasswordSubmit}
-                invalid={this.state.showInvalidPasswordUI}
-                invalidText={"Password should be at least 8 characters!"}
-              />
-              <TextInputSingleLine
-                placeholder={"Retype Password"}
-                secureTextEntry={true}
-                returnKeyType={"done"}
-                onChangeText={this._handleRetypedPasswordTextChange}
-                onEndEditing={this._handleRetypedPasswordSubmit}
-                invalid={this.state.showInvalidRetypedPasswordUI}
-                invalidText={"Passwords don't match!"}
-              />
-              <ButtonGeneric
-                style={{
-                  backgroundColor: commonColors.GREEN,
-                  borderColor: commonColors.GREEN
-                }}
-                textStyle={{ color: "white" }}
-                text={"Signup!"}
-                onPress={this._onPressSignup}
-              />
-            </View>
-          </KeyboardAwareScrollView>
-        </Image>
-      </Modal>
+            <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+              <View style={styles.titleContainer}>
+                <TextFontTitillium style={styles.textStyle}>
+                  Sign Up!
+                </TextFontTitillium>
+              </View>
+              <View style={{ flex: 6 }}>
+                <TextInputSingleLine
+                  autoFocuse={true}
+                  placeholder={"Email Address"}
+                  keyboardType={"ascii-capable"}
+                  onChangeText={this._handleEmailTextChange}
+                  onEndEditing={this._handleEmailSubmit}
+                  invalid={this.state.showInvalidEmailUI}
+                  invalidText={"Invalid Email!"}
+                />
+                <TextInputSingleLine
+                  placeholder={"Password"}
+                  keyboardType={"ascii-capable"}
+                  secureTextEntry={true}
+                  onChangeText={this._handlePasswordTextChange}
+                  onEndEditing={this._handlePasswordSubmit}
+                  invalid={this.state.showInvalidPasswordUI}
+                  invalidText={"Password should be at least 8 characters!"}
+                />
+                <TextInputSingleLine
+                  placeholder={"Retype Password"}
+                  keyboardType={"email-address"}
+                  secureTextEntry={true}
+                  returnKeyType={"done"}
+                  onChangeText={this._handleRetypedPasswordTextChange}
+                  onEndEditing={this._handleRetypedPasswordSubmit}
+                  invalid={this.state.showInvalidRetypedPasswordUI}
+                  invalidText={"Passwords don't match!"}
+                />
+                <ButtonGeneric
+                  style={{
+                    backgroundColor: commonColors.GREEN,
+                    borderColor: commonColors.GREEN
+                  }}
+                  textStyle={{ color: "white" }}
+                  text={"Signup!"}
+                  onPress={this._onPressSignup}
+                />
+              </View>
+            </KeyboardAvoidingView>
+          </Image>
+        </Modal>
+      </View>
     );
   }
 }
@@ -190,6 +215,11 @@ const styles = StyleSheet.create({
     height: 40,
     width: SCREEN_WIDTH / 6 * 5,
     alignSelf: "center"
+  },
+  statusBar: {
+    height: Platform.OS === "ios" ? 20 : StatusBar.currentHeight,
+    backgroundColor: "rgba(0,0,0,0)",
+    width: SCREEN_WIDTH
   }
 });
 
