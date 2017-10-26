@@ -1,3 +1,32 @@
-import { userSignup } from "./session/actions";
+import {
+  postNewUserSignup,
+  sendNewUserRegistrationData,
+  getUserData,
+  setUserToken,
+  setUserID,
+  setUserEmail,
+  setUserAge,
+  setUserCity,
+  setUserPassionsList
+} from "./user/actions";
 
-export { userSignup };
+import {
+  modalUserInfoInput,
+  modalCitySearch,
+  modalInterestSelector
+} from "./modalUI/actions";
+
+export {
+  modalUserInfoInput,
+  modalCitySearch,
+  modalInterestSelector,
+  postNewUserSignup,
+  sendNewUserRegistrationData,
+  getUserData,
+  setUserToken,
+  setUserID,
+  setUserEmail,
+  setUserAge,
+  setUserCity,
+  setUserPassionsList
+};

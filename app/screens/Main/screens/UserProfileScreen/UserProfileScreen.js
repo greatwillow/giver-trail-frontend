@@ -1,5 +1,8 @@
 "use strict";
 
+import { connect } from "react-redux";
+import * as actions from "../../../../data/appActions";
+
 import React, { Component } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { SCREEN_WIDTH } from "../../../../constants/dimensions";
@@ -12,10 +15,20 @@ class UserProfileScreen extends Component {
     this.props.navigation.navigate("DrawerToggle");
   };
 
+  componentDidMount() {
+    const userID = this.props.user.userID;
+    console.log("USER IS ", this.props.user);
+    console.log("USER ID IS ", userID);
+    this.props.getUserData(userID);
+  }
+
   render() {
     return (
       <View style={styles.layoutStyle}>
         <Text style={styles.textStyle}>User Profile!</Text>
+        <Text>User Email Is: {this.props.user.userEmail}</Text>
+        <Text>User Age Range Is: {this.props.user.userAge}</Text>
+        <Text>User City Is: {this.props.user.userCity}</Text>
       </View>
     );
   }
@@ -34,4 +47,11 @@ const styles = StyleSheet.create({
   }
 });
 
-export default UserProfileScreen;
+const mapStateToProps = state => ({
+  user: state.user
+});
+const mapDispatchToProps = dispatch => ({
+  getUserData: inputObject => dispatch(actions.getUserData(inputObject))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserProfileScreen);

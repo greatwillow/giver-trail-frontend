@@ -42,18 +42,19 @@ class SignupScreen extends Component {
   }
 
   _onPressSignup = () => {
-    // if (
-    //   this.state.userEmailValid &&
-    //   this.state.userPasswordValid &&
-    //   this.state.userRetypedPasswordValid
-    // ) {
-    this.setState({ modalVisible: false });
-    this.props.navigation.navigate("userRegistration");
-    //   this.props.userSignup(
-    //     { userEmail: this.state.userEmail },
-    //     { userPassword: this.state.userPassword }
-    //   );
-    // }
+    if (
+      this.state.userEmailValid &&
+      this.state.userPasswordValid &&
+      this.state.userRetypedPasswordValid
+    ) {
+      this.setState({ modalVisible: false });
+      this.props.navigation.navigate("userRegistration");
+      console.log("AM I ONLINE? ", this.props.offline.online);
+      this.props.postNewUserSignup(
+        { userEmail: this.state.userEmail },
+        { userPassword: this.state.userPassword }
+      );
+    }
   };
 
   _onRequestClose = () => {
@@ -224,11 +225,12 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => ({
-  user: state.user
+  user: state.user,
+  offline: state.offline
 });
 const mapDispatchToProps = dispatch => ({
-  userSignup: (userEmail, userPassword) =>
-    dispatch(actions.userSignup(userEmail, userPassword))
+  postNewUserSignup: (userEmail, userPassword) =>
+    dispatch(actions.postNewUserSignup(userEmail, userPassword))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SignupScreen);

@@ -2,93 +2,55 @@
 
 import React, { Component } from "react";
 import { Modal, StyleSheet, Text, View } from "react-native";
+import { connect } from "react-redux";
+import * as actions from "../../../../data/appActions";
 
 import { SCREEN_WIDTH } from "../../../../constants/dimensions";
 import commonColors from "../../../../constants/colors";
-import ModalList from "../../../../components/ModalList";
+import ModalUserInfoInput from "./ModalUserInfoInput";
+import ModalCitySearch from "./ModalCitySearch";
+import ModalInterestSelector from "./ModalInterestSelector";
 import ButtonGeneric from "../../../../components/ButtonGeneric";
 import ageData from "../../../../assets/pureData/ageData";
-import ModalCitySearch from "./ModalCitySearch";
-import ModalImageSelector from "./ModalImageSelector";
 import TextFontTitillium from "../../../../components/TextFontTitillium";
 
 class UserRegistrationScreen extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      modalAgeSearchVisible: false,
-      modalCitySearchVisible: false,
-      modalImageSelectorVisible: false,
-      chosenAge: null
-    };
-  }
-
   _onPressRegister = () => {
     this.props.navigation.navigate("drawer");
-  };
-
-  _onPressAgeSearchView = () => {
-    this.setState({
-      modalAgeSearchVisible: true
+    this.props.sendNewUserRegistrationData({
+      userAge: 8,
+      userCity: "Montreal",
+      userPassionsList: "mock passions list"
     });
   };
 
-  _onPressAgeSearchClose = e => {
-    this.setState({
-      chosenAge: e.value,
-      modalAgeSearchVisible: false
-    });
+  _onPressOpenModalUserInfoInput = () => {
+    this.props.modalUserInfoInput(true);
   };
 
-  _onPressCitySearchView = () => {
-    this.setState({
-      modalCitySearchVisible: true
-    });
+  _onPressOpenModalCitySearch = () => {
+    this.props.modalCitySearch(true);
   };
 
-  _onPressCitySearchClose = () => {
-    this.setState({
-      modalCitySearchVisible: false
-    });
-  };
-
-  _onPressImageSelectorView = () => {
-    this.setState({
-      modalImageSelectorVisible: true
-    });
-  };
-
-  _onPressImageSelectorClose = () => {
-    this.setState({
-      modalImageSelectorVisible: false
-    });
+  _onPressOpenModalInterestSelector = () => {
+    this.props.modalInterestSelector(true);
   };
 
   render() {
     return (
       <View style={styles.layoutStyle}>
-        <ModalList
-          modalVisible={this.state.modalAgeSearchVisible}
-          data={ageData}
-          onPress={this._onPressAgeSearchClose}
-        />
-        <ModalCitySearch
-          modalVisible={this.state.modalCitySearchVisible}
-          onPress={this._onPressCitySearchClose}
-        />
-        <ModalImageSelector
-          modalVisible={this.state.modalImageSelectorVisible}
-          onPress={this._onPressImageSelectorClose}
-        />
-        {/*----------- AGE SELECTION -----------*/}
+        <ModalUserInfoInput data={ageData} />
+        <ModalCitySearch />
+        <ModalInterestSelector />
+        {/*----------- USER INFO INPUT -----------*/}
 
         <View style={{ flexDirection: "row" }}>
           <View style={styles.numberContainer}>
             <TextFontTitillium style={styles.numberText}>1</TextFontTitillium>
           </View>
           <ButtonGeneric
-            onPress={this._onPressAgeSearchView}
-            text={"Pick Your Age Range!"}
+            onPress={this._onPressOpenModalUserInfoInput}
+            text={"What's Your Info?"}
             style={styles.customButton}
             textStyle={styles.customButtonText}
           />
@@ -99,7 +61,7 @@ class UserRegistrationScreen extends Component {
             <TextFontTitillium style={styles.numberText}>2</TextFontTitillium>
           </View>
           <ButtonGeneric
-            onPress={this._onPressCitySearchView}
+            onPress={this._onPressOpenModalCitySearch}
             text={"Pick Your City!"}
             style={styles.customButton}
             textStyle={styles.customButtonText}
@@ -111,7 +73,7 @@ class UserRegistrationScreen extends Component {
             <TextFontTitillium style={styles.numberText}>3</TextFontTitillium>
           </View>
           <ButtonGeneric
-            onPress={this._onPressImageSelectorView}
+            onPress={this._onPressOpenModalInterestSelector}
             text={"Pick Your Passion!"}
             style={styles.customButton}
             textStyle={styles.customButtonText}
@@ -176,4 +138,19 @@ const styles = StyleSheet.create({
   }
 });
 
-export default UserRegistrationScreen;
+const mapStateToProps = state => ({
+  user: state.user,
+  modalUI: state.modalUI
+});
+const mapDispatchToProps = dispatch => ({
+  sendNewUserRegistrationData: inputObject =>
+    dispatch(actions.sendNewUserRegistrationData(inputObject)),
+  modalUserInfoInput: visible => dispatch(actions.modalUserInfoInput(visible)),
+  modalCitySearch: visible => dispatch(actions.modalCitySearch(visible)),
+  modalInterestSelector: visible =>
+    dispatch(actions.modalInterestSelector(visible))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(
+  UserRegistrationScreen
+);
