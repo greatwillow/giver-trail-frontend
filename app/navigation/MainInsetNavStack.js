@@ -15,10 +15,11 @@ import CauseListScreen from "../screens/Main/screens/CauseListScreen/CauseListSc
 import CauseDetailScreen from "../screens/Main/screens/CauseDetailScreen/CauseDetailScreen";
 import DrawerScreen from "../screens/Main/screens/DrawerScreen/DrawerScreen";
 import MenuIcon from "../screens/Main/screens/DrawerScreen/MenuIcon";
+import CustomTabBar from "../components/CustomTabBar";
 
 import { headerStyle } from "../styles/mainInsetHeaderStyle";
 import commonColors from "../constants/colors";
-import { SCREEN_HEIGHT } from "../constants/dimensions";
+import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../constants/dimensions";
 
 const MainInsetNavStack = DrawerNavigator(
   {
@@ -51,6 +52,9 @@ const MainInsetNavStack = DrawerNavigator(
               {
                 //TabNavigator Navigation Options
                 tabBarPosition: "bottom",
+                tabBarComponent: ({ navigation }) => (
+                  <CustomTabBar navigation={navigation} />
+                ),
                 animationEnabled: true,
                 tabBarOptions: {
                   activeTintColor: "#e91e63",
@@ -84,6 +88,7 @@ const MainInsetNavStack = DrawerNavigator(
   {
     //DrawerNavigator Navigation Options
     contentComponent: DrawerScreen,
+    drawerWidth: SCREEN_WIDTH / 16 * 13,
     navigationOptions: {
       gesturesEnabled: false
     }

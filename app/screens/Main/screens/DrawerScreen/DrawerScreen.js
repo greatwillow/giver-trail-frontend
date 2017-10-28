@@ -2,9 +2,14 @@
 
 import React, { Component } from "react";
 
-import { StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
 
 import { NavigationActions } from "react-navigation";
+
+import DrawerItem from "./DrawerItem";
+import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../../../constants/dimensions";
+import commonColors from "../../../../constants/colors";
+import TextFontTitillium from "../../../../components/TextFontTitillium";
 
 export default class DrawerScreen extends Component {
   logout = () => {
@@ -19,55 +24,69 @@ export default class DrawerScreen extends Component {
   render() {
     const { navigation } = this.props;
     return (
-      <View style={styles.container}>
-        <Text
-          onPress={() => navigation.navigate("userRegistration")}
-          style={styles.drawerItem}
-        >
-          User Registration
-        </Text>
-        <Text
-          onPress={() => navigation.navigate("userProfile")}
-          style={styles.drawerItem}
-        >
-          User Profile
-        </Text>
-        <Text
-          onPress={() => navigation.navigate("map")}
-          style={styles.drawerItem}
-        >
-          Map
-        </Text>
-        <Text
-          onPress={() => navigation.navigate("statistics")}
-          style={styles.drawerItem}
-        >
-          Statistics
-        </Text>
-        <Text onPress={this.logout} style={styles.drawerItem}>
-          Log Out
-        </Text>
+      <View style={styles.mainContainer}>
+        <View style={styles.innerTopContainer}>
+          <Image
+            source={require("../../../../assets/images/red-sky.jpeg")}
+            style={{
+              width: SCREEN_WIDTH / 16 * 13,
+              height: SCREEN_WIDTH / 2,
+              justifyContent: "center"
+            }}
+            resizeMode="cover"
+          >
+            <TextFontTitillium style={styles.title}>
+              ~ GiverTrail ~
+            </TextFontTitillium>
+          </Image>
+        </View>
+        <View style={styles.innerBottomContainer}>
+          <DrawerItem
+            onPress={() => navigation.navigate("userRegistration")}
+            text="~  User Registration  ~"
+          />
+          <DrawerItem
+            onPress={() => navigation.navigate("userProfile")}
+            text="~  User Profile  ~"
+            itemPosition="even"
+          />
+          <DrawerItem
+            onPress={() => navigation.navigate("map")}
+            text="~  Map  ~"
+          />
+          <DrawerItem
+            onPress={() => navigation.navigate("statistics")}
+            text="~  Statistics  ~"
+            itemPosition="even"
+          />
+          <DrawerItem
+            onPress={this.logout}
+            style={styles.drawerItem}
+            text="~  Log Out  ~"
+          />
+        </View>
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
+  mainContainer: {
     flex: 1,
-    backgroundColor: "#f6f6f6",
-    paddingTop: 40,
-    paddingHorizontal: 20
+    backgroundColor: commonColors.DARK_GREY
   },
-  drawerItem: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#E73536",
-    padding: 15,
-    margin: 5,
-    borderRadius: 2,
-    borderColor: "#E73536",
-    borderWidth: 1,
-    textAlign: "center"
+  innerTopContainer: {
+    flex: 8
+  },
+  innerBottomContainer: {
+    flex: 14
+  },
+  title: {
+    fontSize: SCREEN_WIDTH / 12,
+    backgroundColor: "rgba(0,0,0,0)",
+    color: commonColors.PINK,
+    textAlign: "center",
+    //padding: 15,
+    margin: 5
   }
 });

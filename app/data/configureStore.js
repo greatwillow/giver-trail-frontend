@@ -10,7 +10,9 @@ import thunk from "redux-thunk";
 import appReducer from "./appReducer";
 
 const offlineConfig = {
-  ...defaultConfig
+  ...defaultConfig,
+  retry: (action, retries) => (action.meta.urgent ? 100 : 1000 * (retries + 1)),
+  discard: (error, action, retries) => error.permanent || retries > 1
 };
 
 const store = createStore(
