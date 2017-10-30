@@ -24,7 +24,18 @@ class DrawerItem extends Component {
           }
         ]}
       >
-        <TextFontTitillium style={[styles.text, this.props.textStyle]}>
+        <TextFontTitillium
+          style={[
+            styles.text,
+            this.props.textStyle,
+            {
+              color:
+                this.props.insetTabUI.insetTabChosen === this.props.tabName
+                  ? commonColors.PINK
+                  : null
+            }
+          ]}
+        >
           {this.props.text}
         </TextFontTitillium>
       </TouchableOpacity>

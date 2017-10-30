@@ -16,10 +16,13 @@ import {
   modalInterestSelector
 } from "./modalUI/actions";
 
+import { setInsetTabUI } from "./insetTabUI/actions";
+
 export {
   modalUserInfoInput,
   modalCitySearch,
   modalInterestSelector,
+  setInsetTabUI,
   postNewUserSignup,
   sendNewUserRegistrationData,
   getUserData,

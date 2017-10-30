@@ -3,6 +3,8 @@
 import React, { Component } from "react";
 
 import { Image, StyleSheet, Text, View } from "react-native";
+import { connect } from "react-redux";
+import * as actions from "../../../../data/appActions";
 
 import { NavigationActions } from "react-navigation";
 
@@ -11,8 +13,29 @@ import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../../../constants/dimensions";
 import commonColors from "../../../../constants/colors";
 import TextFontTitillium from "../../../../components/TextFontTitillium";
 
-export default class DrawerScreen extends Component {
-  logout = () => {
+class DrawerScreen extends Component {
+  _handleNavToUserProfile = () => {
+    this.props.navigation.navigate("userProfile");
+    this.props.setInsetTabUI("userProfile");
+  };
+
+  _handleNavToMap = () => {
+    this.props.navigation.navigate("map");
+    this.props.setInsetTabUI("map");
+  };
+
+  _handleNavToStatistics = () => {
+    this.props.navigation.navigate("statistics");
+    this.props.setInsetTabUI("statistics");
+    console.log("INSET TAB UI ", this.props.insetTabUI);
+  };
+
+  _handleNavToCauses = () => {
+    this.props.navigation.navigate("causes");
+    this.props.setInsetTabUI("causes");
+  };
+
+  _handleLogout = () => {
     const logoutNavAction = NavigationActions.reset({
       index: 0,
       key: null,
@@ -42,27 +65,43 @@ export default class DrawerScreen extends Component {
         </View>
         <View style={styles.innerBottomContainer}>
           <DrawerItem
+            {...this.props}
             onPress={() => navigation.navigate("userRegistration")}
             text="~  User Registration  ~"
+            tabName="userRegistration"
           />
           <DrawerItem
-            onPress={() => navigation.navigate("userProfile")}
+            {...this.props}
+            onPress={this._handleNavToUserProfile}
             text="~  User Profile  ~"
+            tabName="userProfile"
             itemPosition="even"
           />
           <DrawerItem
-            onPress={() => navigation.navigate("map")}
+            {...this.props}
+            onPress={this._handleNavToMap}
             text="~  Map  ~"
+            tabName="map"
           />
           <DrawerItem
-            onPress={() => navigation.navigate("statistics")}
+            {...this.props}
+            onPress={this._handleNavToStatistics}
             text="~  Statistics  ~"
+            tabName="statistics"
             itemPosition="even"
           />
           <DrawerItem
-            onPress={this.logout}
-            style={styles.drawerItem}
+            {...this.props}
+            onPress={this._handleNavToCauses}
+            text="~  Causes  ~"
+            tabName="causes"
+          />
+          <DrawerItem
+            {...this.props}
+            onPress={this._handleLogout}
             text="~  Log Out  ~"
+            tabName="logOut"
+            itemPosition="even"
           />
         </View>
       </View>
@@ -86,7 +125,16 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0)",
     color: commonColors.PINK,
     textAlign: "center",
-    //padding: 15,
     margin: 5
   }
 });
+
+const mapStateToProps = state => ({
+  insetTabUI: state.insetTabUI
+});
+
+const mapDispatchToProps = dispatch => ({
+  setInsetTabUI: chosenTab => dispatch(actions.setInsetTabUI(chosenTab))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(DrawerScreen);

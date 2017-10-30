@@ -9,52 +9,63 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
+import { connect } from "react-redux";
+import * as actions from "../data/appActions";
 
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../constants/dimensions";
 import commonColors from "../constants/colors";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import CustomTabItem from "./CustomTabItem";
 
 class CustomTabBar extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      selectedTab: "userProfile"
-    };
-  }
-
   _selectUserProfileTab = () => {
     this.props.navigation.navigate("userProfile");
-    this.setState({
-      selectedTab: "userProfile"
-    });
+    this.props.setInsetTabUI("userProfile");
   };
 
   _selectMapTab = () => {
     this.props.navigation.navigate("map");
-    this.setState({
-      selectedTab: "map"
-    });
+    this.props.setInsetTabUI("map");
   };
 
   _selectStatisticsTab = () => {
     this.props.navigation.navigate("statistics");
-    this.setState({
-      selectedTab: "statistics"
-    });
+    this.props.setInsetTabUI("statistics");
   };
 
   _selectCausesTab = () => {
     this.props.navigation.navigate("causes");
-    this.setState({
-      selectedTab: "causes"
-    });
+    this.props.setInsetTabUI("causes");
   };
 
   render() {
     return (
       <View style={styles.mainContainer}>
-        <TouchableOpacity
+        <CustomTabItem
+          {...this.props}
+          onPress={this._selectUserProfileTab}
+          iconName="account-box-outline"
+          tabName="userProfile"
+        />
+        <CustomTabItem
+          {...this.props}
+          onPress={this._selectMapTab}
+          iconName="map-marker-radius"
+          tabName="map"
+        />
+        <CustomTabItem
+          {...this.props}
+          onPress={this._selectStatisticsTab}
+          iconName="chart-bar"
+          tabName="statistics"
+        />
+        <CustomTabItem
+          {...this.props}
+          onPress={this._selectCausesTab}
+          iconName="gift"
+          tabName="causes"
+        />
+        {/*<TouchableOpacity
           style={styles.tabContainer}
           onPress={this._selectUserProfileTab}
         >
@@ -109,7 +120,7 @@ class CustomTabBar extends Component {
                 : commonColors.GREEN
             }
           />
-        </TouchableOpacity>
+        </TouchableOpacity>*/}
       </View>
     );
   }
@@ -129,4 +140,12 @@ const styles = StyleSheet.create({
   }
 });
 
-export default CustomTabBar;
+const mapStateToProps = state => ({
+  insetTabUI: state.insetTabUI
+});
+
+const mapDispatchToProps = dispatch => ({
+  setInsetTabUI: chosenTab => dispatch(actions.setInsetTabUI(chosenTab))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(CustomTabBar);

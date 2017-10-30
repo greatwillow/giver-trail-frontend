@@ -91,40 +91,40 @@ const attemptNewUserSignupPost = (userEmail, userPassword) => dispatch => {
     });
 };
 
-export const postNewUserSignup = (userEmail, userPassword) => dispatch => {
-  NetInfo.isConnected.fetch().then(isConnected => {
-    if (isConnected) {
-      dispatch(attemptNewUserSignupPost(userEmail, userPassword));
-    } else {
-      console.log("OFFLINE____________");
-    }
-  });
-};
-
-// export const postNewUserSignup = userEmail => ({
-//   type: actionTypes.POST_NEW_USER_SIGNUP,
-//   payload: { userEmail },
-//   meta: {
-//     offline: {
-//       // the network action to execute:
-//       effect: {
-//         url: "https://damp-tor-16286.herokuapp.com/users/create-user",
-//         method: "POST",
-//         body: { userEmail }
-//       },
-//       // action to dispatch when effect succeeds:
-//       commit: {
-//         type: actionTypes.NEW_USER_SIGNUP_SUCEEDED,
-//         meta: { userEmail }
-//       },
-//       // action to dispatch if network action fails permanently:
-//       rollback: {
-//         type: actionTypes.NEW_USER_SIGNUP_FAILED,
-//         meta: { userEmail }
-//       }
+// export const postNewUserSignup = (userEmail, userPassword) => dispatch => {
+//   NetInfo.isConnected.fetch().then(isConnected => {
+//     if (isConnected) {
+//       dispatch(attemptNewUserSignupPost(userEmail, userPassword));
+//     } else {
+//       console.log("OFFLINE____________");
 //     }
-//   }
-// });
+//   });
+// };
+
+export const postNewUserSignup = userEmail => ({
+  type: actionTypes.POST_NEW_USER_SIGNUP,
+  payload: { userEmail },
+  meta: {
+    offline: {
+      // the network action to execute:
+      effect: {
+        url: "https://damp-tor-16286.herokuapp.com/users/create-user",
+        method: "POST",
+        body: { userEmail }
+      },
+      // action to dispatch when effect succeeds:
+      commit: {
+        type: actionTypes.NEW_USER_SIGNUP_SUCEEDED,
+        meta: { userEmail }
+      },
+      // action to dispatch if network action fails permanently:
+      rollback: {
+        type: actionTypes.NEW_USER_SIGNUP_FAILED,
+        meta: { userEmail }
+      }
+    }
+  }
+});
 
 //--------------------------------------------------
 //   SEND NEW USER REGISTRATION DATA

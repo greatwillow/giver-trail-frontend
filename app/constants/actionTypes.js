@@ -1,15 +1,18 @@
+//tabInsetUI Actions
+export const SET_INSET_TAB_UI = "SET_INSET_TAB_UI";
+
+//modalUI Actions
 export const MODAL_USER_INFO_INPUT = "MODAL_USER_INFO_INPUT";
 export const MODAL_CITY_SEARCH = "MODAL_CITY_SEARCH";
 export const MODAL_INTEREST_SELECTOR = "MODAL_INTEREST_SELECTOR";
 
+//user Actions
 export const SET_USER_ID = "SET_USER_ID";
 export const SET_USER_TOKEN = "SET_USER_TOKEN";
 export const SET_USER_EMAIL = "SET_USER_EMAIL";
 
 export const SET_USER_AGE = "SET_USER_AGE";
-
 export const SET_USER_CITY = "SET_USER_CITY";
-
 export const SET_USER_PASSIONS_LIST = "SET_USER_PASSIONS_LIST";
 
 export const GET_USER_DATA = "GET_USER_DATA";
