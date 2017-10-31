@@ -35,12 +35,8 @@ class WalkthroughScreen extends Component {
             <View
               style={{
                 flex: 2,
-                // width: SCREEN_WIDTH / 6 * 5,
-                // height: SCREEN_HEIGHT / 6 * 4,
                 justifyContent: "center",
                 alignItems: "center"
-                //  borderColor: "red",
-                //  borderWidth: 2
               }}
             >
               <TextFontTitillium style={styles.titleSubStyle}>

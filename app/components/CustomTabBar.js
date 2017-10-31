@@ -65,62 +65,6 @@ class CustomTabBar extends Component {
           iconName="gift"
           tabName="causes"
         />
-        {/*<TouchableOpacity
-          style={styles.tabContainer}
-          onPress={this._selectUserProfileTab}
-        >
-          <Icon
-            name="account-box-outline"
-            size={40}
-            color={
-              this.state.selectedTab === "userProfile"
-                ? commonColors.PINK
-                : commonColors.GREEN
-            }
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.tabContainer}
-          onPress={this._selectMapTab}
-        >
-          <Icon
-            name="map-marker-radius"
-            size={40}
-            color={
-              this.state.selectedTab === "map"
-                ? commonColors.PINK
-                : commonColors.GREEN
-            }
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.tabContainer}
-          onPress={this._selectStatisticsTab}
-        >
-          <Icon
-            name="chart-bar"
-            size={40}
-            color={
-              this.state.selectedTab === "statistics"
-                ? commonColors.PINK
-                : commonColors.GREEN
-            }
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.tabContainer}
-          onPress={this._selectCausesTab}
-        >
-          <Icon
-            name="gift"
-            size={40}
-            color={
-              this.state.selectedTab === "causes"
-                ? commonColors.PINK
-                : commonColors.GREEN
-            }
-          />
-        </TouchableOpacity>*/}
       </View>
     );
   }
@@ -131,7 +75,7 @@ const styles = StyleSheet.create({
     backgroundColor: commonColors.DARK_GREY,
     flexDirection: "row",
     width: SCREEN_WIDTH,
-    height: SCREEN_HEIGHT / 8 * 1.2
+    height: SCREEN_HEIGHT / 8
   },
   tabContainer: {
     width: SCREEN_WIDTH / 4,
