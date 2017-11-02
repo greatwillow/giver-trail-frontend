@@ -47,11 +47,14 @@ class SignupScreen extends Component {
       this.state.userPasswordValid &&
       this.state.userRetypedPasswordValid
     ) {
+      const stringifiedEmail = JSON.stringify(this.state.userEmail);
+      console.log("stringd email is ", stringifiedEmail);
+      console.log("Is string ", typeof stringifiedEmail);
       this.setState({ modalVisible: false });
       this.props.navigation.navigate("userRegistration");
       console.log("AM I ONLINE? ", this.props.offline.online);
       this.props.postNewUserSignup(
-        { userEmail: this.state.userEmail },
+        { userEmail: stringifiedEmail },
         { userPassword: this.state.userPassword }
       );
     }

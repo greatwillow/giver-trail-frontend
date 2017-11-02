@@ -30,7 +30,6 @@ class CauseListScreen extends Component {
       pageBackgroundOpacity: new Animated.Value(0.3),
       itemWidth: SCREEN_WIDTH / 6 * 5,
       itemHeight: SCREEN_WIDTH / 6 * 4,
-      itemPaddingTop: SCREEN_WIDTH / 12 * 3,
       itemImageHeight: SCREEN_WIDTH / 6 * 2,
       pageImageHeight: SCREEN_WIDTH / 6 * 3.5,
       innerTextContainerWidth: 0,
@@ -56,7 +55,6 @@ class CauseListScreen extends Component {
       this.setState({
         itemWidth: SCREEN_WIDTH / 6 * 5,
         itemHeight: SCREEN_WIDTH / 6 * 4,
-        itemPaddingTop: SCREEN_WIDTH / 12 * 3,
         itemImageHeight: SCREEN_WIDTH / 6 * 2,
         pageImageHeight: SCREEN_WIDTH / 6 * 3.5,
         innerTextContainerWidth: 0,
@@ -78,7 +76,6 @@ class CauseListScreen extends Component {
       this.setState({
         itemWidth: SCREEN_WIDTH / 6 * 5.01,
         itemHeight: SCREEN_WIDTH / 6 * 2,
-        itemPaddingTop: SCREEN_WIDTH / 12,
         itemImageHeight: 0,
         pageImageHeight: SCREEN_WIDTH / 6 * 5.5,
         itemPressed: true,
@@ -143,9 +140,6 @@ class CauseListScreen extends Component {
             sliderHeight={SCREEN_WIDTH / 6 * 2}
             itemWidth={this.state.itemWidth}
             onSnapToItem={this._onSnapToItem}
-            // containerCustomStyle={{
-            //   paddingTop: 20 //this.state.itemPaddingTop
-            // }}
           />
         </View>
         <Animated.Image

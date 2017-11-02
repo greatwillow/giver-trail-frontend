@@ -25,38 +25,43 @@ const user = (state = initialState, action) => {
       return setUserPassionsList(state, action.userPassionsList);
     case actionTypes.POST_NEW_USER_SIGNUP:
       console.log("USER SIGNING UP!");
-      return postNewUserSignup(state, action.payload);
+      return postNewUserSignup(state, action);
     case actionTypes.NEW_USER_SIGNUP_SUCEEDED:
       console.log("USER SIGN Up SUCCESS!");
-      return newUserSignupSuceeded(state, action.payload);
+      return newUserSignupSuceeded(state, action);
     case actionTypes.NEW_USER_SIGNUP_FAILED:
       console.log("USER SIGN Up FAIL!");
-      return newUserSignupFailed(state, action.payload);
+      return newUserSignupFailed(state, action);
     default:
       return state;
   }
 };
 
-const postNewUserSignup = (state, payload) => {
+const postNewUserSignup = (state, action) => {
   return {
-    ...state
+    ...state,
+    submitting: { ...state.submitting, [action.payload.userEmail]: true }
   };
 };
 
-const newUserSignupSuceeded = (state, payload) => {
+const newUserSignupSuceeded = (state, action) => {
   return {
     ...state,
-    ...state.user,
-    userEmail: payload.userEmail
+    //...state.user,
+    receipts: { ...state.receipts, [action.meta.userEmail]: action.payload },
+    submitting: omit(state.submitting, [action.meta.userEmail])
+    //userEmail: payload.userEmail
     //userPassword: payload.userPassword
   };
 };
 
-const newUserSignupFailed = (state, payload) => {
+const newUserSignupFailed = (state, action) => {
   return {
     ...state,
-    ...state.user,
-    userEmail: payload.userEmail
+    //...state.user,
+    error: action.payload,
+    submitting: omit(state.submitting, [action.meta.userEmail])
+    //userEmail: payload.userEmail
     //userPassword: payload.userPassword
   };
 };
