@@ -115,11 +115,13 @@ export const postNewUserSignup = userEmail => ({
       // action to dispatch when effect succeeds:
       commit: {
         type: actionTypes.NEW_USER_SIGNUP_SUCEEDED,
+        payload: { userEmail },
         meta: { userEmail }
       },
       // action to dispatch if network action fails permanently:
       rollback: {
         type: actionTypes.NEW_USER_SIGNUP_FAILED,
+        payload: { userEmail },
         meta: { userEmail }
       }
     }

@@ -47,10 +47,8 @@ const postNewUserSignup = (state, action) => {
 const newUserSignupSuceeded = (state, action) => {
   return {
     ...state,
-    //...state.user,
-    receipts: { ...state.receipts, [action.meta.userEmail]: action.payload },
-    submitting: omit(state.submitting, [action.meta.userEmail])
-    //userEmail: payload.userEmail
+    ...state.user,
+    userEmail: action.payload.userEmail
     //userPassword: payload.userPassword
   };
 };
@@ -58,10 +56,8 @@ const newUserSignupSuceeded = (state, action) => {
 const newUserSignupFailed = (state, action) => {
   return {
     ...state,
-    //...state.user,
-    error: action.payload,
-    submitting: omit(state.submitting, [action.meta.userEmail])
-    //userEmail: payload.userEmail
+    ...state.user,
+    userEmail: action.payload.userEmail
     //userPassword: payload.userPassword
   };
 };
