@@ -37,6 +37,9 @@ class ModalCitySearch extends Component {
 
   _onPressGetCity = (data, details) => {
     this.props.modalCitySearch(false);
+    console.log("Data is ", data);
+    console.log("Details are ", details);
+    this.props.setUserCity(details.name);
   };
 
   render() {

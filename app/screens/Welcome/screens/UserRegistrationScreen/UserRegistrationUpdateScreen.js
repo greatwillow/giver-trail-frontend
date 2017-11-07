@@ -7,10 +7,9 @@ import * as actions from "../../../../data/appActions";
 
 import { SCREEN_WIDTH } from "../../../../constants/dimensions";
 import commonColors from "../../../../constants/colors";
-// import ModalUserInfoInput from "./ModalUserInfoInput";
-// import ModalCitySearch from "./ModalCitySearch";
-// import ModalInterestSelector from "./ModalInterestSelector";
-import PopInUserInfoInput from "./PopInUserInfoInput";
+import ModalUserInfoInput from "./ModalUserInfoInput";
+import ModalCitySearch from "./ModalCitySearch";
+import ModalInterestSelector from "./ModalInterestSelector";
 import GenericButton from "../../../../components/GenericButton";
 import ageData from "../../../../assets/pureData/ageData";
 import TextFontTitillium from "../../../../components/TextFontTitillium";
@@ -20,8 +19,7 @@ class UserRegistrationScreen extends Component {
     super(props);
 
     this.state = {
-      firstItemLeft: -200,
-      popInUserInfoInputTop: 2000
+      firstItemLeft: -200
     };
   }
 
@@ -47,43 +45,39 @@ class UserRegistrationScreen extends Component {
       });
     }, 0);
     window.setTimeout(() => {
-      LayoutAnimation.configureNext(this.createCustomLayoutAnimation());
-      this.setState({
-        popInUserInfoInputTop: SCREEN_WIDTH / 12 * 6
-      });
-    }, 0);
+      this.props.modalUserInfoInput(true);
+    }, 1200);
   }
 
   _onPressRegister = () => {
     this.props.navigation.navigate("drawer");
   };
 
-  // _onPressOpenModalUserInfoInput = () => {
-  //   this.props.modalUserInfoInput(true);
-  // };
-  //
-  // _onPressOpenModalCitySearch = () => {
-  //   this.props.modalCitySearch(true);
-  // };
-  //
-  // _onPressOpenModalInterestSelector = () => {
-  //   this.props.modalInterestSelector(true);
-  // };
+  _onPressOpenModalUserInfoInput = () => {
+    this.props.modalUserInfoInput(true);
+  };
+
+  _onPressOpenModalCitySearch = () => {
+    this.props.modalCitySearch(true);
+  };
+
+  _onPressOpenModalInterestSelector = () => {
+    this.props.modalInterestSelector(true);
+  };
 
   render() {
     return (
       <View style={styles.layoutStyle}>
-        {/*<ModalUserInfoInput {...this.props} data={ageData} />
+        <ModalUserInfoInput {...this.props} data={ageData} />
         <ModalCitySearch {...this.props} />
-        <ModalInterestSelector {...this.props} />*/}
+        <ModalInterestSelector {...this.props} />
         {/*----------- USER INFO INPUT -----------*/}
 
         <View
           style={{
             flexDirection: "row",
-            width: SCREEN_WIDTH / 6 * 5,
             position: "absolute",
-            top: SCREEN_WIDTH / 12 * 3,
+            bottom: 500,
             left: this.state.firstItemLeft
           }}
         >
@@ -91,27 +85,19 @@ class UserRegistrationScreen extends Component {
             <TextFontTitillium style={styles.numberText}>1</TextFontTitillium>
           </View>
           <GenericButton
-            //onPress={this._onPressOpenModalUserInfoInput}
+            onPress={this._onPressOpenModalUserInfoInput}
             text={"What's Your Info?"}
             style={styles.customButton}
             textStyle={styles.customButtonText}
           />
         </View>
-        <PopInUserInfoInput
-          {...this.props}
-          data={ageData}
-          style={{
-            position: "absolute",
-            top: this.state.popInUserInfoInputTop
-          }}
-        />
         {/*----------- CITY SELECTION -----------*/}
         <View style={{ flexDirection: "row" }}>
           <View style={styles.numberContainer}>
             <TextFontTitillium style={styles.numberText}>2</TextFontTitillium>
           </View>
           <GenericButton
-            //onPress={this._onPressOpenModalCitySearch}
+            onPress={this._onPressOpenModalCitySearch}
             text={"Pick Your City!"}
             style={styles.customButton}
             textStyle={styles.customButtonText}
@@ -123,7 +109,7 @@ class UserRegistrationScreen extends Component {
             <TextFontTitillium style={styles.numberText}>3</TextFontTitillium>
           </View>
           <GenericButton
-            //onPress={this._onPressOpenModalInterestSelector}
+            onPress={this._onPressOpenModalInterestSelector}
             text={"Pick Your Passion!"}
             style={styles.customButton}
             textStyle={styles.customButtonText}

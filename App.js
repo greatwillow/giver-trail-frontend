@@ -4,11 +4,18 @@ import React, { Component } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
+import { withNetworkConnectivity } from "react-native-offline";
 
 import Expo from "expo";
 
 import AppNavReduxWrapper from "./app/navigation/AppNavReduxWrapper";
 import configureStore from "./app/data/configureStore";
+
+let Root = () => <AppNavReduxWrapper />;
+
+Root = withNetworkConnectivity({
+  withRedux: true // It won't inject isConnected as a prop in this case
+})(Root);
 
 class App extends Component {
   store = configureStore;
@@ -16,7 +23,7 @@ class App extends Component {
   render() {
     return (
       <Provider store={this.store}>
-        <AppNavReduxWrapper />
+        <Root />
       </Provider>
     );
   }

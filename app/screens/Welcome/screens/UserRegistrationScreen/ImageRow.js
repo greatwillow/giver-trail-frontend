@@ -27,24 +27,32 @@ class ImageRow extends Component {
   }
 
   _onPressSelectItem = () => {
-    this.setState({
-      itemSelected: !this.state.itemSelected
-    });
-    if (this.state.itemSelected) {
-      LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
-      this.setState({
-        animatedWidth: this.state.animatedWidth / 4 * 3,
-        animatedHeight: this.state.animatedHeight / 4 * 3,
-        animatedOpacity: 1
-      });
-    } else {
-      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-      this.setState({
-        animatedWidth: this.props.INNER_WIDTH,
-        animatedHeight: this.props.INNER_WIDTH / 2,
-        animatedOpacity: 0
-      });
-    }
+    this.setState(
+      {
+        itemSelected: !this.state.itemSelected
+      },
+      function() {
+        this.state.itemSelected === true
+          ? this.props.addToUserPassionsList(this.props.id)
+          : this.props.removeFromUserPassionsList(this.props.id);
+
+        if (this.state.itemSelected) {
+          LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
+          this.setState({
+            animatedWidth: this.state.animatedWidth / 4 * 3,
+            animatedHeight: this.state.animatedHeight / 4 * 3,
+            animatedOpacity: 1
+          });
+        } else {
+          LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+          this.setState({
+            animatedWidth: this.props.INNER_WIDTH,
+            animatedHeight: this.props.INNER_WIDTH / 2,
+            animatedOpacity: 0
+          });
+        }
+      }
+    );
   };
 
   render() {

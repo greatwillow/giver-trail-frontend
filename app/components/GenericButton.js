@@ -6,7 +6,7 @@ import { Text, StyleSheet, TouchableHighlight } from "react-native";
 import { SCREEN_WIDTH } from "../constants/dimensions";
 import { Font } from "expo";
 
-class ButtonGeneric extends Component {
+class GenericButton extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -63,4 +63,4 @@ var styles = StyleSheet.create({
   }
 });
 
-export default ButtonGeneric;
+export default GenericButton;

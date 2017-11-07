@@ -4,6 +4,8 @@ const initialState = {
   userToken: null,
   userID: null,
   userEmail: null,
+  userFirstName: null,
+  userLastName: null,
   userAge: null,
   userCity: null,
   userPassionsList: []
@@ -17,12 +19,18 @@ const user = (state = initialState, action) => {
       return setUserID(state, action.userID);
     case actionTypes.SET_USER_EMAIL:
       return setUserEmail(state, action.userEmail);
+    case actionTypes.SET_USER_FIRST_NAME:
+      return setUserFirstName(state, action.userFirstName);
+    case actionTypes.SET_USER_LAST_NAME:
+      return setUserLastName(state, action.userLastName);
     case actionTypes.SET_USER_AGE:
       return setUserAge(state, action.userAge);
     case actionTypes.SET_USER_CITY:
       return setUserCity(state, action.userCity);
-    case actionTypes.SET_USER_PASSIONS_LIST:
-      return setUserPassionsList(state, action.userPassionsList);
+    case actionTypes.ADD_TO_USER_PASSIONS_LIST:
+      return addToUserPassionsList(state, action.passionItem);
+    case actionTypes.REMOVE_FROM_USER_PASSIONS_LIST:
+      return removeFromUserPassionsList(state, action.passionItem);
     case actionTypes.POST_NEW_USER_SIGNUP:
       console.log("USER SIGNING UP!");
       return postNewUserSignup(state, action);
@@ -39,8 +47,7 @@ const user = (state = initialState, action) => {
 
 const postNewUserSignup = (state, action) => {
   return {
-    ...state,
-    submitting: { ...state.submitting, [action.payload.userEmail]: true }
+    ...state
   };
 };
 
@@ -49,7 +56,7 @@ const newUserSignupSuceeded = (state, action) => {
     ...state,
     ...state.user,
     userEmail: action.payload.userEmail
-    //userPassword: payload.userPassword
+    //userPassword: action.payload.userPassword
   };
 };
 
@@ -58,7 +65,7 @@ const newUserSignupFailed = (state, action) => {
     ...state,
     ...state.user,
     userEmail: action.payload.userEmail
-    //userPassword: payload.userPassword
+    //userPassword: action.payload.userPassword
   };
 };
 
@@ -86,6 +93,22 @@ const setUserEmail = (state, userEmail) => {
   };
 };
 
+const setUserFirstName = (state, userFirstName) => {
+  return {
+    ...state,
+    ...state.user,
+    userFirstName: userFirstName
+  };
+};
+
+const setUserLastName = (state, userLastName) => {
+  return {
+    ...state,
+    ...state.user,
+    userLastName: userLastName
+  };
+};
+
 const setUserAge = (state, userAge) => {
   return {
     ...state,
@@ -102,11 +125,27 @@ const setUserCity = (state, userCity) => {
   };
 };
 
-const setUserPassionsList = (state, userPassionsList) => {
+const addToUserPassionsList = (state, passionItem) => {
   return {
     ...state,
-    ...state.user,
-    userPassionsList: userPassionsList
+    userPassionsList: [...state.userPassionsList, passionItem]
+  };
+};
+
+const removeFromUserPassionsList = (state, passionItem) => {
+  // const elementIndex = userPassionsList.map((x) => {x.id}).indexOf(passionItem)
+  // const itemFound = userPassionsList[elementIndex]
+  return {
+    ...state,
+    userPassionsList: [
+      ...state.userPassionsList.slice(
+        0,
+        state.userPassionsList.indexOf(passionItem)
+      ),
+      ...state.userPassionsList.slice(
+        state.userPassionsList.indexOf(passionItem) + 1
+      )
+    ]
   };
 };
 

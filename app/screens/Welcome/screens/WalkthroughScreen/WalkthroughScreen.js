@@ -11,7 +11,7 @@ import {
 } from "react-native";
 
 import LoginScreen from "../LoginScreen/LoginScreen";
-import ButtonGeneric from "../../../../components/ButtonGeneric";
+import GenericButton from "../../../../components/GenericButton";
 import MainWalkthroughContainer from "./MainWalkthroughContainer";
 import WALKTHROUGH_DATA from "../../../../assets/pureData/walkthroughData";
 import TextFontTitillium from "../../../../components/TextFontTitillium";
@@ -87,12 +87,12 @@ class WalkthroughScreen extends Component {
             </View>
             <View style={{ flex: 2 }} />
             <View style={{ flex: 2 }}>
-              <ButtonGeneric
+              <GenericButton
                 style={styles.button}
                 text={"Login!"}
                 onPress={this._onPressLogin}
               />
-              <ButtonGeneric
+              <GenericButton
                 style={styles.button}
                 text={"Signup!"}
                 onPress={this._onPressSignup}

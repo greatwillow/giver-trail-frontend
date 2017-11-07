@@ -14,8 +14,8 @@ import {
 
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../constants/dimensions";
 import commonColors from "../constants/colors";
-import ModalListItem from "./ModalListItem";
-import ButtonGeneric from "./ButtonGeneric";
+import GenericListItem from "./GenericListItem";
+import GenericButton from "./GenericButton";
 
 class ModalList extends Component {
   constructor(props) {
@@ -39,7 +39,7 @@ class ModalList extends Component {
 
   _renderListItem = ({ item }) => {
     return (
-      <ModalListItem
+      <GenericListItem
         id={item.key}
         title={item.title}
         onPress={this.props.onPress}

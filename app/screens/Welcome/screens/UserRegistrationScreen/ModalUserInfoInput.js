@@ -17,8 +17,8 @@ import * as actions from "../../../../data/appActions";
 
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../../../constants/dimensions";
 import commonColors from "../../../../constants/colors";
-import ModalListItem from "../../../../components/ModalListItem";
-import ButtonGeneric from "../../../../components/ButtonGeneric";
+import GenericListItem from "../../../../components/GenericListItem";
+import GenericButton from "../../../../components/GenericButton";
 import TextFontTitillium from "../../../../components/TextFontTitillium";
 import TextInputSingleLine from "../../../../components/TextInputSingleLine";
 
@@ -59,7 +59,7 @@ class ModalUserInfoInput extends Component {
       : this.setState({ showLastNameInvalidUI: true });
   };
 
-  _onRequestClose = () => {
+  _onRequestClose(item) {
     if (
       this.state.userFirstName &&
       this.state.userLastName &&
@@ -67,20 +67,23 @@ class ModalUserInfoInput extends Component {
       this.state.userLastNameValid
     ) {
       this.props.modalUserInfoInput(false);
+      this.props.setUserAge(item.key);
+      this.props.setUserFirstName(this.state.userFirstName);
+      this.props.setUserLastName(this.state.userLastName);
     } else {
       this.setState({
         showFirstNameInvalidUI: true,
         showLastNameInvalidUI: true
       });
     }
-  };
+  }
 
   _renderListItem = ({ item }) => {
     return (
-      <ModalListItem
+      <GenericListItem
         id={item.key}
         title={item.title}
-        onPress={this._onRequestClose}
+        onPress={this._onRequestClose.bind(this, item)}
       />
     );
   };
@@ -90,7 +93,7 @@ class ModalUserInfoInput extends Component {
       <View>
         <Modal
           visible={this.props.modalUI.modalUserInfoInput}
-          onRequestClose={this._onRequestClose}
+          //onRequestClose={this._onRequestClose}
         >
           <View style={styles.outerContainer}>
             <View style={styles.innerContainer}>

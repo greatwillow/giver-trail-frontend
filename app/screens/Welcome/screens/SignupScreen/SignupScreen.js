@@ -21,7 +21,7 @@ import commonColors from "../../../../constants/colors";
 import { SCREEN_WIDTH } from "../../../../constants/dimensions";
 import * as actions from "../../../../data/appActions";
 import TextInputSingleLine from "../../../../components/TextInputSingleLine";
-import ButtonGeneric from "../../../../components/ButtonGeneric";
+import GenericButton from "../../../../components/GenericButton";
 import TextFontTitillium from "../../../../components/TextFontTitillium";
 
 class SignupScreen extends Component {
@@ -47,14 +47,10 @@ class SignupScreen extends Component {
       this.state.userPasswordValid &&
       this.state.userRetypedPasswordValid
     ) {
-      const stringifiedEmail = JSON.stringify(this.state.userEmail);
-      console.log("stringd email is ", stringifiedEmail);
-      console.log("Is string ", typeof stringifiedEmail);
       this.setState({ modalVisible: false });
       this.props.navigation.navigate("userRegistration");
-      console.log("AM I ONLINE? ", this.props.offline.online);
       this.props.postNewUserSignup(
-        { userEmail: stringifiedEmail },
+        { userEmail: this.state.userEmail },
         { userPassword: this.state.userPassword }
       );
     }
@@ -168,7 +164,7 @@ class SignupScreen extends Component {
                   invalid={this.state.showInvalidRetypedPasswordUI}
                   invalidText={"Passwords don't match!"}
                 />
-                <ButtonGeneric
+                <GenericButton
                   style={{
                     backgroundColor: commonColors.GREEN,
                     borderColor: commonColors.GREEN
@@ -229,7 +225,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => ({
   user: state.user,
-  offline: state.offline
+  isConnected: state.network.isConnected
 });
 const mapDispatchToProps = dispatch => ({
   postNewUserSignup: (userEmail, userPassword) =>

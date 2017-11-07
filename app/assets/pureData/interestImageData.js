@@ -26,7 +26,7 @@ const interestImageData = [
   },
   {
     id: 6,
-    title: "Under 20",
+    title: "Norway Hiker",
     image: require("../images/interestImages/norway-hiker.jpeg")
   }
 ];

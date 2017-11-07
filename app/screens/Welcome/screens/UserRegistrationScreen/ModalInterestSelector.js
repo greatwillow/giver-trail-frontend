@@ -9,7 +9,7 @@ import * as actions from "../../../../data/appActions";
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../../../constants/dimensions";
 import commonColors from "../../../../constants/colors";
 import interestImageData from "../../../../assets/pureData/interestImageData";
-import ButtonGeneric from "../../../../components/ButtonGeneric";
+import GenericButton from "../../../../components/GenericButton";
 import TextFontTitillium from "../../../../components/TextFontTitillium";
 
 import ImageRow from "./ImageRow";
@@ -17,6 +17,13 @@ import ImageRow from "./ImageRow";
 const INNER_WIDTH = SCREEN_WIDTH / 12 * 11;
 
 class ModalInterestSelector extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      userPassionsList: []
+    };
+  }
   _keyExtractor = (item, index) => item.id;
 
   _onRequestClose = () => {
@@ -29,6 +36,7 @@ class ModalInterestSelector extends Component {
 
   _renderItem = ({ item }) => (
     <ImageRow
+      {...this.props}
       id={item.id}
       title={item.title}
       image={item.image}
@@ -50,7 +58,7 @@ class ModalInterestSelector extends Component {
                   style={{
                     fontSize: 20,
                     textAlign: "center",
-                    lineHeight: 50
+                    lineHeight: 70
                   }}
                 >
                   Select
@@ -77,7 +85,7 @@ class ModalInterestSelector extends Component {
                 />
               </View>
               <View style={{ flex: 2 }}>
-                <ButtonGeneric
+                <GenericButton
                   style={{
                     margin: 20,
                     marginTop: 30,

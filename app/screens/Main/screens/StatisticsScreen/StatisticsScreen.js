@@ -11,7 +11,7 @@ class SignupScreen extends Component {
     return (
       <View style={styles.layoutStyle}>
         <Text style={styles.textStyle}>Statistics!</Text>
-        <TouchableHighlight
+        {/*<TouchableHighlight
           onPress={() => {
             this.props.navigation.navigate("causes");
           }}
@@ -19,7 +19,7 @@ class SignupScreen extends Component {
           underlayColor="green"
         >
           <Text>Go to User Registration!</Text>
-        </TouchableHighlight>
+        </TouchableHighlight>*/}
       </View>
     );
   }

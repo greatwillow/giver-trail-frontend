@@ -5,9 +5,12 @@ import {
   setUserToken,
   setUserID,
   setUserEmail,
+  setUserFirstName,
+  setUserLastName,
   setUserAge,
   setUserCity,
-  setUserPassionsList
+  addToUserPassionsList,
+  removeFromUserPassionsList
 } from "./user/actions";
 
 import {
@@ -17,6 +20,11 @@ import {
 } from "./modalUI/actions";
 
 import { setInsetTabUI } from "./insetTabUI/actions";
+
+import {
+  setRegistrationUI,
+  setUserInfoInputFinished
+} from "./registrationUI/actions";
 
 export {
   modalUserInfoInput,
@@ -29,7 +37,12 @@ export {
   setUserToken,
   setUserID,
   setUserEmail,
+  setUserFirstName,
+  setUserLastName,
   setUserAge,
   setUserCity,
-  setUserPassionsList
+  addToUserPassionsList,
+  removeFromUserPassionsList,
+  setRegistrationUI,
+  setUserInfoInputFinished
 };

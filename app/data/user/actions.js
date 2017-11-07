@@ -28,6 +28,20 @@ export function setUserEmail(userEmail) {
   };
 }
 
+export function setUserFirstName(userFirstName) {
+  return {
+    type: actionTypes.SET_USER_FIRST_NAME,
+    userFirstName
+  };
+}
+
+export function setUserLastName(userLastName) {
+  return {
+    type: actionTypes.SET_USER_LAST_NAME,
+    userLastName
+  };
+}
+
 export function setUserAge(userAge) {
   return {
     type: actionTypes.SET_USER_AGE,
@@ -42,10 +56,17 @@ export function setUserCity(userCity) {
   };
 }
 
-export function setUserPassionsList(userPassionsList) {
+export function addToUserPassionsList(passionItem) {
   return {
-    type: actionTypes.SET_USER_PASSIONS_LIST,
-    userPassionsList
+    type: actionTypes.ADD_TO_USER_PASSIONS_LIST,
+    passionItem
+  };
+}
+
+export function removeFromUserPassionsList(passionItem) {
+  return {
+    type: actionTypes.REMOVE_FROM_USER_PASSIONS_LIST,
+    passionItem
   };
 }
 
@@ -53,80 +74,51 @@ export function setUserPassionsList(userPassionsList) {
 //   ATTEMPT NEW USER SIGNUP REQUEST
 //--------------------------------------------------
 
-const attemptNewUserSignupPost = (userEmail, userPassword) => dispatch => {
-  const email = userEmail.userEmail;
-  const password = userPassword.userPassword;
+const attemptNewUserSignupPost = (userEmail, userPassword) => {
+  function thunk(dispatch) {
+    const email = userEmail.userEmail;
+    const password = userPassword.userPassword;
 
-  const USER = {
-    email: email,
-    password: password
-  };
+    const USER = {
+      email: email,
+      password: password
+    };
 
-  const USER_POST_URI =
-    "https://damp-tor-16286.herokuapp.com/users/create-user";
+    const USER_POST_URI =
+      "https://damp-tor-16286.herokuapp.com/users/create-user";
 
-  return fetch(USER_POST_URI, {
-    headers: new Headers({
-      Accept: "application/json",
-      "Content-Type": "application/json"
-    }),
-    method: "POST",
-    body: JSON.stringify(USER)
-  })
-    .then(res => {
-      if (res.status == 200) {
-        const XAUTH_TOKEN = res.headers.map["x-auth"][0];
-        dispatch(actions.setUserToken(XAUTH_TOKEN));
-        return res.json();
-      } else {
-        throw new Error("Something wrong with the server!");
-      }
+    fetch(USER_POST_URI, {
+      headers: new Headers({
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      }),
+      method: "POST",
+      body: JSON.stringify(USER)
     })
-    .then(data => {
-      dispatch(actions.setUserID(data._id));
-      dispatch(actions.setUserEmail(data.email));
-    })
-    .catch(error => {
-      console.error(error);
-    });
+      .then(res => {
+        if (res.status == 200) {
+          const XAUTH_TOKEN = res.headers.map["x-auth"][0];
+          dispatch(actions.setUserToken(XAUTH_TOKEN));
+          return res.json();
+        } else {
+          throw new Error("Something wrong with the server!");
+        }
+      })
+      .then(data => {
+        dispatch(actions.setUserID(data._id));
+        dispatch(actions.setUserEmail(data.email));
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+  thunk.interceptInOffline = true;
+  return thunk;
 };
 
-// export const postNewUserSignup = (userEmail, userPassword) => dispatch => {
-//   NetInfo.isConnected.fetch().then(isConnected => {
-//     if (isConnected) {
-//       dispatch(attemptNewUserSignupPost(userEmail, userPassword));
-//     } else {
-//       console.log("OFFLINE____________");
-//     }
-//   });
-// };
-
-export const postNewUserSignup = userEmail => ({
-  type: actionTypes.POST_NEW_USER_SIGNUP,
-  payload: { userEmail },
-  meta: {
-    offline: {
-      // the network action to execute:
-      effect: {
-        url: "https://damp-tor-16286.herokuapp.com/users/create-user",
-        method: "POST",
-        body: { userEmail }
-      },
-      // action to dispatch when effect succeeds:
-      commit: {
-        type: actionTypes.NEW_USER_SIGNUP_SUCEEDED,
-        payload: { userEmail },
-        meta: { userEmail }
-      },
-      // action to dispatch if network action fails permanently:
-      rollback: {
-        type: actionTypes.NEW_USER_SIGNUP_FAILED,
-        payload: { userEmail },
-        meta: { userEmail }
-      }
-    }
-  }
-});
+export const postNewUserSignup = (userEmail, userPassword) => dispatch => {
+  dispatch(attemptNewUserSignupPost(userEmail, userPassword));
+};
 
 //--------------------------------------------------
 //   SEND NEW USER REGISTRATION DATA
@@ -138,15 +130,15 @@ const attemptSendingNewUserRegistrationData = inputObject => (
 ) => {
   const age = inputObject.userAge;
   const city = inputObject.userCity;
-  const description = inputObject.userPassionsList;
-  console.log("USER AGE", age);
-  console.log("USER City", city);
-  console.log("USER Description", description);
-  console.log("USER", inputObject);
+  //const description = inputObject.userPassionsList;
+  // console.log("USER AGE", age);
+  // console.log("USER City", city);
+  // console.log("USER Description", description);
+  // console.log("USER", inputObject);
 
   const USER = {
-    age: age,
-    description: description
+    age: age
+    //description: description
   };
 
   const USER_PUT_URI =
@@ -173,7 +165,7 @@ const attemptSendingNewUserRegistrationData = inputObject => (
     })
     .then(data => {
       dispatch(actions.setUserAge(data.age));
-      dispatch(actions.setUserPassionsList(data.description));
+      dispatch(actions.addToUserPassionsList(data.description));
     })
     .catch(error => {
       console.error(error);
@@ -181,13 +173,7 @@ const attemptSendingNewUserRegistrationData = inputObject => (
 };
 
 export const sendNewUserRegistrationData = inputObject => dispatch => {
-  NetInfo.isConnected.fetch().then(isConnected => {
-    if (isConnected) {
-      dispatch(attemptSendingNewUserRegistrationData(inputObject));
-    } else {
-      console.log("OFFLINE____________");
-    }
-  });
+  dispatch(attemptSendingNewUserRegistrationData(inputObject));
 };
 
 //--------------------------------------------------
@@ -220,7 +206,7 @@ const attemptGettingUserData = userID => (dispatch, getState) => {
     })
     .then(data => {
       dispatch(actions.setUserAge(data.doc.age));
-      dispatch(actions.setUserPassionsList(data.doc.description));
+      dispatch(actions.addToUserPassionsList(data.doc.description));
     })
     .catch(error => {
       console.error(error);
@@ -228,11 +214,5 @@ const attemptGettingUserData = userID => (dispatch, getState) => {
 };
 
 export const getUserData = inputObject => dispatch => {
-  NetInfo.isConnected.fetch().then(isConnected => {
-    if (isConnected) {
-      dispatch(attemptGettingUserData(inputObject));
-    } else {
-      console.log("OFFLINE____________");
-    }
-  });
+  dispatch(attemptGettingUserData(inputObject));
 };

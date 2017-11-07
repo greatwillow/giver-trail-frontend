@@ -9,59 +9,73 @@ import { SCREEN_WIDTH } from "../../../../constants/dimensions";
 import commonColors from "../../../../constants/colors";
 import TextFontTitillium from "../../../../components/TextFontTitillium";
 
-import ButtonGeneric from "../../../../components/ButtonGeneric";
+import GenericButton from "../../../../components/GenericButton";
 import DrawerScreen from "../DrawerScreen/DrawerScreen";
+import interestImageData from "../../../../assets/pureData/interestImageData";
+import ageData from "../../../../assets/pureData/ageData";
 
 class UserProfileScreen extends Component {
   _onPressDrawerToggle = () => {
     this.props.navigation.navigate("DrawerToggle");
   };
 
-  componentDidMount() {
-    const userID = this.props.user.userID;
-    console.log("USER IS ", this.props.user);
-    console.log("USER ID IS ", userID);
-    //this.props.getUserData(userID);
-  }
+  // componentDidMount() {
+  //   const userID = this.props.user.userID;
+  //   console.log("USER IS ", this.props.user);
+  //   console.log("USER ID IS ", userID);
+  //   //this.props.getUserData(userID);
+  // }
+
+  _renderInterestImages = () => {
+    return this.props.user.userPassionsList.map(item => {
+      const interestImageIndex = interestImageData.map(x => x.id).indexOf(item);
+      return (
+        <View key={item} style={{ flex: 1 }}>
+          <Image
+            source={interestImageData[interestImageIndex].image}
+            style={{ width: SCREEN_WIDTH, height: SCREEN_WIDTH / 6 }}
+          />
+        </View>
+      );
+    });
+  };
+
+  _renderAge = () => {
+    const ageIndex = ageData.map(x => x.key).indexOf(this.props.user.userAge);
+    console.log("AGE INDEX IS ", ageIndex);
+    const age = ageData[ageIndex].title;
+    return <Text> {age}</Text>;
+  };
 
   render() {
     return (
       <View style={styles.layoutStyle}>
         <View style={styles.profileImageContainer}>
           <Image
-            source={require("../../../../assets/images/mountain-and-shoes.jpeg")}
+            source={require("../../../../assets/images/girl-head-mountain.jpg")}
             style={styles.profileImage}
           />
         </View>
         <View style={styles.titleContainer}>
           <TextFontTitillium style={styles.titleStyle}>
-            User Profile!
+            {this.props.user.userFirstName} {this.props.user.userLastName}
           </TextFontTitillium>
         </View>
         <View style={{ flex: 4 }}>
-          <ScrollView style={{ flex: 10 }}>
-            <TextFontTitillium>
-              User Email Is: {this.props.user.userEmail}
+          <View style={styles.mainContentContainer}>
+            <TextFontTitillium style={{ fontSize: 20 }}>
+              <Text style={{ color: commonColors.PINK }}>My Email: </Text>
+              {this.props.user.userEmail} {"\n"}
+              <Text style={{ color: commonColors.PINK }}>My Age Range: </Text>
+              {this._renderAge()} {"\n"}
+              <Text style={{ color: commonColors.PINK }}>My Home Base: </Text>
+              {this.props.user.userCity} {"\n"}
             </TextFontTitillium>
-            <TextFontTitillium>
-              User Age Range Is: {this.props.user.userAge}
-            </TextFontTitillium>
-            <TextFontTitillium>
-              User City Is: {this.props.user.userCity}
-            </TextFontTitillium>
-            <TextFontTitillium>
-              eparate package called redux-thunk. Well explain how middleware
-              works in general later; for now, there is just one important thing
-              you need to know: by using this specific middleware, an action
-              creator can return a function instead of an action object. This
-              way, the action creator becomes a thunk. When an action creator
-              returns a function, that function will get executed by the Redux
-              Thunk middleware. This function doesn't need to be pure; it is
-              thus allowed to have side effects, including executing
-              asynchronous API calls. The function can also dispatch
-              actions—like those synchronous actions we defined earlier.
-            </TextFontTitillium>
-          </ScrollView>
+          </View>
+
+          <View style={styles.interestImageContainer}>
+            <ScrollView>{this._renderInterestImages()}</ScrollView>
+          </View>
         </View>
       </View>
     );
@@ -76,9 +90,9 @@ const styles = StyleSheet.create({
     width: SCREEN_WIDTH
   },
   profileImage: {
-    width: 120,
-    height: 120,
-    borderRadius: 60
+    width: 130,
+    height: 130,
+    borderRadius: 65
   },
   profileImageContainer: {
     width: SCREEN_WIDTH,
@@ -89,7 +103,7 @@ const styles = StyleSheet.create({
   },
   titleStyle: {
     fontSize: 25,
-    color: commonColors.PINK
+    color: commonColors.GREEN
   },
   titleContainer: {
     flex: 1,
@@ -99,6 +113,15 @@ const styles = StyleSheet.create({
     backgroundColor: commonColors.DARK_GREY,
     borderBottomWidth: 2,
     borderColor: commonColors.GREEN
+  },
+  mainContentContainer: {
+    flex: 1,
+    width: SCREEN_WIDTH,
+    padding: 20
+  },
+  interestImageContainer: {
+    flex: 2,
+    width: SCREEN_WIDTH
   }
 });
 
