@@ -123,25 +123,6 @@ class CauseListScreen extends Component {
   render() {
     return (
       <View style={styles.layoutStyle}>
-        <View
-          style={{
-            flex: 1,
-            position: "absolute",
-            top: 20
-          }}
-        >
-          <Carousel
-            ref={c => {
-              this._carousel = c;
-            }}
-            data={CAUSE_LIST_DATA}
-            renderItem={this._renderCarousel}
-            sliderWidth={SCREEN_WIDTH}
-            sliderHeight={SCREEN_WIDTH / 6 * 2}
-            itemWidth={this.state.itemWidth}
-            onSnapToItem={this._onSnapToItem}
-          />
-        </View>
         <Animated.Image
           source={this.state.pageBackgroundImage}
           style={{
@@ -170,6 +151,25 @@ class CauseListScreen extends Component {
             </TextFontTitillium>
           </Animated.ScrollView>
         </Animated.Image>
+        <View
+          style={{
+            flex: 1,
+            position: "absolute",
+            top: 20
+          }}
+        >
+          <Carousel
+            ref={c => {
+              this._carousel = c;
+            }}
+            data={CAUSE_LIST_DATA}
+            renderItem={this._renderCarousel}
+            sliderWidth={SCREEN_WIDTH}
+            sliderHeight={SCREEN_WIDTH / 6 * 2}
+            itemWidth={this.state.itemWidth}
+            onSnapToItem={this._onSnapToItem}
+          />
+        </View>
       </View>
     );
   }

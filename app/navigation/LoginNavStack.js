@@ -20,7 +20,7 @@ const LoginNavStack = StackNavigator(
     // walkthrough: { screen: WalkthroughScreen },
     // login: { screen: LoginScreen },
     // signup: { screen: SignupScreen },
-    userRegistration: { screen: RegistrationWalkthroughScreen },
+    // userRegistration: { screen: RegistrationWalkthroughScreen },
     mainInsetNavStack: { screen: MainInsetNavStack }
   },
   {

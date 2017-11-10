@@ -19,21 +19,17 @@ class UserProfileScreen extends Component {
     this.props.navigation.navigate("DrawerToggle");
   };
 
-  // componentDidMount() {
-  //   const userID = this.props.user.userID;
-  //   console.log("USER IS ", this.props.user);
-  //   console.log("USER ID IS ", userID);
-  //   //this.props.getUserData(userID);
-  // }
-
   _renderInterestImages = () => {
     return this.props.user.userPassionsList.map(item => {
       const interestImageIndex = interestImageData.map(x => x.id).indexOf(item);
       return (
-        <View key={item} style={{ flex: 1 }}>
+        <View key={item} style={{ flex: 1, alignItems: "center" }}>
           <Image
             source={interestImageData[interestImageIndex].image}
-            style={{ width: SCREEN_WIDTH, height: SCREEN_WIDTH / 6 }}
+            style={{
+              width: SCREEN_WIDTH / 6 * 5,
+              height: SCREEN_WIDTH / 12 * 3
+            }}
           />
         </View>
       );
@@ -41,6 +37,7 @@ class UserProfileScreen extends Component {
   };
 
   _renderAge = () => {
+    console.log("AGE IS ", this.props.user.userAge);
     const ageIndex = ageData.map(x => x.key).indexOf(this.props.user.userAge);
     console.log("AGE INDEX IS ", ageIndex);
     const age = ageData[ageIndex].title;
@@ -50,12 +47,12 @@ class UserProfileScreen extends Component {
   render() {
     return (
       <View style={styles.layoutStyle}>
-        <View style={styles.profileImageContainer}>
-          <Image
-            source={require("../../../../assets/images/girl-head-mountain.jpg")}
-            style={styles.profileImage}
-          />
-        </View>
+        {/*<View style={styles.profileImageContainer}>*/}
+        <Image
+          source={require("../../../../assets/images/girl-head-mountain.jpg")}
+          style={styles.profileImage}
+        />
+        {/*</View>*/}
         <View style={styles.titleContainer}>
           <TextFontTitillium style={styles.titleStyle}>
             {this.props.user.userFirstName} {this.props.user.userLastName}
@@ -68,8 +65,11 @@ class UserProfileScreen extends Component {
               {this.props.user.userEmail} {"\n"}
               <Text style={{ color: commonColors.PINK }}>My Age Range: </Text>
               {this._renderAge()} {"\n"}
-              <Text style={{ color: commonColors.PINK }}>My Home Base: </Text>
+              <Text style={{ color: commonColors.PINK, borderBottomWidth: 1 }}>
+                My Home Base:{" "}
+              </Text>
               {this.props.user.userCity} {"\n"}
+              <Text style={{ color: commonColors.PINK }}>My Interests: </Text>
             </TextFontTitillium>
           </View>
 
@@ -92,21 +92,27 @@ const styles = StyleSheet.create({
   profileImage: {
     width: 130,
     height: 130,
-    borderRadius: 65
+    borderRadius: 65,
+    position: "absolute",
+    top: 10,
+    left: SCREEN_WIDTH / 2 - 65
   },
-  profileImageContainer: {
-    width: SCREEN_WIDTH,
-    flex: 2,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "white"
-  },
+  // profileImageContainer: {
+  //   width: SCREEN_WIDTH,
+  //   flex: 2,
+  //   alignItems: "center",
+  //   justifyContent: "center",
+  //   backgroundColor: "white",
+  //   position: "absolute",
+  //   top: 10,
+  //   left: SCREEN_WIDTH / 2 - 65
+  // },
   titleStyle: {
     fontSize: 25,
     color: commonColors.GREEN
   },
   titleContainer: {
-    flex: 1,
+    flex: 2,
     width: SCREEN_WIDTH,
     alignItems: "center",
     justifyContent: "center",
@@ -115,7 +121,7 @@ const styles = StyleSheet.create({
     borderColor: commonColors.GREEN
   },
   mainContentContainer: {
-    flex: 1,
+    flex: 2,
     width: SCREEN_WIDTH,
     padding: 20
   },
