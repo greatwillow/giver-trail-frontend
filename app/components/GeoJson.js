@@ -3,62 +3,60 @@ import { View } from "react-native";
 import MapView from "react-native-maps";
 import uuid from "uuid";
 
-export const makeOverlays = features => {
-  const points = features
-    .filter(f => f.geometry && (f.type === "node" || f.type === "Multinode"))
-    .map(feature =>
-      makeCoordinates(feature).map(geometry => makeOverlay(geometry, feature))
+export const makeOverlays = elements => {
+  const points = elements
+    .filter(e => e && (e.type === "node"))
+    .map(element =>
+      makeCoordinates(element).map(geometry => makeOverlay(geometry, element))
     )
     .reduce(flatten, [])
-    .map(overlay => ({ ...overlay, type: "point" }));
+    .map(overlay => {
+      console.log("POINTS OVERLAY: ", overlay)
+      return ({ ...overlay, type: "point" })
+    });
 
-  const lines = features
+  const lines = elements
     .filter(
-      f =>
-        f.geometry && (f.type === "way" || f.type === "Multiway")
+      e =>
+        e.geometry && (e.type === "way")
     )
-    .map(feature =>
-      makeCoordinates(feature).map(geometry => {
-        console.log("MAKING COORDINATES! ", geometry)
-       return makeOverlay(geometry, feature)
+    .map(element =>
+      makeCoordinates(element).map(geometry => {
+       return makeOverlay(geometry, element)
       })
     )
     .reduce(flatten, [])
     .map(overlay => {
-      console.log("OVERLAY IS ",overlay)
       return ({ ...overlay, type: "polyline" })
     }
     );
 
-  const multipolygons = features
-    .filter(f => f.geometry && f.type === "MultiPolygon")
-    .map(feature =>
-      makeCoordinates(feature).map(geometry => makeOverlay(geometry, feature))
+  const multipolygons = elements
+    .filter(e => e.geometry && e.type === "MultiPolygon")
+    .map(element =>
+      makeCoordinates(element).map(geometry => makeOverlay(geometry, element))
     )
     .reduce(flatten, []);
 
-  const polygons = features
-    .filter(f => f.geometry && f.type === "Polygon")
-    .map(feature => makeOverlay(makeCoordinates(feature), feature))
+  const polygons = elements
+    .filter(e => e.geometry && e.type === "Polygon")
+    .map(element => makeOverlay(makeCoordinates(element), element))
     .reduce(flatten, [])
     .concat(multipolygons)
     .map(overlay => ({ ...overlay, type: "polygon" }));
 
   const overlays = points.concat(lines).concat(polygons);
-
-  console.log("FINAL OVERLAYS ",overlays);
-
   return overlays;
 };
 
 const flatten = (prev, curr) => prev.concat(curr);
 
-const makeOverlay = (geometry, feature) => {
+const makeOverlay = (geometry, element) => {
   let overlay = {
-    feature,
-    id: feature.id ? feature.id : uuid()
+    element,
+    id: element.id ? element.id : uuid()
   };
-  if (feature.type === "Polygon" || feature.type === "MultiPolygon") {
+  if (element.type === "Polygon") {
     overlay.geometry = geometry[0];
     if (geometry.length > 1) {
       overlay.holes = geometry.slice(1);
@@ -75,27 +73,24 @@ const makenode = c => ({ latitude: c.lat, longitude: c.lon });
 
 const makeLine = l => l.map(makenode);
 
-const makeCoordinates = feature => {
-  const g = feature;
-  if (g.type === "node") {
-    return [makenode(g.geometry)];
-  } else if (g.type === "Multinode") {
-    return g.geometry.map(makenode);
-  } else if (g.type === "way") {
-    return [makeLine(g.geometry)];
-  } else if (g.type === "Multiway") {
-    return g.geometry.map(makeLine);
-  } else if (g.type === "Polygon") {
-    return g.geometry.map(makeLine);
-  } else if (g.type === "MultiPolygon") {
-    return g.geometry.map(p => p.map(makeLine));
+const makeCoordinates = element => { 
+  const e = element;
+  if (e.type === "node") {
+    if(e.hasOwnProperty("geometry")) {
+      return [makenode(e.geometry)];
+    } 
+    return []//return [makenode(e)];
+  } else if (e.type === "way") {
+    return [makeLine(e.geometry)];
+  } else if (e.type === "Polygon") {
+    return e.geometry.map(makeLine);
   } else {
     return [];
   }
 };
 
 const Geojson = props => {
-  const overlays = makeOverlays(props.geojson.features);
+  const overlays = makeOverlays(props.geojson.elements);
   return (
     <View>
       {overlays.map(overlay => {
@@ -112,7 +107,7 @@ const Geojson = props => {
           return (
             <MapView.Polygon
               key={overlay.id}
-              geometry={overlay.geometry}
+              coordinates={overlay.geometry}
               holes={overlay.holes}
               strokeColor={props.strokeColor}
               fillColor={props.fillColor}

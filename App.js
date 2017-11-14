@@ -14,7 +14,8 @@ import configureStore from "./app/data/configureStore";
 let Root = () => <AppNavReduxWrapper />;
 
 Root = withNetworkConnectivity({
-  withRedux: true // It won't inject isConnected as a prop in this case
+  withRedux: false, // It won't inject isConnected as a prop in this case
+  checkConnectionInterval: 1000
 })(Root);
 
 class App extends Component {

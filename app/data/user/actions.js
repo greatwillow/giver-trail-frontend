@@ -113,6 +113,7 @@ const attemptNewUserSignupPost = (userEmail, userPassword) => {
       });
   }
   thunk.interceptInOffline = true;
+  thunk.meta = { retry: true };
   return thunk;
 };
 

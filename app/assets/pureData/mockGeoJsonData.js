@@ -1,6 +1,6 @@
 const mockGeoJsonData = 
 {
-  features: [
+  "elements": [
 {
   "type": "way",
   "id": 223587710,
