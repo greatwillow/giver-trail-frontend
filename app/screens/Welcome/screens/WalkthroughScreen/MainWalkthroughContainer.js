@@ -3,7 +3,7 @@
 import React, { Component } from "react";
 
 import {
-  Image,
+  ImageBackground,
   Platform,
   StyleSheet,
   StatusBar,
@@ -17,10 +17,9 @@ class MainWalkthroughContainer extends Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <Image
+      <ImageBackground
           source={this.props.backgroundImageFile}
-          style={styles.backgroundImage}
-        >
+          style={styles.backgroundImage}>
           <View style={styles.statusBar}>
             <StatusBar
               backgroundColor={"transparent"}
@@ -29,7 +28,7 @@ class MainWalkthroughContainer extends Component {
             />
           </View>
           {this.props.children}
-        </Image>
+          </ImageBackground>
       </View>
     );
   }
@@ -45,6 +44,10 @@ const styles = {
     alignItems: "center"
   },
   statusBar: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
     height: Platform.OS === "ios" ? 20 : StatusBar.currentHeight,
     backgroundColor: "rgba(0,0,0,0)",
     width: SCREEN_WIDTH

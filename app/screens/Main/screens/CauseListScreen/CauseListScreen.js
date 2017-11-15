@@ -101,6 +101,9 @@ class CauseListScreen extends Component {
             }
           ]}
         >
+                  <TextFontTitillium style={styles.carouselItemTitle}>
+            {item.title}
+          </TextFontTitillium>
           <Image
             source={item.causeImage}
             style={{
@@ -108,9 +111,7 @@ class CauseListScreen extends Component {
               height: this.state.itemImageHeight
             }}
           />
-          <TextFontTitillium style={styles.carouselItemTitle}>
-            {item.title}
-          </TextFontTitillium>
+
           <TextFontTitillium style={styles.carouselItemSubTitle1}>
             with{" "}
             <Text style={styles.carouselItemSubTitle2}>{item.company}</Text>
@@ -133,7 +134,16 @@ class CauseListScreen extends Component {
             bottom: 0
           }}
           blurRadius={0}
-        >
+        />
+        <View style={{
+          position: 'absolute',
+          top: SCREEN_WIDTH/6*2 +10, 
+          left: 0,
+          right: 0,
+          bottom: 0,
+          justifyContent: 'center',
+          alignItems: 'center'
+      }} >
           <Animated.ScrollView
             style={{
               flex: 1,
@@ -142,7 +152,7 @@ class CauseListScreen extends Component {
               padding: this.state.innerTextContainerPadding,
               backgroundColor: "rgba(1,1,1,0.8)",
               width: this.state.innerTextContainerWidth,
-              height: this.state.innerTextContainerWidth,
+              //height: this.state.innerTextContainerWidth,
               borderRadius: 10
             }}
           >
@@ -150,7 +160,7 @@ class CauseListScreen extends Component {
               {this.state.pageDescriptionText}
             </TextFontTitillium>
           </Animated.ScrollView>
-        </Animated.Image>
+            </View>
         <View
           style={{
             flex: 1,
@@ -189,22 +199,19 @@ const styles = StyleSheet.create({
     backgroundColor: "#f6f6f6",
     borderRadius: 10,
     overflow: "hidden",
-    paddingBottom: 20
+    paddingBottom: 10
   },
   carouselItemTitle: {
     fontSize: 20,
     color: "black",
     textAlign: "center",
-    paddingTop: 15,
-    paddingRight: 10,
-    paddingLeft: 10
+    padding: 15,
   },
   carouselItemSubTitle1: {
     fontSize: 15,
     color: "black",
     textAlign: "right",
-    padding: 10,
-    paddingBottom: 15
+    padding: 15
   },
   carouselItemSubTitle2: {
     fontSize: 20,

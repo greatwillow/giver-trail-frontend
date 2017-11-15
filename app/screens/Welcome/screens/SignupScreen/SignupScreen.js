@@ -2,7 +2,7 @@
 
 import React, { Component } from "react";
 import {
-  Image,
+  ImageBackground,
   KeyboardAvoidingView,
   Modal,
   Platform,
@@ -125,7 +125,7 @@ class SignupScreen extends Component {
           visible={this.state.modalVisible}
           onRequestClose={this._onRequestClose}
         >
-          <Image
+          <ImageBackground
             source={require("../../../../assets/images/hooded-sitter.jpeg")}
             style={styles.backgroundImage}
           >
@@ -175,7 +175,7 @@ class SignupScreen extends Component {
                 />
               </View>
             </KeyboardAvoidingView>
-          </Image>
+          </ImageBackground>
         </Modal>
       </View>
     );

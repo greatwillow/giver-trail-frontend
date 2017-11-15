@@ -25,10 +25,10 @@ class TextFontTitillium extends Component {
     return (
       <View>
         <Text
-          style={[
-            { fontFamily: this.state.fontLoaded ? "titillium-light" : null },
-            this.props.style
-          ]}
+        style={[
+          { fontFamily: this.state.fontLoaded ? "titillium-light" : null },
+          this.props.style
+        ]}
         >
           {this.props.children}
         </Text>

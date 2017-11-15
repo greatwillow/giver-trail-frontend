@@ -2,7 +2,7 @@
 
 import React, { Component } from "react";
 
-import { Image, StyleSheet, Text, View } from "react-native";
+import { ImageBackground, StyleSheet, Text, View } from "react-native";
 import { connect } from "react-redux";
 import * as actions from "../../../../data/appActions";
 
@@ -49,7 +49,7 @@ class DrawerScreen extends Component {
     return (
       <View style={styles.mainContainer}>
         <View style={styles.innerTopContainer}>
-          <Image
+          <ImageBackground
             source={require("../../../../assets/images/red-sky.jpeg")}
             style={{
               width: SCREEN_WIDTH / 16 * 13,
@@ -61,7 +61,7 @@ class DrawerScreen extends Component {
             <TextFontTitillium style={styles.title}>
               ~ GiverTrail ~
             </TextFontTitillium>
-          </Image>
+          </ImageBackground>
         </View>
         <View style={styles.innerBottomContainer}>
           <DrawerItem

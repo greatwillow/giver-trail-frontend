@@ -1,25 +1,13 @@
 "use strict";
 
 import React, { Component } from "react";
-import { Text, StyleSheet, TouchableHighlight } from "react-native";
+import { Text, StyleSheet, TouchableHighlight, View } from "react-native";
 
 import { SCREEN_WIDTH } from "../constants/dimensions";
-import { Font } from "expo";
+import TextFontTitillium from "./TextFontTitillium"
 
 class GenericButton extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      fontLoaded: false
-    };
-  }
 
-  async componentDidMount() {
-    await Font.loadAsync({
-      "titillium-light": require("../assets/fonts/TitilliumWeb-Light.ttf")
-    });
-    this.setState({ fontLoaded: true });
-  }
 
   render() {
     return (
@@ -28,15 +16,11 @@ class GenericButton extends Component {
         underlayColor={"gray"}
         onPress={this.props.onPress}
       >
-        <Text
-          style={[
-            { fontFamily: this.state.fontLoaded ? "titillium-light" : null },
-            styles.buttonText,
-            this.props.textStyle
-          ]}
-        >
+      <View>
+        <TextFontTitillium >
           {this.props.text ? this.props.text : "Text Needed!"}{" "}
-        </Text>
+        </TextFontTitillium>
+        </View>
       </TouchableHighlight>
     );
   }

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import {
   Dimensions,
-  Image,
   View,
   Text,
   ScrollView,
@@ -120,7 +119,7 @@ class WalkthroughScreen extends Component {
 
   render() {
     return (
-      <ScrollView horizontal style={{ flex: 1 }} pagingEnabled>
+      <ScrollView horizontal style={{flex: 1}} pagingEnabled>
         {this._renderWalkthrough()}
       </ScrollView>
     );

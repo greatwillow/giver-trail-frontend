@@ -2,10 +2,10 @@
 
 import React, { Component } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import Expo from "expo";
+//import Expo from "expo";
 
-import Geojson from "../../../../components/GeoJson";
-import GeojsonClass from "../../../../components/GeoJsonClass";
+//import Geojson from "../../../../components/GeoJson";
+//import GeojsonClass from "../../../../components/GeoJsonClass";
 
 import { SCREEN_WIDTH } from "../../../../constants/dimensions";
 import mockGeoJsonData from "../../../../assets/pureData/mockGeoJsonData";
@@ -175,7 +175,7 @@ class MapScreen extends Component {
     //-----------------------Bottom GeoJson----------
     return (
       <View style={{ flex: 1 }}>
-        <Expo.MapView
+        {/* <Expo.MapView
           style={styles.mapStyle}
           provider="google"
           initialRegion={{
@@ -237,7 +237,7 @@ class MapScreen extends Component {
               }
             })}
           </View>
-        </Expo.MapView>
+        </Expo.MapView> */}
 
         <View style={{ flex: 1 }}>
           <TouchableOpacity
