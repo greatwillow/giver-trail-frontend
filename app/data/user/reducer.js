@@ -3,11 +3,11 @@ import * as actionTypes from "../../constants/actionTypes";
 const initialState = {
   userToken: null,
   userID: null,
-  userEmail: null,
-  userFirstName: null,
-  userLastName: null,
-  userAge: 0,
-  userCity: null,
+  userEmail: "gregory.g.denys@gmail.com",
+  userFirstName: "Gregory",
+  userLastName: "Denys",
+  userAge: null,
+  userCity: {name: "Montreal", latitude: 45.5, longitude: -73.6},
   userPassionsList: []
 };
 
@@ -121,7 +121,11 @@ const setUserCity = (state, userCity) => {
   return {
     ...state,
     ...state.user,
-    userCity: userCity
+    userCity: {
+      name: userCity.name,
+      latitude: userCity.latitude,
+      longitude: userCity.longitude
+    }
   };
 };
 
@@ -133,8 +137,6 @@ const addToUserPassionsList = (state, passionItem) => {
 };
 
 const removeFromUserPassionsList = (state, passionItem) => {
-  // const elementIndex = userPassionsList.map((x) => {x.id}).indexOf(passionItem)
-  // const itemFound = userPassionsList[elementIndex]
   return {
     ...state,
     userPassionsList: [

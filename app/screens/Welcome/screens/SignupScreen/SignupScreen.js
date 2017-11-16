@@ -112,13 +112,7 @@ class SignupScreen extends Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <View style={styles.statusBar}>
-          <StatusBar
-            backgroundColor={"transparent"}
-            translucent
-            hidden={true}
-          />
-        </View>
+      {/* <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding"> */}
         <Modal
           animationType="slide"
           transparent={true}
@@ -129,7 +123,7 @@ class SignupScreen extends Component {
             source={require("../../../../assets/images/hooded-sitter.jpeg")}
             style={styles.backgroundImage}
           >
-            <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+            
               <View style={styles.titleContainer}>
                 <TextFontTitillium style={styles.textStyle}>
                   Sign Up!
@@ -158,7 +152,7 @@ class SignupScreen extends Component {
                   placeholder={"Retype Password"}
                   keyboardType={"email-address"}
                   secureTextEntry={true}
-                  returnKeyType={"done"}
+                  //returnKeyType={"done"}
                   onChangeText={this._handleRetypedPasswordTextChange}
                   onEndEditing={this._handleRetypedPasswordSubmit}
                   invalid={this.state.showInvalidRetypedPasswordUI}
@@ -174,9 +168,17 @@ class SignupScreen extends Component {
                   onPress={this._onPressSignup}
                 />
               </View>
-            </KeyboardAvoidingView>
+            
+            <View style={styles.statusBar}>
+          <StatusBar
+            backgroundColor={"transparent"}
+            translucent
+            hidden={true}
+          />
+        </View>
           </ImageBackground>
         </Modal>
+        {/* </KeyboardAvoidingView> */}
       </View>
     );
   }
@@ -193,7 +195,6 @@ const styles = StyleSheet.create({
     flex: 1,
     width: SCREEN_WIDTH,
     height: null,
-    resizeMode: "cover",
     justifyContent: "center",
     alignItems: "center"
   },
@@ -217,7 +218,11 @@ const styles = StyleSheet.create({
     alignSelf: "center"
   },
   statusBar: {
-    height: Platform.OS === "ios" ? 20 : StatusBar.currentHeight,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 20, //Platform.OS === "ios" ? 20 : StatusBar.currentHeight,
     backgroundColor: "rgba(0,0,0,0)",
     width: SCREEN_WIDTH
   }

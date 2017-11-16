@@ -1,5 +1,4 @@
 const ageData = [
-  { key: 0, title: "Unspecified" },
   { key: 1, title: "Under 20" },
   { key: 2, title: "20 - 25" },
   { key: 3, title: "25 - 30" },

@@ -37,38 +37,29 @@ class UserProfileScreen extends Component {
   };
 
   _renderAge = () => {
-    console.log("AGE IS ", this.props.user.userAge);
-    const ageIndex = ageData.map(x => x.key).indexOf(this.props.user.userAge);
-    console.log("AGE INDEX IS ", ageIndex);
-    const age = ageData[ageIndex].title;
-    return <Text> {age}</Text>;
+    if(this.props.user.userAge) {
+      const ageIndex = ageData.map(x => x.key).indexOf(this.props.user.userAge);
+      const age = ageData[ageIndex].title;
+      return <Text> {age}</Text>;
+    } else {
+      const age = "Unspecified"
+      return <Text> {age}</Text>;
+    }
   };
 
   render() {
     return (
       <View style={styles.layoutStyle}>
-        {/*<View style={styles.profileImageContainer}>*/}
-        <Image
-          source={require("../../../../assets/images/girl-head-mountain.jpg")}
-          style={styles.profileImage}
-        />
-        {/*</View>*/}
-        <View style={styles.titleContainer}>
-          <TextFontTitillium style={styles.titleStyle}>
-            {this.props.user.userFirstName} {this.props.user.userLastName}
-          </TextFontTitillium>
-        </View>
+        <View style={styles.headerContainer}/>
         <View style={{ flex: 4 }}>
           <View style={styles.mainContentContainer}>
             <TextFontTitillium style={{ fontSize: 20 }}>
-              <Text style={{ color: commonColors.PINK }}>My Email: </Text>
-              {this.props.user.userEmail} {"\n"}
               <Text style={{ color: commonColors.PINK }}>My Age Range: </Text>
               {this._renderAge()} {"\n"}
               <Text style={{ color: commonColors.PINK, borderBottomWidth: 1 }}>
                 My Home Base:{" "}
               </Text>
-              {this.props.user.userCity} {"\n"}
+              {this.props.user.userCity.name} {"\n"}
               <Text style={{ color: commonColors.PINK }}>My Interests: </Text>
             </TextFontTitillium>
           </View>
@@ -77,6 +68,18 @@ class UserProfileScreen extends Component {
             <ScrollView>{this._renderInterestImages()}</ScrollView>
           </View>
         </View>
+        <View style={styles.nameAndEmailContainer}>
+          <TextFontTitillium style={styles.nameStyle}>
+              {this.props.user.userFirstName} {this.props.user.userLastName}
+          </TextFontTitillium>
+          <TextFontTitillium style={styles.emailStyle}>
+              {this.props.user.userEmail}
+          </TextFontTitillium>
+        </View>
+        <Image
+          source={require("../../../../assets/images/girl-head-mountain.jpg")}
+          style={styles.profileImage}
+        />
       </View>
     );
   }
@@ -95,24 +98,32 @@ const styles = StyleSheet.create({
     borderRadius: 65,
     position: "absolute",
     top: 10,
-    left: SCREEN_WIDTH / 2 - 65
+    left: 10
   },
-  // profileImageContainer: {
-  //   width: SCREEN_WIDTH,
-  //   flex: 2,
-  //   alignItems: "center",
-  //   justifyContent: "center",
-  //   backgroundColor: "white",
-  //   position: "absolute",
-  //   top: 10,
-  //   left: SCREEN_WIDTH / 2 - 65
-  // },
-  titleStyle: {
+  nameAndEmailContainer: {
+    position: 'absolute',
+    top: 10,
+    left: 150,
+    right: 10,
+    height: 130,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  nameStyle: {
     fontSize: 25,
-    color: commonColors.GREEN
+    backgroundColor: 'rgba(0,0,0,0)',
+    color: commonColors.GREEN,
+    textAlign: 'center'
   },
-  titleContainer: {
-    flex: 2,
+  emailStyle: {
+    fontSize: 15,
+    backgroundColor: 'rgba(0,0,0,0)',
+    color: commonColors.GREEN,
+    textAlign: 'center'
+  },
+  headerContainer: {
+    flex: 0,
+    height: 150,
     width: SCREEN_WIDTH,
     alignItems: "center",
     justifyContent: "center",
@@ -126,7 +137,7 @@ const styles = StyleSheet.create({
     padding: 20
   },
   interestImageContainer: {
-    flex: 2,
+    flex: 1,
     width: SCREEN_WIDTH
   }
 });

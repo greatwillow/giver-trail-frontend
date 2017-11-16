@@ -56,7 +56,6 @@ class DrawerScreen extends Component {
               height: SCREEN_WIDTH / 2,
               justifyContent: "center"
             }}
-            resizeMode="cover"
           >
             <TextFontTitillium style={styles.title}>
               ~ GiverTrail ~

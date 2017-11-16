@@ -39,7 +39,6 @@ const styles = {
     flex: 1,
     width: SCREEN_WIDTH,
     height: null,
-    resizeMode: "cover",
     justifyContent: "center",
     alignItems: "center"
   },
@@ -48,7 +47,7 @@ const styles = {
     top: 0,
     left: 0,
     right: 0,
-    height: Platform.OS === "ios" ? 20 : StatusBar.currentHeight,
+    height: 20, //Platform.OS === "ios" ? 20 : StatusBar.currentHeight,
     backgroundColor: "rgba(0,0,0,0)",
     width: SCREEN_WIDTH
   }

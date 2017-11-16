@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Text,
   TouchableWithoutFeedback,
+  UIManager,
   View
 } from "react-native";
 
@@ -20,6 +21,7 @@ import Carousel from "react-native-snap-carousel";
 
 import CAUSE_LIST_DATA from "../../../../assets/pureData/causeListData";
 
+UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
 class CauseListScreen extends Component {
   constructor(props) {
     super(props);

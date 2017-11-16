@@ -4,7 +4,6 @@ import React, { Component } from "react";
 
 import {
   Image,
-  KeyboardAvoidingView,
   Modal,
   StyleSheet,
   Text,
@@ -21,13 +20,18 @@ import { googlePlacesAutocompleteAPIKey } from "../../../../constants/apiKeys";
 //--------------
 
 class PopInCitySearch extends Component {
-  _onPressGetCity = (data, details) => {
-    this.props.setUserCity(details.name);
+  
+  _onPressSetCity = (data, details) => {
+    const userCity ={
+      name: details.name,
+      latitude: details.geometry.location.lat,
+      longitude: details.geometry.location.lng,
+    }
+    this.props.setUserCity(userCity);
   };
 
   render() {
     return (
-      <KeyboardAvoidingView behavior="padding">
         <View style={[styles.innerContainer, this.props.style]}>
           <View style={styles.listContainer}>
             <GooglePlacesAutocomplete
@@ -37,7 +41,7 @@ class PopInCitySearch extends Component {
               fetchDetails={true}
               renderDescription={row => row.description}
               onPress={(data, details = null) => {
-                this._onPressGetCity(data, details);
+                this._onPressSetCity(data, details);
               }}
               getDefaultValue={() => ""}
               query={{
@@ -72,7 +76,6 @@ class PopInCitySearch extends Component {
             />
           </View>
         </View>
-      </KeyboardAvoidingView>
     );
   }
 }

@@ -8,6 +8,7 @@ import {
   Modal,
   StyleSheet,
   Text,
+  UIManager,
   View
 } from "react-native";
 import { connect } from "react-redux";
@@ -23,6 +24,8 @@ import NavArrows from "./NavArrows";
 import ageData from "../../../../assets/pureData/ageData";
 import TextFontTitillium from "../../../../components/TextFontTitillium";
 
+
+UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
 class RegistrationWalkthroughScreen extends Component {
   constructor(props) {
     super(props);
@@ -130,7 +133,6 @@ class RegistrationWalkthroughScreen extends Component {
     return (
       <View style={styles.layoutStyle}>
         <Image
-          resizeMode="contain"
           source={require("../../../../assets/images/registrationImages/swiss-mountains-transparent-top.jpg")}
           style={{
             position: "absolute",
@@ -159,16 +161,14 @@ class RegistrationWalkthroughScreen extends Component {
               left: this.state.userInfoInputItemLeft
             }}
           />
-          <KeyboardAvoidingView behavior="padding">
             <PopInCitySearch
               {...this.props}
               style={{
                 position: "absolute",
-                bottom: -(SCREEN_HEIGHT / 8 * 5),
+                bottom: 0,
                 left: this.state.citySearchItemLeft
               }}
             />
-          </KeyboardAvoidingView>
           <PopInInterestSelector
             {...this.props}
             style={{
