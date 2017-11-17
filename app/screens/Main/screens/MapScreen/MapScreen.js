@@ -9,8 +9,8 @@ import shortid from 'shortid'
 import * as actions from "../../../../data/appActions";
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../../../constants/dimensions";
 import mockGeoJsonData from "../../../../assets/pureData/mockGeoJsonData2";
-import GooglePlacesAutocomplete from "../../../../utils/GooglePlacesAutocomplete";
-import { googlePlacesAutocompleteAPIKey } from "../../../../constants/apiKeys";
+
+import GoogleAutocompleteSearch from "./GoogleAutocompleteSearch";
 import GoogleGeocoding from "../../../../utils/GoogleGeocoding"
 import { googleMapsGeocodingAPIKey } from "../../../../constants/apiKeys"
 import commonColors from "../../../../constants/colors"
@@ -18,30 +18,19 @@ import { logInAsync } from "expo/src/Google";
 
 
 let requestedGeoJsonData = { elements: [{ geometry: [{ lat: 0, lon: 0 }] }] };
+
 class MapScreen extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      latitude: 46.0108,
-      longitude: -74.1812,
-      latitudeDelta: 0.0322,
-      longitudeDelta: 0.0321
+      latitude: this.props.user.userCity.latitude,
+      longitude: this.props.user.userCity.longitude,
+      latitudeDelta: 0.3,
+      longitudeDelta: 0.3
     };
   }
-
-//--------------------------------------------------
-// INITIAL MAP LAYOUT
-//--------------------------------------------------
   
-  _initialLayout = () => {
-    this.mapRef.fitToCoordinates([{
-      latitude: this.props.user.userCity.latitude, 
-      longitude: this.props.user.userCity.longitude
-    }], { 
-      edgePadding: { top: 10, right: 10, bottom: 10, left: 10 }, 
-      animated: false 
-    })
-  }
 
 //--------------------------------------------------
 // GEOCODING
@@ -56,6 +45,8 @@ class MapScreen extends Component {
           const formattedLocation = {
             latitude: location.lat,
             longitude: location.lng,
+            latitudeDelta: 0.1,
+            longitudeDelta: 0.1
           }
           this._updateLocation(formattedLocation)
           return formattedLocation;
@@ -72,10 +63,10 @@ class MapScreen extends Component {
 
 
   _fetchPolylines = () => {
-    const MIN_LONGITUDE = this.state.longitude - this.state.longitudeDelta / 2;
-    const MIN_LATITUDE = this.state.latitude - this.state.latitudeDelta / 2;
-    const MAX_LONGITUDE = this.state.longitude + this.state.longitudeDelta / 2;
-    const MAX_LATITUDE = this.state.latitude + this.state.latitudeDelta / 2;
+    const MIN_LONGITUDE = this.state.longitude - this.state.longitudeDelta;
+    const MIN_LATITUDE = this.state.latitude - this.state.latitudeDelta;
+    const MAX_LONGITUDE = this.state.longitude + this.state.longitudeDelta;
+    const MAX_LATITUDE = this.state.latitude + this.state.latitudeDelta;
 
     const OVERPASS_URL = `http://overpass-api.de/api/interpreter?data=[out:json];way["highway"="footway"](
       ${MIN_LATITUDE},${MIN_LONGITUDE},${MAX_LATITUDE},${MAX_LONGITUDE});out geom;`;
@@ -83,7 +74,7 @@ class MapScreen extends Component {
     const SERVER_URL = `https://damp-tor-16286.herokuapp.com/sendTrails`;
     const USER_TOKEN = this.props.user.userToken;
 
-    fetch(SERVER_URL, {
+    fetch(OVERPASS_URL, {
       headers: new Headers({
         "Content-Type": "application/json"
       }),
@@ -99,11 +90,6 @@ class MapScreen extends Component {
       })
       .then(data => {
         requestedGeoJsonData = Object.assign({},data);
-
-        console.log('====================================');
-        console.log("SERVER DATA ",data);
-        console.log('====================================');
-
       })
       .catch(error => {
         console.error("THE ERROR IS: ", error);
@@ -119,74 +105,77 @@ class MapScreen extends Component {
       function(state, props) {
         return {
           latitude: location.latitude,
-          longitude: location.longitude
+          longitude: location.longitude,
+          latitudeDelta: location.latitudeDelta,
+          longitudeDelta: location.longitudeDelta,
         };
       },
       function() {
-
-
-        return this._fetchPolylines();
+        if(this.state.latitudeDelta <= 0.3 && this.state.longitudeDelta <= 0.3) {
+          return this._fetchPolylines();
+        }
       }
     );
     return;
   };
 
+//--------------------------------------------------
+// GETTING REGION DELTAS
+//--------------------------------------------------
+
+// _regionFrom(lat, lon, distance) {
+//   distance = distance/2
+//   const circumference = 40075
+//   const oneDegreeOfLatitudeInMeters = 111.32 * 1000
+//   const angularDistance = distance/circumference
+
+//   const latitudeDelta = distance / oneDegreeOfLatitudeInMeters
+//   const longitudeDelta = Math.abs(Math.atan2(
+//           Math.sin(angularDistance)*Math.cos(lat),
+//           Math.cos(angularDistance) - Math.sin(lat) * Math.sin(lat)))
+
+//   return result = {
+//       latitude: lat,
+//       longitude: lon,
+//       latitudeDelta,
+//       longitudeDelta,
+//   }
+// }
+
+//--------------------------------------------------
+// RENDER
+//--------------------------------------------------
+
   render() {
 
-      let polylines = requestedGeoJsonData.map(e => {
-        return e.Trail.geometry.coordinates.map(c => {
-          return ({latitude: c.lat, longitude: c.lng})
+      let polylines = requestedGeoJsonData.elements.map(e => {
+        return e.geometry.map(c => {
+          return ({latitude: c.lat, longitude: c.lon})
         })
       })
+
+      console.log('====================================');
+      console.log("POLYLINES ", polylines);
+      console.log('====================================');
 
     return (
       <View style={{ flex: 1 }}>
       
-      <GooglePlacesAutocomplete
-              placeholder="Search for your City!"
-              minLength={2}
-              listViewDisplayed="auto"
-              fetchDetails={true}
-              renderDescription={row => row.description}
-              onPress={(data, details = null) => {
-                this._geocodeCity(data, details);
-              }}
-              getDefaultValue={() => ""}
-              query={{
-                key: googlePlacesAutocompleteAPIKey,
-                language: "en",
-                types: "(cities)"
-              }}
-              nearbyPlacesAPI="GooglePlacesSearch"
-              GooglePlacesSearchQuery={{
-                rankby: "distance"
-              }}
-              filterReverseGeocodingByTypes={[
-                "locality",
-                "administrative_area_level_3"
-              ]}
-              debounce={200}
-              styles={{
-                textInputContainer: {
-                  width: "100%",
-                  backgroundColor: "white"
-                },
-                textInput: {
-                  borderWidth: 1,
-                  borderColor: "black",
-                  borderRadius: 10,
-                  height: 40
-                },
-                listView: {
-                  height: SCREEN_HEIGHT / 9
-                }
-              }}
-            />      
+     
         <Expo.MapView
-          ref = {(ref) => {this.mapRef = ref}}
-          onLayout = {this._initialLayout}
+          ref = {(ref) => { this.mapRef = ref}}
+          //onLayout = {this._initialLayout()}
+          onLayout = {() => this.mapRef.fitToCoordinates([{
+            latitude: this.props.user.userCity.latitude + 0.1, 
+            longitude: this.props.user.userCity.longitude + 0.1
+          },{
+            latitude: this.props.user.userCity.latitude - 0.1, 
+            longitude: this.props.user.userCity.longitude - 0.1
+          }
+        
+        ], { edgePadding: { top: 0, right: 0, bottom: 0, left: 0 }, animated: true })}
           style={styles.mapStyle}
-          //provider="google"
+          provider="google"
           region={{
             longitude: this.state.longitude,
             latitude: this.state.latitude,
@@ -202,14 +191,14 @@ class MapScreen extends Component {
             }}
           />
           
-        {/* {polylines.map(p => (
+        {polylines.map(p => (
           <Expo.MapView.Polyline
           key={shortid.generate()}
          coordinates={p}
          strokeColor={commonColors.PINK}
          strokeWidth={1}
        />
-        ))} */}
+        ))}
 
 
         </Expo.MapView>
@@ -227,7 +216,7 @@ class MapScreen extends Component {
   }
 }
 
-const styles = StyleSheet.create({
+  const styles = StyleSheet.create({
   mapStyle: {
     flex: 3,
     justifyContent: "center",
