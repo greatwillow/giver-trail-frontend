@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 
 import GooglePlacesAutocomplete from "../../../../utils/GooglePlacesAutocomplete";
 import { googlePlacesAutocompleteAPIKey } from "../../../../constants/apiKeys";
+import GoogleGeocoding from "../../../../utils/GoogleGeocoding"
+import { googleMapsGeocodingAPIKey } from "../../../../constants/apiKeys"
+
+import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../../../constants/dimensions";
 class GoogleAutocompleteSearch extends Component {
 
 
@@ -10,19 +14,31 @@ class GoogleAutocompleteSearch extends Component {
 //--------------------------------------------------
 
   _geocodeCity = (data, details) => {
+
+    console.log('====================================');
+    console.log("DATA IS ",data);
+    console.log("DETAILS ARE ",details);
+    console.log('====================================');
     
         GoogleGeocoding.setApiKey(googleMapsGeocodingAPIKey);
           GoogleGeocoding.getFromLocation(details.name).then(
             json => {
+
+
               const location = json.results[0].geometry.location;
               const formattedLocation = {
                 latitude: location.lat,
-                longitude: location.lng,
+                longitude: location.lng, 
                 latitudeDelta: 0.1,
                 longitudeDelta: 0.1
               }
-              this._updateLocation(formattedLocation)
-              return formattedLocation;
+              this.props.setMapRegion(formattedLocation)
+              // this._updateLocation(formattedLocation)
+              // return formattedLocation;
+              console.log('====================================');
+              console.log("Location is ",location);
+              console.log("formatted  ",formattedLocation);
+              console.log('====================================');
             },
             error => {
               console.log("GEOCODING ERROR ",error);
@@ -39,7 +55,7 @@ class GoogleAutocompleteSearch extends Component {
             listViewDisplayed="auto"
             fetchDetails={true}
             renderDescription={row => row.description}
-            onPress={(data, details = null) => {
+            onPress={(data, details) => {
               this._geocodeCity(data, details);
             }}
             getDefaultValue={() => ""}
@@ -59,6 +75,10 @@ class GoogleAutocompleteSearch extends Component {
             debounce={200}
             styles={{
               textInputContainer: {
+                position: 'absolute',
+                top: 20,
+                left: 20,
+                right: 20,
                 width: "100%",
                 backgroundColor: "white"
               },

@@ -26,11 +26,18 @@ import {
   setUserInfoInputFinished
 } from "./registrationUI/actions";
 
+import {
+  setMapRegion
+} from "./mapUI/actions";
+
 export {
+  //modalUI
   modalUserInfoInput,
   modalCitySearch,
   modalInterestSelector,
+  //insetTabUI
   setInsetTabUI,
+  //user
   postNewUserSignup,
   sendNewUserRegistrationData,
   getUserData,
@@ -43,6 +50,9 @@ export {
   setUserCity,
   addToUserPassionsList,
   removeFromUserPassionsList,
+  //registrationUI
   setRegistrationUI,
-  setUserInfoInputFinished
+  setUserInfoInputFinished,
+  //mapUI
+  setMapRegion,
 };

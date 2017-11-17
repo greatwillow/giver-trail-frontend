@@ -7,6 +7,7 @@ import user from "./user/reducer";
 import modalUI from "./modalUI/reducer";
 import insetTabUI from "./insetTabUI/reducer";
 import registrationUI from "./registrationUI/reducer";
+import mapUI from "./mapUI/reducer";
 import { reducer as network } from "react-native-offline";
 
 const appReducer = combineReducers({
@@ -16,7 +17,8 @@ const appReducer = combineReducers({
   modalUI: modalUI,
   insetTabUI: insetTabUI,
   registrationUI,
-  network: network
+  network: network,
+  mapUI: mapUI
 });
 
 export default appReducer;
