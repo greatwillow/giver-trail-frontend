@@ -7,6 +7,9 @@ import { googleMapsGeocodingAPIKey } from "../../../../constants/apiKeys"
 
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../../../constants/dimensions";
 class GoogleAutocompleteSearch extends Component {
+  constructor() {
+    super()
+  }
 
 
 //--------------------------------------------------
@@ -14,17 +17,10 @@ class GoogleAutocompleteSearch extends Component {
 //--------------------------------------------------
 
   _geocodeCity = (data, details) => {
-
-    console.log('====================================');
-    console.log("DATA IS ",data);
-    console.log("DETAILS ARE ",details);
-    console.log('====================================');
     
         GoogleGeocoding.setApiKey(googleMapsGeocodingAPIKey);
           GoogleGeocoding.getFromLocation(details.name).then(
             json => {
-
-
               const location = json.results[0].geometry.location;
               const formattedLocation = {
                 latitude: location.lat,
@@ -32,13 +28,7 @@ class GoogleAutocompleteSearch extends Component {
                 latitudeDelta: 0.1,
                 longitudeDelta: 0.1
               }
-              this.props.setMapRegion(formattedLocation)
-              // this._updateLocation(formattedLocation)
-              // return formattedLocation;
-              console.log('====================================');
-              console.log("Location is ",location);
-              console.log("formatted  ",formattedLocation);
-              console.log('====================================');
+              this.props.explicitSetMapRegion(formattedLocation);
             },
             error => {
               console.log("GEOCODING ERROR ",error);

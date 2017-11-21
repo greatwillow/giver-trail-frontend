@@ -37,12 +37,12 @@ class UserProfileScreen extends Component {
   };
 
   _renderAge = () => {
-    if(this.props.user.userAge) {
+    if (this.props.user.userAge) {
       const ageIndex = ageData.map(x => x.key).indexOf(this.props.user.userAge);
       const age = ageData[ageIndex].title;
       return <Text> {age}</Text>;
     } else {
-      const age = "Unspecified"
+      const age = "Unspecified";
       return <Text> {age}</Text>;
     }
   };
@@ -50,18 +50,32 @@ class UserProfileScreen extends Component {
   render() {
     return (
       <View style={styles.layoutStyle}>
-        <View style={styles.headerContainer}/>
+        <View style={styles.headerContainer} />
         <View style={{ flex: 4 }}>
           <View style={styles.mainContentContainer}>
-            <TextFontTitillium style={{ fontSize: 20 }}>
-              <Text style={{ color: commonColors.PINK }}>My Age Range: </Text>
-              {this._renderAge()} {"\n"}
-              <Text style={{ color: commonColors.PINK, borderBottomWidth: 1 }}>
-                My Home Base:{" "}
-              </Text>
-              {this.props.user.userCity.name} {"\n"}
-              <Text style={{ color: commonColors.PINK }}>My Interests: </Text>
-            </TextFontTitillium>
+            <View style={{ flex: 1, flexDirection: "row" }}>
+              <View style={{ flex: 1 }}>
+                <TextFontTitillium style={{ fontSize: 20 }}>
+                  <Text style={{ color: commonColors.PINK }}>
+                    My Age Range:
+                  </Text>
+                  {this._renderAge()} {"\n"}
+                </TextFontTitillium>
+              </View>
+              <View style={{ flex: 1 }}>
+                <TextFontTitillium style={{ fontSize: 20 }}>
+                  <Text
+                    style={{ color: commonColors.PINK, borderBottomWidth: 1 }}
+                  >
+                    My Home Base:{" "}
+                  </Text>
+                  {this.props.user.userCity.name} {"\n"}
+                  <Text style={{ color: commonColors.PINK }}>
+                    My Interests:
+                  </Text>
+                </TextFontTitillium>
+              </View>
+            </View>
           </View>
 
           <View style={styles.interestImageContainer}>
@@ -70,10 +84,10 @@ class UserProfileScreen extends Component {
         </View>
         <View style={styles.nameAndEmailContainer}>
           <TextFontTitillium style={styles.nameStyle}>
-              {this.props.user.userFirstName} {this.props.user.userLastName}
+            {this.props.user.userFirstName} {this.props.user.userLastName}
           </TextFontTitillium>
           <TextFontTitillium style={styles.emailStyle}>
-              {this.props.user.userEmail}
+            {this.props.user.userEmail}
           </TextFontTitillium>
         </View>
         <Image
@@ -101,25 +115,25 @@ const styles = StyleSheet.create({
     left: 10
   },
   nameAndEmailContainer: {
-    position: 'absolute',
+    position: "absolute",
     top: 10,
     left: 150,
     right: 10,
     height: 130,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center"
   },
   nameStyle: {
     fontSize: 25,
-    backgroundColor: 'rgba(0,0,0,0)',
+    backgroundColor: "rgba(0,0,0,0)",
     color: commonColors.GREEN,
-    textAlign: 'center'
+    textAlign: "center"
   },
   emailStyle: {
     fontSize: 15,
-    backgroundColor: 'rgba(0,0,0,0)',
+    backgroundColor: "rgba(0,0,0,0)",
     color: commonColors.GREEN,
-    textAlign: 'center'
+    textAlign: "center"
   },
   headerContainer: {
     flex: 0,

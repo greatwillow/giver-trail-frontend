@@ -1,12 +1,12 @@
 import * as actionTypes from "../../constants/actionTypes";
 
 const initialState = {
+  mapZoom: 15,
   mapRegion: {
     latitude: 45.5,
     longitude: -73.6,
     latitudeDelta: 0.3,
     longitudeDelta: 0.3,
-    test: "dog"
   }
 }
 
@@ -22,8 +22,13 @@ const mapUI = (state = initialState, action) => {
             longitude: action.mapRegion.longitude,
             latitudeDelta: action.mapRegion.latitudeDelta,
             longitudeDelta: action.mapRegion.longitudeDelta,
-            test: action.mapRegion.test
           }
+        }
+    case actionTypes.SET_MAP_ZOOM:
+        return {
+          ...state,
+          ...state.mapUI,
+          mapZoom: action.mapZoom
         }
     default:
       return state;

@@ -8,4 +8,12 @@ export function setMapRegion(mapRegion) {
       type: actionTypes.SET_MAP_REGION,
       mapRegion: mapRegion
     };
+}
+
+export function setMapZoom(mapZoom) {
+  return {
+    type: actionTypes.SET_MAP_ZOOM,
+    mapZoom: mapZoom
   }
+}
+

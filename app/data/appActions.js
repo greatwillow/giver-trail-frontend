@@ -27,7 +27,8 @@ import {
 } from "./registrationUI/actions";
 
 import {
-  setMapRegion
+  setMapRegion,
+  setMapZoom,
 } from "./mapUI/actions";
 
 export {
@@ -55,4 +56,5 @@ export {
   setUserInfoInputFinished,
   //mapUI
   setMapRegion,
+  setMapZoom
 };

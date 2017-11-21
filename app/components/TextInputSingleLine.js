@@ -27,11 +27,11 @@ class TextInputSingleLine extends Component {
           }
           keyboardType={this.props.keyboardType}
           underlineColorAndroid={'rgba(0,0,0,0)'}
-          returnKeyType={this.props.returnKeyType || "next"}
+          //returnKeyType={this.props.returnKeyType || "next"}
           secureTextEntry={this.props.secureTextEntry}
           autoCapitalize="words"
           autoCorrect={false}
-          returnKeyType="next"
+          //returnKeyType="next"
           clearButtonMode="while-editing"
           autoFocus={this.props.autoFocus || false}
           maxLength={50}

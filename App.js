@@ -1,12 +1,20 @@
-"use strict";
+/**
+ * Sample React Native App
+ * https://github.com/facebook/react-native
+ * @flow
+ */
 
 import React, { Component } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
+} from "react-native";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
 import { withNetworkConnectivity } from "react-native-offline";
-
-import Expo from "expo";
 
 import AppNavReduxWrapper from "./app/navigation/AppNavReduxWrapper";
 import configureStore from "./app/data/configureStore";
@@ -17,10 +25,8 @@ Root = withNetworkConnectivity({
   withRedux: true, // It won't inject isConnected as a prop in this case
   checkConnectionInterval: 5000
 })(Root);
-
-class App extends Component {
+class App extends Component<{}> {
   store = configureStore;
-
   render() {
     return (
       <Provider store={this.store}>
@@ -29,8 +35,6 @@ class App extends Component {
     );
   }
 }
-
-export default App;
 
 const styles = StyleSheet.create({
   container: {
@@ -41,4 +45,4 @@ const styles = StyleSheet.create({
   }
 });
 
-Expo.registerRootComponent(App);
+export default App;

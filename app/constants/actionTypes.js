@@ -12,6 +12,7 @@ export const SET_USER_INFO_INPUT_FINISHED = "SET_USER_INFO_INPUT_FINISHED";
 
 //mapUI Actions
 export const SET_MAP_REGION = "SET_MAP_REGION";
+export const SET_MAP_ZOOM = "SET_MAP_ZOOM"
 
 //user Actions
 export const SET_USER_ID = "SET_USER_ID";

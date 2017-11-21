@@ -4,31 +4,30 @@ import React, { Component } from "react";
 
 import { StyleSheet, Text, View } from "react-native";
 
-import { Font } from "expo";
+//import { Font } from "expo";
 
 class TextFontTitillium extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      fontLoaded: false
-    };
-  }
+  // constructor(props) {
+  //   super(props);
+  //   this.state = {
+  //     fontLoaded: false
+  //   };
+  // }
 
-  async componentDidMount() {
-    await Font.loadAsync({
-      "titillium-light": require("../assets/fonts/TitilliumWeb-Light.ttf")
-    });
-    this.setState({ fontLoaded: true });
-  }
+  // async componentDidMount() {
+  //   await Font.loadAsync({
+  //     "titillium-light": require("../assets/fonts/TitilliumWeb-Light.ttf")
+  //   });
+  //   this.setState({ fontLoaded: true });
+  // }
 
   render() {
     return (
       <View>
         <Text
-        style={[
-          { fontFamily: this.state.fontLoaded ? "titillium-light" : null },
-          this.props.style
-        ]}
+        // style={[{fontFamily: 'TitilliumWeb-Light'},
+        //   this.props.style]}
+        style={this.props.style}
         >
           {this.props.children}
         </Text>

@@ -564,7 +564,7 @@ export default class GooglePlacesAutocomplete extends Component {
             style={defaultStyles.textInput}
             value={this.state.text}
             placeholder={"Search for your City!"}
-            returnKeyType={"search"}
+            //returnKeyType={"search"}
             autoFocus={true}
             onFocus={
               onFocus
@@ -590,7 +590,7 @@ GooglePlacesAutocomplete.propTypes = {
   placeholder: PropTypes.string,
   placeholderTextColor: PropTypes.string,
   underlineColorAndroid: PropTypes.string,
-  returnKeyType: PropTypes.string,
+  //returnKeyType: PropTypes.string,
   onPress: PropTypes.func,
   onNotFound: PropTypes.func,
   onFail: PropTypes.func,
@@ -625,7 +625,7 @@ GooglePlacesAutocomplete.defaultProps = {
   placeholderTextColor: "#A8A8A8",
   isRowScrollable: true,
   underlineColorAndroid: "transparent",
-  returnKeyType: "default",
+  //returnKeyType: "default",
   onPress: () => {},
   onNotFound: () => {},
   onFail: () => {},
