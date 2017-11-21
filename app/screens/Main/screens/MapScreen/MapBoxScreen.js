@@ -17,25 +17,22 @@ Mapbox.setAccessToken(
 );
 class MapBoxScreen extends Component {
   constructor() {
-    super()
+    super();
     this.state = {
-      locationPermission: 'undetermined'
-    }
+      locationPermission: "undetermined"
+    };
   }
 
   componentDidMount() {
-    
     _requestGeolocationPermission = () => {
-      Permissions.request('location')
-        .then(response => {
-          this.setState({
-            locationPermission: response
-          })
-        })
-    }
-    return _requestGeolocationPermission()
+      Permissions.request("location").then(response => {
+        this.setState({
+          locationPermission: response
+        });
+      });
+    };
+    return _requestGeolocationPermission();
   }
-
 
   _onPressUserLocationSearch = () => {
     this.props.modalCitySearch(true);
@@ -54,11 +51,11 @@ class MapBoxScreen extends Component {
 
   _onRegionDidChange = region => {
     let bounds = this.mapRef.getVisibleBounds();
-    console.log('====================================');
-    console.log('====================================');
+    console.log("====================================");
+    console.log("====================================");
     console.log("My Permission is ", this.state.locationPermission);
-    console.log('====================================');
-    console.log('====================================');
+    console.log("====================================");
+    console.log("====================================");
   };
 
   _explicitSetMapRegion = region => {
@@ -66,29 +63,63 @@ class MapBoxScreen extends Component {
     this.props.modalCitySearch(false);
   };
 
-
   render() {
     return (
-      <Mapbox.MapView
-      ref={ref => {
-        this.mapRef = ref;
-      }}
-      logoEnabled={false}
-      compassEnabled={true}
-      showUserLocation={(this.state.locationPermission == 'authorized') ? true : false}
-      centerCoordinate={[
-        this.props.user.userCity.longitude,
-        this.props.user.userCity.latitude
-      ]}
-      userTrackingMode={Mapbox.UserTrackingModes.Follow}
-      styleURL={"mapbox://styles/greatwillow/cja5e63er3g7s2ul5mqr5i3w7"}
-      style={{ flex: 1 }}
-      zoomLevel={this.props.mapUI.mapZoom}
-      onRegionDidChange={region => this._onRegionDidChange(region)}
-    />
-
-
-
+      <View
+        style={{
+          flex: 1,
+          width: SCREEN_WIDTH,
+          height: SCREEN_HEIGHT,
+          backgroundColor: "green"
+        }}
+      >
+        <Mapbox.MapView
+          ref={ref => {
+            this.mapRef = ref;
+          }}
+          logoEnabled={false}
+          compassEnabled={true}
+          showUserLocation={
+            this.state.locationPermission == "authorized" ? true : false
+          }
+          centerCoordinate={[
+            this.props.user.userCity.longitude,
+            this.props.user.userCity.latitude
+          ]}
+          userTrackingMode={Mapbox.UserTrackingModes.Follow}
+          styleURL={"mapbox://styles/greatwillow/cja5e63er3g7s2ul5mqr5i3w7"}
+          style={{ flex: 1 }}
+          zoomLevel={this.props.mapUI.mapZoom}
+          onRegionDidChange={region => this._onRegionDidChange(region)}
+        />
+        <TouchableOpacity
+          style={styles.searchIcon}
+          onPress={this._onPressUserLocationSearch}
+        >
+          <Icon name="search-web" size={40} color={commonColors.PINK} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.zoomInIcon}
+          onPress={this._onPressMapZoomIn}
+        >
+          <Icon name="plus-circle" size={50} color={commonColors.DARK_GREY} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.zoomOutIcon}
+          onPress={this._onPressMapZoomOut}
+        >
+          <Icon name="minus-circle" size={50} color={commonColors.DARK_GREY} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.trackingIcon}
+          onPress={this._onPressUserLocationSearch}
+        >
+          <Icon name="radar" size={50} color={commonColors.DARK_GREY} />
+        </TouchableOpacity>
+        <ModalCitySearch
+          explicitSetMapRegion={region => this._explicitSetMapRegion(region)}
+        />
+      </View>
     );
   }
 }
@@ -135,31 +166,32 @@ const mapDispatchToProps = dispatch => ({
 
 export default connect(mapStateToProps, mapDispatchToProps)(MapBoxScreen);
 
+//   <TouchableOpacity
+//   style={styles.searchIcon}
+//   onPress={this._onPressUserLocationSearch}
+// >
+//   <Icon name="search-web" size={40} color={commonColors.PINK} />
+// </TouchableOpacity>
+// <TouchableOpacity
+//   style={styles.zoomInIcon}
+//   onPress={this._onPressMapZoomIn}
+// >
+//   <Icon name="plus-circle" size={50} color={commonColors.DARK_GREY} />
+// </TouchableOpacity>
+// <TouchableOpacity
+//   style={styles.zoomOutIcon}
+//   onPress={this._onPressMapZoomOut}
+// >
+//   <Icon name="minus-circle" size={50} color={commonColors.DARK_GREY} />
+// </TouchableOpacity>
+// <TouchableOpacity
+//   style={styles.trackingIcon}
+//   onPress={this._onPressUserLocationSearch}
+// >
+//   <Icon name="radar" size={50} color={commonColors.DARK_GREY} />
+// </TouchableOpacity>
+// <ModalCitySearch
+//   explicitSetMapRegion={region => this._explicitSetMapRegion(region)}
+// />
 
-            //   <TouchableOpacity
-            //   style={styles.searchIcon}
-            //   onPress={this._onPressUserLocationSearch}
-            // >
-            //   <Icon name="search-web" size={40} color={commonColors.PINK} />
-            // </TouchableOpacity>
-            // <TouchableOpacity
-            //   style={styles.zoomInIcon}
-            //   onPress={this._onPressMapZoomIn}
-            // >
-            //   <Icon name="plus-circle" size={50} color={commonColors.DARK_GREY} />
-            // </TouchableOpacity>
-            // <TouchableOpacity
-            //   style={styles.zoomOutIcon}
-            //   onPress={this._onPressMapZoomOut}
-            // >
-            //   <Icon name="minus-circle" size={50} color={commonColors.DARK_GREY} />
-            // </TouchableOpacity>
-            // <TouchableOpacity
-            //   style={styles.trackingIcon}
-            //   onPress={this._onPressUserLocationSearch}
-            // >
-            //   <Icon name="radar" size={50} color={commonColors.DARK_GREY} />
-            // </TouchableOpacity>
-            // <ModalCitySearch
-            //   explicitSetMapRegion={region => this._explicitSetMapRegion(region)}
-            // />
+// Mapbox.UserTrackingModes.Follow
