@@ -19,7 +19,7 @@ class MapBoxScreen extends Component {
   constructor() {
     super()
     this.state = {
-      locationPermission: null
+      locationPermission: 'undetermined'
     }
   }
 
@@ -33,6 +33,7 @@ class MapBoxScreen extends Component {
           })
         })
     }
+    return _requestGeolocationPermission()
   }
 
 
@@ -53,6 +54,11 @@ class MapBoxScreen extends Component {
 
   _onRegionDidChange = region => {
     let bounds = this.mapRef.getVisibleBounds();
+    console.log('====================================');
+    console.log('====================================');
+    console.log("My Permission is ", this.state.locationPermission);
+    console.log('====================================');
+    console.log('====================================');
   };
 
   _explicitSetMapRegion = region => {
@@ -60,28 +66,28 @@ class MapBoxScreen extends Component {
     this.props.modalCitySearch(false);
   };
 
+
   render() {
     return (
-
-
-
       <Mapbox.MapView
-        ref={ref => {
-          this.mapRef = ref;
-        }}
-        logoEnabled={false}
-        compassEnabled={true}
-        //showUserLocation={(this.state.locationPermission == 'authorized') ? true : false}
-        centerCoordinate={[
-          this.props.user.userCity.longitude,
-          this.props.user.userCity.latitude
-        ]}
-        //userTrackingMode={Mapbox.UserTrackingModes.Follow}
-        styleURL={"mapbox://styles/greatwillow/cja5e63er3g7s2ul5mqr5i3w7"}
-        style={{ flex: 1 }}
-        zoomLevel={this.props.mapUI.mapZoom}
-        //onRegionDidChange={region => this._onRegionDidChange(region)}
-      />
+      ref={ref => {
+        this.mapRef = ref;
+      }}
+      logoEnabled={false}
+      compassEnabled={true}
+      showUserLocation={(this.state.locationPermission == 'authorized') ? true : false}
+      centerCoordinate={[
+        this.props.user.userCity.longitude,
+        this.props.user.userCity.latitude
+      ]}
+      userTrackingMode={Mapbox.UserTrackingModes.Follow}
+      styleURL={"mapbox://styles/greatwillow/cja5e63er3g7s2ul5mqr5i3w7"}
+      style={{ flex: 1 }}
+      zoomLevel={this.props.mapUI.mapZoom}
+      onRegionDidChange={region => this._onRegionDidChange(region)}
+    />
+
+
 
     );
   }

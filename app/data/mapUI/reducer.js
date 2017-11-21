@@ -1,7 +1,7 @@
 import * as actionTypes from "../../constants/actionTypes";
 
 const initialState = {
-  mapZoom: 15,
+  mapZoom: 10,
   mapRegion: {
     latitude: 45.5,
     longitude: -73.6,
