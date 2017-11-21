@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { StyleSheet, Text, TouchableOpacity, View, Modal } from "react-native";
-//import Mapbox from "@mapbox/react-native-mapbox-gl";
+import Mapbox from "@mapbox/react-native-mapbox-gl";
 import Permissions from "react-native-permissions";
 
 import * as actions from "../../../../data/appActions";
@@ -12,9 +12,9 @@ import GoogleAutocompleteSearch from "./GoogleAutocompleteSearch";
 import ModalCitySearch from "./ModalCitySearch";
 import { modalCitySearch } from "../../../../data/appActions";
 
-// Mapbox.setAccessToken(
-//   "pk.eyJ1IjoiZ3JlYXR3aWxsb3ciLCJhIjoiY2phNGJkNW05YTg1ajJ3czR2MjRkamN4ZyJ9.4QQ9UW5OoFMq6A5LbCgMXA"
-// );
+Mapbox.setAccessToken(
+  "pk.eyJ1IjoiZ3JlYXR3aWxsb3ciLCJhIjoiY2phNGJkNW05YTg1ajJ3czR2MjRkamN4ZyJ9.4QQ9UW5OoFMq6A5LbCgMXA"
+);
 class MapBoxScreen extends Component {
   constructor() {
     super()
@@ -62,28 +62,26 @@ class MapBoxScreen extends Component {
 
   render() {
     return (
-      <View style={{flex: 1}}>
-        <Text> Works</Text>
-        </View>
 
 
-      // <Mapbox.MapView
-      //   ref={ref => {
-      //     this.mapRef = ref;
-      //   }}
-      //   logoEnabled={false}
-      //   compassEnabled={true}
-      //   //showUserLocation={(this.state.locationPermission == 'authorized') ? true : false}
-      //   centerCoordinate={[
-      //     this.props.user.userCity.longitude,
-      //     this.props.user.userCity.latitude
-      //   ]}
-      //   //userTrackingMode={Mapbox.UserTrackingModes.Follow}
-      //   styleURL={"mapbox://styles/greatwillow/cja5e63er3g7s2ul5mqr5i3w7"}
-      //   style={{ flex: 1 }}
-      //   zoomLevel={this.props.mapUI.mapZoom}
-      //   onRegionDidChange={region => this._onRegionDidChange(region)}
-      // />
+
+      <Mapbox.MapView
+        ref={ref => {
+          this.mapRef = ref;
+        }}
+        logoEnabled={false}
+        compassEnabled={true}
+        //showUserLocation={(this.state.locationPermission == 'authorized') ? true : false}
+        centerCoordinate={[
+          this.props.user.userCity.longitude,
+          this.props.user.userCity.latitude
+        ]}
+        //userTrackingMode={Mapbox.UserTrackingModes.Follow}
+        styleURL={"mapbox://styles/greatwillow/cja5e63er3g7s2ul5mqr5i3w7"}
+        style={{ flex: 1 }}
+        zoomLevel={this.props.mapUI.mapZoom}
+        //onRegionDidChange={region => this._onRegionDidChange(region)}
+      />
 
     );
   }
