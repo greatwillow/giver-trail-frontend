@@ -31,6 +31,10 @@ import {
   setMapZoom,
 } from "./mapUI/actions";
 
+import {
+  addLocationPointToTrail
+} from "./trail/actions"
+
 export {
   //modalUI
   modalUserInfoInput,
@@ -56,5 +60,7 @@ export {
   setUserInfoInputFinished,
   //mapUI
   setMapRegion,
-  setMapZoom
+  setMapZoom,
+  //trail
+  addLocationPointToTrail
 };

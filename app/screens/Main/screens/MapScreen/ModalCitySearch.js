@@ -38,7 +38,7 @@ class ModalCitySearch extends Component {
           onRequestClose={this._onRequestClose}
         >
           <View style={styles.outerContainer}>
-            <KeyboardAvoidingView behavior="padding">
+            {/* <KeyboardAvoidingView behavior="padding"> */}
               <View style={styles.innerContainer}>
                 <View style={styles.listContainer}>
                 <GoogleAutocompleteSearch
@@ -48,7 +48,7 @@ class ModalCitySearch extends Component {
                 </View>
               </View>
               <View style={{ height: 50 }} />
-            </KeyboardAvoidingView>
+            {/* </KeyboardAvoidingView> */}
           </View>
         </Modal>
       </View>

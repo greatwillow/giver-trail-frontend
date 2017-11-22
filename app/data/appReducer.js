@@ -8,6 +8,8 @@ import modalUI from "./modalUI/reducer";
 import insetTabUI from "./insetTabUI/reducer";
 import registrationUI from "./registrationUI/reducer";
 import mapUI from "./mapUI/reducer";
+import trail from "./trail/reducer";
+
 import { reducer as network } from "react-native-offline";
 
 const appReducer = combineReducers({
@@ -18,7 +20,8 @@ const appReducer = combineReducers({
   insetTabUI: insetTabUI,
   registrationUI,
   network: network,
-  mapUI: mapUI
+  mapUI: mapUI,
+  trail: trail,
 });
 
 export default appReducer;

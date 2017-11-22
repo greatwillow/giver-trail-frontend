@@ -1,243 +1,318 @@
-"use strict";
-
 import React, { Component } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  Geolocation,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Modal
+} from "react-native";
 import { connect } from "react-redux";
-import Expo from "expo";
-import shortid from 'shortid'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-
 import * as actions from "../../../../data/appActions";
-import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../../../constants/dimensions";
-import mockGeoJsonData from "../../../../assets/pureData/mockGeoJsonData2";
 
+import BackgroundGeolocation from "react-native-mauron85-background-geolocation";
+import Mapbox from "@mapbox/react-native-mapbox-gl";
+import Permissions from "react-native-permissions";
 import GoogleAutocompleteSearch from "./GoogleAutocompleteSearch";
-import commonColors from "../../../../constants/colors"
-import { logInAsync } from "expo/src/Google";
 
+import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../../../constants/dimensions";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import commonColors from "../../../../constants/colors";
+import ModalCitySearch from "./ModalCitySearch";
+//import { modalCitySearch } from "../../../../data/appActions";
 
-let requestedGeoJsonData = { elements: [{ geometry: [{ lat: 0, lon: 0 }] }] };
+Mapbox.setAccessToken(
+  "pk.eyJ1IjoiZ3JlYXR3aWxsb3ciLCJhIjoiY2phNGJkNW05YTg1ajJ3czR2MjRkamN4ZyJ9.4QQ9UW5OoFMq6A5LbCgMXA"
+);
 
 class MapScreen extends Component {
-
+  constructor() {
+    super();
+    this.state = {
+      locationPermission: "undetermined",
+      route: []
+    };
+  }
 
 //--------------------------------------------------
-//   FETCHING POLYLINES
+// MOUNTING/ CHECKING PERMISSION --> may not need?
 //--------------------------------------------------
 
-
-  _fetchPolylines = () => {
-    const MIN_LONGITUDE = this.props.mapUI.mapRegion.longitude - this.props.mapUI.mapRegion.longitudeDelta;
-    const MIN_LATITUDE = this.props.mapUI.mapRegion.latitude - this.props.mapUI.mapRegion.latitudeDelta;
-    const MAX_LONGITUDE = this.props.mapUI.mapRegion.longitude + this.props.mapUI.mapRegion.longitudeDelta;
-    const MAX_LATITUDE = this.props.mapUI.mapRegion.latitude + this.props.mapUI.mapRegion.latitudeDelta;
-
-    const OVERPASS_URL = `http://overpass-api.de/api/interpreter?data=[out:json];way["highway"="path"](
-      ${MIN_LATITUDE},${MIN_LONGITUDE},${MAX_LATITUDE},${MAX_LONGITUDE});out geom;`;
-
-    //const SERVER_URL = `https://damp-tor-16286.herokuapp.com/sendTrails`;
-    //const USER_TOKEN = this.props.user.userToken;
-
-    fetch(OVERPASS_URL, {
-      headers: new Headers({
-        "Content-Type": "application/json"
-      }),
-      method: "GET",
-      //"x-auth": USER_TOKEN
-    })
-      .then(res => {
-        if (res.status == 200) {
-          return res.json();
-        } else {
-          throw new Error("Server Error");
-        }
-      })
-      .then(data => {
-        requestedGeoJsonData = Object.assign({},data);
-      })
-      .catch(error => {
-        console.log("THE ERROR IS: ", error);
+  componentDidMount() {
+    Permissions.request("location").then(response => {
+      this.setState({
+        locationPermission: response
       });
+    });
+
+//--------------------------------------------------
+// GEOLOCATION CONFIG
+//--------------------------------------------------
+
+    BackgroundGeolocation.configure({
+      desiredAccuracy: 10,
+      stationaryRadius: 10,
+      distanceFilter: 10,
+      // notificationTitle: "Background tracking",
+      // notificationText: "enabled",
+      debug: false,  //for sounds
+      startOnBoot: false,
+      stopOnTerminate: false,
+      locationProvider: BackgroundGeolocation.DISTANCE_FILTER_PROVIDER,
+      interval: 3000,
+      stopOnStillActivity: true,
+    });
+
+//--------------------------------------------------
+// CHECK IF APP IS IN BACKGROUND
+//--------------------------------------------------
+
+BackgroundGeolocation.on("background", () => {
+  console.log("[INFO] App is in background");
+});
+
+BackgroundGeolocation.on("foreground", () => {
+  console.log("[INFO] App is in foreground");
+});
+
+//--------------------------------------------------
+// CHECKING PERMISSION STATUS
+//--------------------------------------------------
+
+BackgroundGeolocation.checkStatus(status => {
+  console.log(
+    "[INFO] BackgroundGeolocation service is running",
+    status.isRunning
+  );
+  console.log(
+    "[INFO] BackgroundGeolocation service has permissions",
+    status.hasPermissions
+  );
+  console.log(
+    "[INFO] BackgroundGeolocation auth status: " + status.authorization
+  );
+
+  if (!status.isRunning) {
+    BackgroundGeolocation.start();
+  }
+});
+
+ //--------------------------------------------------
+ // ACTION AT EACH GPS POINT TAKEN IN
+ //--------------------------------------------------   
+
+    BackgroundGeolocation.on("location", location => {
+      BackgroundGeolocation.startTask(taskKey => {
+
+        this.props.addLocationPointToTrail({
+          latitude: location.latitude,
+          longitude: location.longitude
+        })
+
+        console.log('====================================');
+        console.log("INPUTTED IS ", this.props.trail);
+        console.log('====================================');
+
+        BackgroundGeolocation.endTask(taskKey);
+      });
+    });
+
+    BackgroundGeolocation.on("stationary", stationaryLocation => {
+      // handle stationary locations here
+      Actions.sendLocation(stationaryLocation);
+    });
+
+    BackgroundGeolocation.on("error", error => {
+      console.log("[ERROR] BackgroundGeolocation error:", error);
+    });
+
+    BackgroundGeolocation.on("start", () => {
+      console.log("[INFO] BackgroundGeolocation service has been started");
+    });
+
+    BackgroundGeolocation.on("stop", () => {
+      console.log("[INFO] BackgroundGeolocation service has been stopped");
+    });
+
+    BackgroundGeolocation.on("authorization", status => {
+      console.log(
+        "[INFO] BackgroundGeolocation authorization status: " + status
+      );
+      if (status !== BackgroundGeolocation.AUTHORIZED) {
+        Alert.alert(
+          "Location services are disabled",
+          "Would you like to open location settings?",
+          [
+            {
+              text: "Yes",
+              onPress: () => BackgroundGeolocation.showLocationSettings()
+            },
+            {
+              text: "No",
+              onPress: () => console.log("No Pressed"),
+              style: "cancel"
+            }
+          ]
+        );
+      }
+    });
+
+  }
+
+  //--------------------------------------------------
+  // MODAL UI SEARCH
+  //--------------------------------------------------
+
+  _onPressUserLocationSearch = () => {
+    this.props.modalCitySearch(true);
   };
 
-//--------------------------------------------------
-// REGION UPDATE
-//--------------------------------------------------
+  //--------------------------------------------------
+  // ZOOM
+  //--------------------------------------------------
 
-_onRegionChangeComplete = (region) => {
-  async function asyncFunc(region) {
-    await this.props.setMapRegion(region);
-    if(this.props.mapUI.mapRegion.latitudeDelta <= 0.2 && this.props.mapUI.mapRegion.longitudeDelta <= 0.2) {    
-      await this._fetchPolylines();
-    }
-    return;
-  }
-  asyncFunc = asyncFunc.bind(this)
-  return asyncFunc(region)
-}
+  _onPressMapZoomIn = () => {
+    this.props.setMapZoom(this.props.mapUI.mapZoom + 1);
+  };
 
-//--------------------------------------------------
-// GETTING REGION DELTAS
-//--------------------------------------------------
+  _onPressMapZoomOut = () => {
+    this.props.setMapZoom(this.props.mapUI.mapZoom - 1);
+  };
 
-// _regionFrom(lat, lon, distance) {
-//   distance = distance/2
-//   const circumference = 40075
-//   const oneDegreeOfLatitudeInMeters = 111.32 * 1000
-//   const angularDistance = distance/circumference
+  //--------------------------------------------------
+  // REGION CHANGE
+  //--------------------------------------------------
 
-//   const latitudeDelta = distance / oneDegreeOfLatitudeInMeters
-//   const longitudeDelta = Math.abs(Math.atan2(
-//           Math.sin(angularDistance)*Math.cos(lat),
-//           Math.cos(angularDistance) - Math.sin(lat) * Math.sin(lat)))
+  _onRegionDidChange = region => {
+    //SET BOUNDS
+    let bounds = this.mapRef.getVisibleBounds();
+  };
 
-//   return result = {
-//       latitude: lat,
-//       longitude: lon,
-//       latitudeDelta,
-//       longitudeDelta,
-//   }
-// }
+  _explicitSetMapRegion = region => {
+    this.mapRef.flyTo([region.longitude, region.latitude]);
+    this.props.modalCitySearch(false);
+  };
 
-//--------------------------------------------------
-// RENDER
-//--------------------------------------------------
-
-_onPressUserLocationSearch = () => {
-
-}
-
-_onPressMapZoomIn = () => {
-  this.props.setMapRegion({
-    latitude: this.props.mapUI.mapRegion.latitude,
-    longitude: this.props.mapUI.mapRegion.longitude,
-    latitudeDelta: this.props.mapUI.mapRegion.latitudeDelta - 0.05,
-    longitudeDelta: this.props.mapUI.mapRegion.longitudeDelta -0.05
-  })
-}
-
-_onPressMapZoomOut = () => {
-  this.props.setMapRegion({
-    latitude: this.props.mapUI.mapRegion.latitude,
-    longitude: this.props.mapUI.mapRegion.longitude,
-    latitudeDelta: this.props.mapUI.mapRegion.latitudeDelta + 0.05,
-    longitudeDelta: this.props.mapUI.mapRegion.longitudeDelta + 0.05
-  })
-}
-
+  //--------------------------------------------------
+  // RENDERING
+  //--------------------------------------------------
 
   render() {
-
-      let polylines = requestedGeoJsonData.elements.map(e => {
-        return e.geometry.map(c => {
-          return ({latitude: c.lat, longitude: c.lon})
-        })
-      })
-
     return (
-      <View style={{ flex: 1 }}>
-        <Expo.MapView
-          ref = {(ref) => { this.mapRef = ref}}
-          //onLayout = {this._initialLayout()}
-          onLayout = {() => this.mapRef.fitToCoordinates([
-                {
-                  latitude: this.props.user.userCity.latitude + 0.1, 
-                  longitude: this.props.user.userCity.longitude + 0.1
-                },{
-                  latitude: this.props.user.userCity.latitude - 0.1, 
-                  longitude: this.props.user.userCity.longitude - 0.1
-                }      
-              ], { edgePadding: { top: 0, right: 0, bottom: 0, left: 0 }, animated: true })
-            }
-          style={styles.mapStyle}
-          provider="google"
-          region={{
-            longitude: this.props.mapUI.mapRegion.longitude,
-            latitude: this.props.mapUI.mapRegion.latitude,
-            longitudeDelta: this.props.mapUI.mapRegion.longitudeDelta,
-            latitudeDelta: this.props.mapUI.mapRegion.latitudeDelta
-          }}
-          onRegionChangeComplete={reg => this._onRegionChangeComplete(reg)}
-        >
-          
-        {polylines.map(p => (
-          <Expo.MapView.Polyline
-          key={shortid.generate()}
-         coordinates={p}
-         strokeColor={commonColors.PINK}
-         strokeWidth={1}
-       />
-        ))}
+      <View
+      style={{
+        flex: 1,
+        width: SCREEN_WIDTH,
+        height: SCREEN_HEIGHT,
+        backgroundColor: "black"
+      }}
+    >
+      <Mapbox.MapView
+        ref={ref => {
+          this.mapRef = ref;
+        }}
+        logoEnabled={false}
+        compassEnabled={true}
+        showUserLocation={
+          this.state.locationPermission == "authorized" ? true : false
+        }
+        centerCoordinate={[
+          this.props.user.userCity.longitude,
+          this.props.user.userCity.latitude
+        ]}
+        userTrackingMode={Mapbox.UserTrackingModes.Follow}
+        styleURL={"mapbox://styles/greatwillow/cja5e63er3g7s2ul5mqr5i3w7"}
+        style={{ flex: 1 }}
+        zoomLevel={this.props.mapUI.mapZoom}
+        onRegionDidChange={region => this._onRegionDidChange(region)}
+      />
 
-        {/* <GoogleAutocompleteSearch {...this.props}/> */}
-        </Expo.MapView>
-
-        <TouchableOpacity style={styles.searchIcon} onPress={this._onPressUserLocationSearch}>
-          <Icon name="search-web" size={40} color={commonColors.PINK}/>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.zoomInIcon} onPress={this._onPressMapZoomIn}>
-          <Icon name="plus-circle" size={50} color={commonColors.DARK_GREY} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.zoomOutIcon} onPress={this._onPressMapZoomOut}>
-          <Icon name="minus-circle" size={50} color={commonColors.DARK_GREY} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.trackingIcon} onPress={this._onPressUserLocationSearch}>
-          <Icon name="radar" size={50} color={commonColors.DARK_GREY} />
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity
+      style={styles.searchIcon}
+      onPress={this._onPressUserLocationSearch}
+    >
+      <Icon name="search-web" size={40} color={commonColors.PINK} />
+    </TouchableOpacity>
+    <TouchableOpacity
+      style={styles.zoomInIcon}
+      onPress={this._onPressMapZoomIn}
+    >
+      <Icon name="plus-circle" size={50} color={commonColors.DARK_GREY} />
+    </TouchableOpacity>
+    <TouchableOpacity
+      style={styles.zoomOutIcon}
+      onPress={this._onPressMapZoomOut}
+    >
+      <Icon name="minus-circle" size={50} color={commonColors.DARK_GREY} />
+    </TouchableOpacity>
+    <TouchableOpacity
+      style={styles.trackingIcon}
+      onPress={this._onPressUserLocationSearch}
+    >
+      <Icon name="radar" size={50} color={commonColors.DARK_GREY} />
+    </TouchableOpacity>
+    <ModalCitySearch
+      explicitSetMapRegion={region => this._explicitSetMapRegion(region)}
+    />
+  </View>
     );
   }
+
+  //--------------------------------------------------
+  // UNMOUNTING
+  //--------------------------------------------------
+
+  componentWillUnmount() {
+    // unregister all event listeners
+    BackgroundGeolocation.events.forEach(event =>
+      BackgroundGeolocation.removeAllListeners(event)
+    );
+  }
+
 }
 
-  const styles = StyleSheet.create({
-  mapStyle: {
-    flex: 3,
-    justifyContent: "center",
-    alignItems: "center",
-    width: SCREEN_WIDTH,
-    height: 400
-  },
-  textStyle: {
-    fontSize: 30,
-    color: "red"
-  },
+const styles = StyleSheet.create({
   searchIcon: {
     backgroundColor: "rgba(0,0,0,0)",
-    position: 'absolute',
+    position: "absolute",
     top: 20,
     right: 20
   },
   zoomInIcon: {
     backgroundColor: "rgba(0,0,0,0)",
-    position: 'absolute',
+    position: "absolute",
     bottom: 80,
     right: 20
   },
   zoomOutIcon: {
     backgroundColor: "rgba(0,0,0,0)",
-    position: 'absolute',
+    position: "absolute",
     bottom: 20,
     right: 20
   },
   trackingIcon: {
     backgroundColor: "rgba(0,0,0,0)",
-    position: 'absolute',
+    position: "absolute",
     bottom: 20,
     left: 20
   }
 });
 
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   user: state.user,
-  mapUI: state.mapUI
-})
+  mapUI: state.mapUI,
+  modalUI: state.modalUI,
+  trail: state.trail,
+});
 
-const mapDispatchToProps = (dispatch) => ({
-  setUserCity: (userCity) => dispatch(actions.setUserCity(userCity)),
-  setMapRegion: (mapRegion) => dispatch(actions.setMapRegion(mapRegion))
-})
-
+const mapDispatchToProps = dispatch => ({
+  modalCitySearch: visible => dispatch(actions.modalCitySearch(visible)),
+  setUserCity: userCity => dispatch(actions.setUserCity(userCity)),
+  setMapRegion: mapRegion => dispatch(actions.setMapRegion(mapRegion)),
+  setMapZoom: mapZoom => dispatch(actions.setMapZoom(mapZoom)),
+  addLocationPointToTrail: locationPoint => dispatch(actions.addLocationPointToTrail(locationPoint))
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(MapScreen);
-
