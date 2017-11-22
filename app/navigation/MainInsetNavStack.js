@@ -9,7 +9,8 @@ import {
 } from "react-navigation";
 
 import UserProfileScreen from "../screens/Main/screens/UserProfileScreen/UserProfileScreen";
-import MapBoxScreen from "../screens/Main/screens/MapScreen/MapBoxScreen";
+//import MapBoxScreen from "../screens/Main/screens/MapScreen/MapBoxScreen";
+import BackgroundGeoPage from "../screens/Main/screens/MapScreen/BackgroundGeoPage"
 //import StatisticsScreen from "../screens/Main/screens/StatisticsScreen/StatisticsScreen";
 import CauseListScreen from "../screens/Main/screens/CauseListScreen/CauseListScreen";
 import CauseDetailScreen from "../screens/Main/screens/CauseDetailScreen/CauseDetailScreen";
@@ -31,7 +32,7 @@ const MainInsetNavStack = DrawerNavigator(
             screen: TabNavigator(
               {
                 userProfile: { screen: UserProfileScreen },
-                map: { screen: MapBoxScreen },
+                map: { screen: BackgroundGeoPage },
                 statistics: { screen: UserProfileScreen },
                 causes: {
                   screen: StackNavigator(

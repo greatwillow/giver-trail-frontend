@@ -1,47 +1,47 @@
 {
-	"name": "giverTrailFrontEnd",
-	"version": "0.0.1",
-	"private": true,
-	"scripts": {
-	  "start": "node node_modules/react-native/local-cli/cli.js start",
-	  "test": "jest",
-	  "debug": "open 'rndebugger://set-debugger-loc?host=localhost&port=19001'",
-	  "android-linux": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res && react-native run-android"
-	},
-	"dependencies": {
-	  "@mapbox/react-native-mapbox-gl": "^6.0.0",
-	  "@turf/turf": "^5.0.4",
-	  "lodash.debounce": "^4.0.8",
-	  "qs": "^6.5.1",
-	  "react": "16.0.0-alpha.12",
-	  "react-native": "0.50.3",
-	  "react-native-offline": "^3.4.0",
-	  "react-native-permissions": "^1.0.1",
-	  "react-native-snap-carousel": "^3.3.4",
-	  "react-native-vector-icons": "^4.4.2",
-	  "react-navigation": "^1.0.0-beta.13",
-	  "react-redux": "^5.0.6",
-	  "redux": "^3.7.2",
-	  "redux-offline": "^2.0.0",
-	  "redux-thunk": "^2.2.0",
-	  "shortid": "^2.2.8"
-	},
-	"devDependencies": {
-	  "babel-jest": "21.2.0",
-	  "babel-preset-react-native": "4.0.0",
-	  "jest": "21.2.1",
-	  "react-test-renderer": "16.0.0",
-	  "react-native-scripts": "1.7.0",
-	  "redux-devtools-extension": "^2.13.2",
-	  "redux-logger": "^3.0.6"
-	},
-	"jest": {
-	  "preset": "react-native"
-	},
-	"rnpm": {
-	  "assets": [
-		"./assets/fonts"
-	  ]
-	}
+  "name": "giverTrailFrontEnd",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "jest",
+    "debug": "open 'rndebugger://set-debugger-loc?host=localhost&port=19001'",
+    "android-linux": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res && react-native run-android"
+  },
+  "dependencies": {
+    "@mapbox/react-native-mapbox-gl": "^6.0.0",
+    "@turf/turf": "^5.0.4",
+    "lodash.debounce": "^4.0.8",
+    "qs": "^6.5.1",
+    "react": "16.0.0-alpha.12",
+    "react-native": "0.50.3",
+    "react-native-mauron85-background-geolocation": "^0.4.0-rc.2",
+    "react-native-offline": "^3.4.0",
+    "react-native-permissions": "^1.0.1",
+    "react-native-snap-carousel": "^3.3.4",
+    "react-native-vector-icons": "^4.4.2",
+    "react-navigation": "^1.0.0-beta.13",
+    "react-redux": "^5.0.6",
+    "redux": "^3.7.2",
+    "redux-offline": "^2.0.0",
+    "redux-thunk": "^2.2.0",
+    "shortid": "^2.2.8"
+  },
+  "devDependencies": {
+    "babel-jest": "21.2.0",
+    "babel-preset-react-native": "4.0.0",
+    "jest": "21.2.1",
+    "react-test-renderer": "16.0.0",
+    "react-native-scripts": "1.7.0",
+    "redux-devtools-extension": "^2.13.2",
+    "redux-logger": "^3.0.6"
+  },
+  "jest": {
+    "preset": "react-native"
+  },
+  "rnpm": {
+    "assets": [
+      "./assets/fonts"
+    ]
   }
-  
+}

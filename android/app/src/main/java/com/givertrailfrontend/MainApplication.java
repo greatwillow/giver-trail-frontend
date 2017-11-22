@@ -2,6 +2,7 @@ package com.givertrailfrontend;
 
 import android.app.Application;
 
+import com.marianhello.react.BackgroundGeolocationPackage;
 import com.mapbox.rctmgl.RCTMGLPackage;
 import com.facebook.react.ReactApplication;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -26,7 +27,8 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
             new VectorIconsPackage(),
-            new RCTMGLPackage()
+            new RCTMGLPackage(),
+            new BackgroundGeolocationPackage()
       );
     }
 

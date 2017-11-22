@@ -1,6 +1,13 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { StyleSheet, Text, TouchableOpacity, View, Modal } from "react-native";
+import {
+  Geolocation,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Modal
+} from "react-native";
 import Mapbox from "@mapbox/react-native-mapbox-gl";
 import Permissions from "react-native-permissions";
 
@@ -19,19 +26,17 @@ class MapBoxScreen extends Component {
   constructor() {
     super();
     this.state = {
-      locationPermission: "undetermined"
+      locationPermission: "undetermined",
+      route: []
     };
   }
 
   componentDidMount() {
-    _requestGeolocationPermission = () => {
-      Permissions.request("location").then(response => {
-        this.setState({
-          locationPermission: response
-        });
+    Permissions.request("location").then(response => {
+      this.setState({
+        locationPermission: response
       });
-    };
-    return _requestGeolocationPermission();
+    });
   }
 
   _onPressUserLocationSearch = () => {
@@ -50,18 +55,53 @@ class MapBoxScreen extends Component {
   };
 
   _onRegionDidChange = region => {
+    //SET BOUNDS
     let bounds = this.mapRef.getVisibleBounds();
+
+    //WATCH GEO POSITION
+
     console.log("====================================");
+    console.log("GEOLOC IS ", Geolocation);
     console.log("====================================");
-    console.log("My Permission is ", this.state.locationPermission);
-    console.log("====================================");
-    console.log("====================================");
+
+    // Geolocation.watchPosition(success => {
+    //   console.log("SUCESS in WATCH POSITION! ", success);
+    //   if(this.state.route == null) {
+    //     this.setState({
+    //       route: [success]
+    //     })
+    //   } else {
+    //     this.setState({
+    //       route: route.push(success)
+    //     })
+    //   }
+    //   console.log("NEW SUCESS ",success)
+    // },
+    // error => {
+    //   console.log("ERROR IN WATCH POSITION ", error);
+    // },
+    // {
+    //   distanceFilter: 20
+    // }
+    // )
   };
 
   _explicitSetMapRegion = region => {
     this.mapRef.flyTo([region.longitude, region.latitude]);
     this.props.modalCitySearch(false);
   };
+
+  // _renderRoute() {
+    // if (!this.state.route) {
+    //   return null;
+    // }
+    // if(this.state.route == [])
+    // return (
+    //   <Mapbox.ShapeSource id='routeSource' shape={this.state.route}>
+    //     <Mapbox.LineLayer id='routeFill' style={layerStyles.route} belowLayerID='originInnerCircle' />
+    //   </Mapbox.ShapeSource>
+    // );
+  // }
 
   render() {
     return (
@@ -70,7 +110,7 @@ class MapBoxScreen extends Component {
           flex: 1,
           width: SCREEN_WIDTH,
           height: SCREEN_HEIGHT,
-          backgroundColor: "green"
+          backgroundColor: "black"
         }}
       >
         <Mapbox.MapView
@@ -91,7 +131,10 @@ class MapBoxScreen extends Component {
           style={{ flex: 1 }}
           zoomLevel={this.props.mapUI.mapZoom}
           onRegionDidChange={region => this._onRegionDidChange(region)}
-        />
+        >
+          {/* {this._renderRoute} */}
+        </Mapbox.MapView>
+
         <TouchableOpacity
           style={styles.searchIcon}
           onPress={this._onPressUserLocationSearch}
