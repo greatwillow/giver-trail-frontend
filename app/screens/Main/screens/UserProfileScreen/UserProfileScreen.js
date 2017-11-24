@@ -27,7 +27,7 @@ class UserProfileScreen extends Component {
           <Image
             source={interestImageData[interestImageIndex].image}
             style={{
-              width: SCREEN_WIDTH / 6 * 5,
+              width: SCREEN_WIDTH / 6 * 5.5,
               height: SCREEN_WIDTH / 12 * 3
             }}
           />
@@ -51,37 +51,27 @@ class UserProfileScreen extends Component {
     return (
       <View style={styles.layoutStyle}>
         <View style={styles.headerContainer} />
-        <View style={{ flex: 4 }}>
+        <ScrollView style={{ flex: 4 }}>
           <View style={styles.mainContentContainer}>
-            <View style={{ flex: 1, flexDirection: "row" }}>
               <View style={{ flex: 1 }}>
-                <TextFontTitillium style={{ fontSize: 20 }}>
-                  <Text style={{ color: commonColors.PINK }}>
-                    My Age Range:
-                  </Text>
-                  {this._renderAge()} {"\n"}
-                </TextFontTitillium>
-              </View>
-              <View style={{ flex: 1 }}>
-                <TextFontTitillium style={{ fontSize: 20 }}>
+                <TextFontTitillium style={{ fontSize: 20, textAlign: 'center', padding: 10 }}>
                   <Text
                     style={{ color: commonColors.PINK, borderBottomWidth: 1 }}
                   >
-                    My Home Base:{" "}
+                    Based In:{" "}
                   </Text>
-                  {this.props.user.userCity.name} {"\n"}
+                  {this.props.user.userCity.name} {"\n"}{"\n"}
                   <Text style={{ color: commonColors.PINK }}>
-                    My Interests:
+                    Likes These Adventures:
                   </Text>
                 </TextFontTitillium>
               </View>
-            </View>
           </View>
 
           <View style={styles.interestImageContainer}>
             <ScrollView>{this._renderInterestImages()}</ScrollView>
           </View>
-        </View>
+        </ScrollView>
         <View style={styles.nameAndEmailContainer}>
           <TextFontTitillium style={styles.nameStyle}>
             {this.props.user.userFirstName} {this.props.user.userLastName}
@@ -104,7 +94,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    width: SCREEN_WIDTH
+    width: SCREEN_WIDTH,
+    backgroundColor: commonColors.LIGHT_GREY
   },
   profileImage: {
     width: 130,
@@ -112,14 +103,14 @@ const styles = StyleSheet.create({
     borderRadius: 65,
     position: "absolute",
     top: 10,
-    left: 10
+    left: SCREEN_WIDTH /2 - 65,
   },
   nameAndEmailContainer: {
     position: "absolute",
-    top: 10,
-    left: 150,
-    right: 10,
-    height: 130,
+    top: 140,
+    left: 30,
+    right: 30,
+    height: 80,
     alignItems: "center",
     justifyContent: "center"
   },
@@ -137,7 +128,7 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     flex: 0,
-    height: 150,
+    height: 230,
     width: SCREEN_WIDTH,
     alignItems: "center",
     justifyContent: "center",
@@ -146,13 +137,22 @@ const styles = StyleSheet.create({
     borderColor: commonColors.GREEN
   },
   mainContentContainer: {
-    flex: 2,
-    width: SCREEN_WIDTH,
-    padding: 20
+    flex: 1,
+    width: SCREEN_WIDTH / 6 * 5.5,
+    alignSelf: 'center',
+    padding: 20,
+    margin: 10,
+    backgroundColor: "white",
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   interestImageContainer: {
     flex: 1,
-    width: SCREEN_WIDTH
+    width: SCREEN_WIDTH /6 *5.5,
+    alignSelf: 'center',
+    borderWidth: 1,
+    borderColor: commonColors.GREEN
   }
 });
 

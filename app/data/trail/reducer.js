@@ -2,7 +2,7 @@ import * as actionTypes from "../../constants/actionTypes";
 
 const initialState = {
     id: null,
-    geometry: []
+    coordinates: []
 }
 
 const trail = (state = initialState, action) => {
@@ -11,10 +11,12 @@ const trail = (state = initialState, action) => {
             return {
                 ...state, 
                 ...state.trail,
-                    geometry: state.geometry.concat({
-                        latitude: action.locationPoint.latitude,
-                        longitude: action.locationPoint.longitude
-                    })
+                    coordinates: state.coordinates.concat([
+                        [
+                        action.locationPoint.longitude,
+                        action.locationPoint.latitude
+                        ]
+                    ])
             }
         default:
             return state;

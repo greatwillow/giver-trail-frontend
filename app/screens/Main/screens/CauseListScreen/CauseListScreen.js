@@ -10,25 +10,28 @@ import {
   Text,
   TouchableWithoutFeedback,
   UIManager,
-  View
+  View,
+  TouchableOpacity
 } from "react-native";
 
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../../../constants/dimensions";
 import commonColors from "../../../../constants/colors";
 import TextFontTitillium from "../../../../components/TextFontTitillium";
+import GenericButton from "../../../../components/GenericButton";
 
 import Carousel from "react-native-snap-carousel";
 
 import CAUSE_LIST_DATA from "../../../../assets/pureData/causeListData";
 
-UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
+UIManager.setLayoutAnimationEnabledExperimental &&
+  UIManager.setLayoutAnimationEnabledExperimental(true);
 class CauseListScreen extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       itemPressed: false,
-      pageBackgroundImage: CAUSE_LIST_DATA[0].causeImage,
+      pageBackgroundImage: CAUSE_LIST_DATA[0].gradientCauseImage,
       pageBackgroundOpacity: new Animated.Value(0.3),
       itemWidth: SCREEN_WIDTH / 6 * 5,
       itemHeight: SCREEN_WIDTH / 6 * 4,
@@ -70,7 +73,7 @@ class CauseListScreen extends Component {
     } else {
       this.setState({
         pageBackgroundImage:
-          CAUSE_LIST_DATA[this._carousel.currentIndex].causeImage,
+          CAUSE_LIST_DATA[this._carousel.currentIndex].gradientCauseImage,
         pageDescriptionText:
           CAUSE_LIST_DATA[this._carousel.currentIndex].description
       });
@@ -103,7 +106,7 @@ class CauseListScreen extends Component {
             }
           ]}
         >
-                  <TextFontTitillium style={styles.carouselItemTitle}>
+          <TextFontTitillium style={styles.carouselItemTitle}>
             {item.title}
           </TextFontTitillium>
           <Image
@@ -111,6 +114,15 @@ class CauseListScreen extends Component {
             style={{
               width: this.state.itemWidth,
               height: this.state.itemImageHeight
+            }}
+          />
+          <View
+            style={{
+              flex: 0,
+              width: SCREEN_WIDTH / 6*5,
+              height: 1,
+              borderBottomColor: 'black',
+              borderBottomWidth: 1,
             }}
           />
 
@@ -137,16 +149,18 @@ class CauseListScreen extends Component {
           }}
           blurRadius={0}
         />
-        <View style={{
-          position: 'absolute',
-          top: SCREEN_WIDTH/6*2 +10, 
-          left: 0,
-          right: 0,
-          bottom: 0,
-          justifyContent: 'center',
-          alignItems: 'center'
-      }} >
-          <Animated.ScrollView
+        <View
+          style={{
+            position: "absolute",
+            top: SCREEN_WIDTH / 6 * 2 + 10,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            justifyContent: "center",
+            alignItems: "center"
+          }}
+        >
+          <Animated.View
             style={{
               flex: 1,
               alignSelf: "center",
@@ -158,11 +172,17 @@ class CauseListScreen extends Component {
               borderRadius: 10
             }}
           >
-            <TextFontTitillium style={{ color: "#f6f6f6", fontSize: 15 }}>
-              {this.state.pageDescriptionText}
-            </TextFontTitillium>
-          </Animated.ScrollView>
+            <ScrollView>
+              <TextFontTitillium style={{ color: "#f6f6f6", fontSize: 15 }}>
+                {"     "}{this.state.pageDescriptionText}
+              </TextFontTitillium>
+            </ScrollView>
+            <View style={{ height: 60, flex: 0, flexDirection: "row", justifyContent: 'space-around' }}>
+              <GenericButton style={styles.buttonStyle} text={'Select Cause'}/>
+              <GenericButton style={styles.buttonStyle} text={'Share This'}/>
             </View>
+          </Animated.View>
+        </View>
         <View
           style={{
             flex: 1,
@@ -207,7 +227,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: "black",
     textAlign: "center",
-    padding: 15,
+    padding: 15
   },
   carouselItemSubTitle1: {
     fontSize: 15,
@@ -223,6 +243,13 @@ const styles = StyleSheet.create({
   textStyle: {
     fontSize: 30,
     color: "red"
+  },
+  buttonStyle: { 
+    height: 40, 
+    width: SCREEN_WIDTH /6 * 2, 
+    backgroundColor: commonColors.GREEN,
+    marginTop: 10,
+    marginBottom: 0,
   }
 });
 
