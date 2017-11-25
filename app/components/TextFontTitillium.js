@@ -25,9 +25,7 @@ class TextFontTitillium extends Component {
     return (
       <View>
         <Text
-        // style={[{fontFamily: 'TitilliumWeb-Light'},
-        //   this.props.style]}
-        style={this.props.style}
+        style={[{fontFamily: 'TitilliumWeb-Regular'}, this.props.style]}
         >
           {this.props.children}
         </Text>

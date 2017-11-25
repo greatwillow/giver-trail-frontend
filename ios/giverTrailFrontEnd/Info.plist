@@ -13,6 +13,17 @@
 	</array>
 	<key>UIAppFonts</key>
 	<array>
+		<string>YatraOne-Regular.ttf</string>
+		<string>TitilliumWeb-Regular.ttf</string>
+		<string>TitilliumWeb-Light.ttf</string>
+		<string>ShadowsIntoLight.ttf</string>
+		<string>RalewayDots-Regular.ttf</string>
+		<string>PoitetOne-Regular.ttf</string>
+		<string>NothingYouCouldDo.ttf</string>
+		<string>Megrim.ttf</string>
+		<string>HomemadeApple-Regular.ttf</string>
+		<string>GloriaHallelujah.ttf</string>
+		<string>Courier-New.ttf</string>
 		<string>Entypo.ttf</string>
 		<string>EvilIcons.ttf</string>
 		<string>Feather.ttf</string>
