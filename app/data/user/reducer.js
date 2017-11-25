@@ -29,6 +29,8 @@ const user = (state = initialState, action) => {
       return setUserCity(state, action.userCity);
     case actionTypes.ADD_TO_USER_PASSIONS_LIST:
       return addToUserPassionsList(state, action.passionItem);
+    case actionTypes.SET_USER_PASSIONS_LIST:
+      return setUserPassionsList(state, action.list);
     case actionTypes.REMOVE_FROM_USER_PASSIONS_LIST:
       return removeFromUserPassionsList(state, action.passionItem);
     case actionTypes.POST_NEW_USER_SIGNUP:
@@ -128,6 +130,13 @@ const setUserCity = (state, userCity) => {
     }
   };
 };
+
+const setUserPassionsList = (state, list) => {
+  return {
+    ...state,
+    userPassionsList: list
+  }
+}
 
 const addToUserPassionsList = (state, passionItem) => {
   return {

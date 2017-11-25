@@ -1,5 +1,6 @@
 import {
   postNewUserSignup,
+  attemptUserSignIn,
   sendNewUserRegistrationData,
   getUserData,
   setUserToken,
@@ -9,8 +10,9 @@ import {
   setUserLastName,
   setUserAge,
   setUserCity,
+  setUserPassionsList,
   addToUserPassionsList,
-  removeFromUserPassionsList
+  removeFromUserPassionsList,
 } from "./user/actions";
 
 import {
@@ -32,8 +34,14 @@ import {
 } from "./mapUI/actions";
 
 import {
-  addLocationPointToTrail
+  generateNewTrail,
+  addLocationPointToTrail,
+  toggleTrackingStatus
 } from "./trail/actions"
+
+import {
+  addTrailToTrails,
+} from "./trails/actions"
 
 export {
   //modalUI
@@ -44,6 +52,7 @@ export {
   setInsetTabUI,
   //user
   postNewUserSignup,
+  attemptUserSignIn,
   sendNewUserRegistrationData,
   getUserData,
   setUserToken,
@@ -53,6 +62,7 @@ export {
   setUserLastName,
   setUserAge,
   setUserCity,
+  setUserPassionsList,
   addToUserPassionsList,
   removeFromUserPassionsList,
   //registrationUI
@@ -62,5 +72,9 @@ export {
   setMapRegion,
   setMapZoom,
   //trail
-  addLocationPointToTrail
+  generateNewTrail,
+  addLocationPointToTrail,
+  toggleTrackingStatus,
+  //trails
+  addTrailToTrails,
 };

@@ -57,6 +57,7 @@ const MainInsetNavStack = DrawerNavigator(
                   <CustomTabBar navigation={navigation} />
                 ),
                 animationEnabled: true,
+                swipeEnabled: false,
                 tabBarOptions: {
                   activeTintColor: "#e91e63",
                   style: {

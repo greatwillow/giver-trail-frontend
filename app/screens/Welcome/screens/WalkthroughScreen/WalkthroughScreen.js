@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import {
-  Dimensions,
   View,
   Text,
   ScrollView,
@@ -9,7 +8,7 @@ import {
   TouchableOpacity
 } from "react-native";
 
-import LoginScreen from "../LoginScreen/LoginScreen";
+import SignInScreen from "../SignInScreen/SignInScreen";
 import GenericButton from "../../../../components/GenericButton";
 import MainWalkthroughContainer from "./MainWalkthroughContainer";
 import WALKTHROUGH_DATA from "../../../../assets/pureData/walkthroughData";
@@ -19,7 +18,7 @@ import commonColors from "../../../../constants/colors";
 
 class WalkthroughScreen extends Component {
   _onPressLogin = () => {
-    this.props.navigation.navigate("login");
+    this.props.navigation.navigate("signIn");
   };
 
   _onPressSignup = () => {
@@ -88,12 +87,12 @@ class WalkthroughScreen extends Component {
             <View style={{ flex: 2 }}>
               <GenericButton
                 style={styles.button}
-                text={"Login!"}
+                text={"Sign In"}
                 onPress={this._onPressLogin}
               />
               <GenericButton
                 style={styles.button}
-                text={"Signup!"}
+                text={"Sign Up"}
                 onPress={this._onPressSignup}
               />
             </View>

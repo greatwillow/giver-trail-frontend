@@ -3,11 +3,11 @@
 import React, { Component } from "react";
 import { StackNavigator } from "react-navigation";
 
-import LoginNavStack from "./LoginNavStack";
+import WelcomeNavStack from "./WelcomeNavStack";
 import MainInsetNavStack from "./MainInsetNavStack";
 
 const AppNavigation = StackNavigator({
-  loginNavStack: { screen: LoginNavStack },
+  welcomeNavStack: { screen: WelcomeNavStack },
   mainInsetNavStack: { screen: MainInsetNavStack }
 });
 

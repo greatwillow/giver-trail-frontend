@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { connect } from "react-redux";
 import * as actions from "../../../../data/appActions";
+import shortid from "shortid"
 
 import BackgroundGeolocation from "react-native-mauron85-background-geolocation";
 import MapboxGL from "@mapbox/react-native-mapbox-gl";
@@ -33,7 +34,7 @@ class MapScreen extends Component {
     super();
     this.state = {
       locationPermission: "undetermined",
-      route: []
+      route: {}
     };
   }
 
@@ -48,6 +49,11 @@ class MapScreen extends Component {
       });
     });
 
+    componentWillUpdate = nextProps => {
+  
+      nextProps.trail.trackingStatus ? BackgroundGeolocation.start() : BackgroundGeolocation.stop();
+    }
+
     //--------------------------------------------------
     // GEOLOCATION CONFIG
     //--------------------------------------------------
@@ -55,15 +61,15 @@ class MapScreen extends Component {
     BackgroundGeolocation.configure({
       desiredAccuracy: 0,
       stationaryRadius: 10,
-      distanceFilter: 3,
-      // notificationTitle: "Background tracking",
-      // notificationText: "enabled",
+      distanceFilter: 1,
+      notificationTitle: "Background tracking",
+      notificationText: "enabled",
       debug: false, //for sounds
       startOnBoot: false,
       stopOnTerminate: false,
       locationProvider: BackgroundGeolocation.DISTANCE_FILTER_PROVIDER,
-      interval: 0,
-      stopOnStillActivity: true
+      //interval: 500,
+      stopOnStillActivity: false
     });
 
     //--------------------------------------------------
@@ -82,30 +88,44 @@ class MapScreen extends Component {
     // CHECKING PERMISSION STATUS
     //--------------------------------------------------
 
-    BackgroundGeolocation.checkStatus(status => {
-      console.log(
-        "[INFO] BackgroundGeolocation service is running",
-        status.isRunning
-      );
-      console.log(
-        "[INFO] BackgroundGeolocation service has permissions",
-        status.hasPermissions
-      );
-      console.log(
-        "[INFO] BackgroundGeolocation auth status: " + status.authorization
-      );
+    _checkGeolocationStatus = () => {
+      BackgroundGeolocation.checkStatus(status => {
+        console.log(
+          "[INFO] BackgroundGeolocation service is running",
+          status.isRunning
+        );
+        console.log(
+          "[INFO] BackgroundGeolocation service has permissions",
+          status.hasPermissions
+        );
+        console.log(
+          "[INFO] BackgroundGeolocation auth status: " + status.authorization
+        );
+  
+        if (!status.isRunning) {
+          BackgroundGeolocation.start();
+        }
+      });
+    }
 
-      if (!status.isRunning) {
-        BackgroundGeolocation.start();
-      }
-    });
 
     //--------------------------------------------------
     // ACTION AT EACH GPS POINT TAKEN IN
     //--------------------------------------------------
+    BackgroundGeolocation.on("start", () => {
+      console.log("[INFO] BackgroundGeolocation service has been started");
+    });
 
     BackgroundGeolocation.on("location", location => {
+
+      console.log('====================================');
+      console.log("WHATS LOC ",location);
+      console.log('====================================');
       BackgroundGeolocation.startTask(taskKey => {
+
+        console.log('====================================');
+        console.log("ADDING LOC ");
+        console.log('====================================');
         this.props.addLocationPointToTrail({
           longitude: location.longitude,
           latitude: location.latitude
@@ -114,7 +134,7 @@ class MapScreen extends Component {
         console.log("====================================");
         console.log("INPUTTED IS ", this.props.trail);
         console.log("====================================");
-        if (this.props.trail.coordinates.length > 2) {
+        if (this.props.trail.coordinates.length > 1) {
           const lineString = makeLineString(this.props.trail.coordinates);
 
           this.setState({
@@ -140,9 +160,7 @@ class MapScreen extends Component {
       console.log("[ERROR] BackgroundGeolocation error:", error);
     });
 
-    BackgroundGeolocation.on("start", () => {
-      console.log("[INFO] BackgroundGeolocation service has been started");
-    });
+
 
     BackgroundGeolocation.on("stop", () => {
       console.log("[INFO] BackgroundGeolocation service has been stopped");
@@ -173,7 +191,7 @@ class MapScreen extends Component {
   }
 
   //--------------------------------------------------
-  // MODAL UI SEARCH
+  // PRESS MODAL UI SEARCH
   //--------------------------------------------------
 
   _onPressUserLocationSearch = () => {
@@ -181,7 +199,7 @@ class MapScreen extends Component {
   };
 
   //--------------------------------------------------
-  // ZOOM
+  // PRESS ZOOM
   //--------------------------------------------------
 
   _onPressMapZoomIn = () => {
@@ -191,6 +209,31 @@ class MapScreen extends Component {
   _onPressMapZoomOut = () => {
     this.props.setMapZoom(this.props.mapUI.mapZoom - 1);
   };
+
+  //--------------------------------------------------
+  // PRESS TOGGLE TRACKING
+  //--------------------------------------------------
+
+  _onPressToggleTracking = () => {
+    this.props.trail.trackingStatus ? BackgroundGeolocation.stop() : BackgroundGeolocation.start();
+
+    this.props.toggleTrackingStatus(!this.props.trail.trackingStatus)
+
+    
+    _checkGeolocationStatus()
+
+  }
+
+  //--------------------------------------------------
+  // PRESS START NEW TRAIL
+  //--------------------------------------------------
+
+  _onPressStartNewTrail = () => {
+
+    this.props.addTrailToTrails(this.props.trail);
+    this.props.generateNewTrail();
+
+  }
 
   //--------------------------------------------------
   // REGION CHANGE
@@ -211,23 +254,6 @@ class MapScreen extends Component {
   //--------------------------------------------------
 
   _renderRoute() {
-    const myCoords = [
-      [-73.5896, 45.50399833333333],
-      [-73.58979833333333, 45.50390000000001],
-      [-73.59059833333335, 45.5035],
-      [45.503099999999996, -73.5913],
-      [45.50279999999999, -73.59179999999999],
-      [45.502698333333335, -73.59199833333334],
-      [45.50279999999999, -73.5929],
-      [45.50289833333333, -73.59329833333332]
-    ];
-
-    const line = makeLineString(myCoords);
-
-    console.log("====================================");
-    console.log("LINE IS ", line);
-    console.log("====================================");
-
     return (
       <MapboxGL.Animated.ShapeSource id="routeSource" shape={this.state.route}>
         <MapboxGL.Animated.LineLayer id="routeFill" style={layerStyles.route} />
@@ -254,7 +280,7 @@ class MapScreen extends Component {
             this.mapRef = ref;
           }}
           logoEnabled={false}
-          compassEnabled={true}
+          compassEnabled={false}
           showUserLocation={
             this.state.locationPermission == "authorized" ? true : false
           }
@@ -270,31 +296,56 @@ class MapScreen extends Component {
         >
           {this._renderRoute()}
         </MapboxGL.MapView>
-
+        <View 
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            padding: 10,
+            position: "absolute", 
+            top: 5, 
+            right: 5, 
+            left: 5, 
+            height: 60, 
+            backgroundColor: "rgba(0,0,0,0.7)", 
+            borderRadius: 5
+            }}
+            >
+            <TouchableOpacity
+              style={styles.searchIcon}
+              onPress={this._onPressUserLocationSearch}
+            >
+              <Icon name="search-web" size={40} color={commonColors.GREEN} />
+            </TouchableOpacity>
+            <View style={{flexDirection: 'row'}}>
+              <TouchableOpacity
+                style={styles.trackingIcon}
+                onPress={this._onPressStartNewTrail}
+              >
+                <Icon name="map-marker-plus" size={40} color={commonColors.GREEN} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.trackingIcon}
+                onPress={this._onPressToggleTracking}
+              >
+                <Icon name={this.props.trail.trackingStatus ? "pause-circle-outline" : "play-circle-outline" } 
+                  size={40} 
+                  color={commonColors.PINK} 
+                  />
+              </TouchableOpacity>
+            </View>
+        </View>
         <TouchableOpacity
-          style={styles.searchIcon}
-          onPress={this._onPressUserLocationSearch}
-        >
-          <Icon name="search-web" size={40} color={commonColors.PINK} />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.zoomInIcon}
-          onPress={this._onPressMapZoomIn}
-        >
-          <Icon name="plus-circle" size={50} color={commonColors.DARK_GREY} />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.zoomOutIcon}
-          onPress={this._onPressMapZoomOut}
-        >
-          <Icon name="minus-circle" size={50} color={commonColors.DARK_GREY} />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.trackingIcon}
-          onPress={this._onPressUserLocationSearch}
-        >
-          <Icon name="radar" size={50} color={commonColors.DARK_GREY} />
-        </TouchableOpacity>
+              style={styles.zoomOutIcon}
+              onPress={this._onPressMapZoomOut}
+            >
+              <Icon name="minus-circle" size={50} color={commonColors.DARK_GREY} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.zoomInIcon}
+              onPress={this._onPressMapZoomIn}
+            >
+              <Icon name="plus-circle" size={50} color={commonColors.DARK_GREY} />
+            </TouchableOpacity>
         <ModalCitySearch
           explicitSetMapRegion={region => this._explicitSetMapRegion(region)}
         />
@@ -317,27 +368,22 @@ class MapScreen extends Component {
 const styles = StyleSheet.create({
   searchIcon: {
     backgroundColor: "rgba(0,0,0,0)",
-    position: "absolute",
-    top: 20,
-    right: 20
   },
   zoomInIcon: {
     backgroundColor: "rgba(0,0,0,0)",
-    position: "absolute",
-    bottom: 80,
-    right: 20
+    position: 'absolute',
+    left: 10,
+    bottom: 70,
   },
   zoomOutIcon: {
     backgroundColor: "rgba(0,0,0,0)",
-    position: "absolute",
-    bottom: 20,
-    right: 20
+    position: 'absolute',
+    left: 10,
+    bottom: 10,
   },
   trackingIcon: {
     backgroundColor: "rgba(0,0,0,0)",
-    position: "absolute",
-    bottom: 20,
-    left: 20
+    marginHorizontal: 10,
   }
 });
 
@@ -347,8 +393,8 @@ const styles = StyleSheet.create({
 
 const layerStyles = MapboxGL.StyleSheet.create({
   route: {
-    lineColor: "blue",
-    lineWidth: 10,
+    lineColor: commonColors.PINK,
+    lineWidth: 5,
     lineOpacity: 0.84
   }
 });
@@ -370,7 +416,11 @@ const mapDispatchToProps = dispatch => ({
   setMapRegion: mapRegion => dispatch(actions.setMapRegion(mapRegion)),
   setMapZoom: mapZoom => dispatch(actions.setMapZoom(mapZoom)),
   addLocationPointToTrail: locationPoint =>
-    dispatch(actions.addLocationPointToTrail(locationPoint))
+    dispatch(actions.addLocationPointToTrail(locationPoint)),
+  toggleTrackingStatus: trackingStatus =>
+    dispatch(actions.toggleTrackingStatus(trackingStatus)),
+  addTrailToTrails: trail => dispatch(actions.addTrailToTrails(trail)),
+  generateNewTrail: () => dispatch(actions.generateNewTrail()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MapScreen);

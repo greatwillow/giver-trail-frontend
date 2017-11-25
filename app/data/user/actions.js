@@ -2,6 +2,7 @@ import { NetInfo } from "react-native";
 
 import * as actionTypes from "../../constants/actionTypes";
 import * as actions from "../appActions";
+import { NavigationActions } from 'react-navigation'
 
 //--------------------------------------------------
 //   SET USER DATA
@@ -53,6 +54,13 @@ export function setUserCity(userCity) {
   return {
     type: actionTypes.SET_USER_CITY,
     userCity
+  };
+}
+
+export function setUserPassionsList(list) {
+  return {
+    type: actionTypes.SET_USER_PASSIONS_LIST,
+    list
   };
 }
 
@@ -184,8 +192,6 @@ export const sendNewUserRegistrationData = inputObject => dispatch => {
 const attemptGettingUserData = userID => (dispatch, getState) => {
   const USER_GET_URI = `https://damp-tor-16286.herokuapp.com/users/${userID}`;
 
-  console.log("GET REQ UserID is ", userID);
-
   const STATE = getState();
   const USER_TOKEN = STATE.user.userToken;
 
@@ -217,3 +223,60 @@ const attemptGettingUserData = userID => (dispatch, getState) => {
 export const getUserData = inputObject => dispatch => {
   dispatch(attemptGettingUserData(inputObject));
 };
+
+//--------------------------------------------------
+// ATTEMPT USER SIGN IN
+//--------------------------------------------------
+
+export const attemptUserSignIn = (userEmail, userPassword) => (
+  dispatch,
+  getState
+) => {
+  const USER = {
+    email: userEmail.userEmail,
+    password: userPassword.userPassword
+  };
+
+  const USER_POST_URI =
+    "https://damp-tor-16286.herokuapp.com/users/login";
+
+  return fetch(USER_POST_URI, {
+    headers: new Headers({
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    }),
+    method: "POST",
+    body: JSON.stringify(USER)
+  })
+    .then(res => {
+      if (res.status == 200) {
+
+        dispatch(actions.setUserToken(res.headers.map["x-auth"][0]))
+
+        return res.json();
+      } else {
+        throw new Error("Something wrong with the server! Response is: ", res);
+      }
+    })
+    .then(data => {
+      
+        console.log('====================================');
+        console.log("DATA is ",data);
+        console.log('====================================');
+
+        dispatch(actions.setUserEmail(data.email))
+        dispatch(actions.setUserAge(data.age))
+        dispatch(actions.setUserPassionsList(data.interestList))
+
+        //TODO: Get Abdalla to modify user city data - add lat,long,name params
+        //dispatch(actions.setUserCity(data.address.city))
+
+        dispatch(NavigationActions.navigate({ routeName: 'mainInsetNavStack'}))
+
+    })
+    .catch(error => {
+        dispatch(NavigationActions.navigate({ routeName: 'signInFail'}))
+      //console.error(error);
+    });
+}
+

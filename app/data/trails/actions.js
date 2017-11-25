@@ -1,0 +1,9 @@
+import * as actionTypes from "../../constants/actionTypes"
+import * as actions from '../appActions';
+
+export function addTrailToTrails(trail) {
+    return {
+        type: actionTypes.ADD_TRAIL_TO_TRAILS,
+        trail
+    }
+}

@@ -4,8 +4,9 @@ import React from "react";
 import { StackNavigator, TabNavigator } from "react-navigation";
 
 import WalkthroughScreen from "../screens/Welcome/screens/WalkthroughScreen/WalkthroughScreen";
-import LoginScreen from "../screens/Welcome/screens/LoginScreen/LoginScreen";
+import SignInScreen from "../screens/Welcome/screens/SignInScreen/SignInScreen";
 import SignupScreen from "../screens/Welcome/screens/SignupScreen/SignupScreen";
+import SignInFailScreen from "../screens/Welcome/screens/SignInFailScreen/SignInFailScreen";
 import RegistrationWalkthroughScreen from "../screens/Welcome/screens/UserRegistrationScreen/RegistrationWalkthroughScreen";
 
 import MainInsetNavStack from "./MainInsetNavStack";
@@ -15,12 +16,13 @@ const loginNavOptions = {
   header: null
 };
 
-const LoginNavStack = StackNavigator(
+const WelcomeNavStack = StackNavigator(
   {
-    // walkthrough: { screen: WalkthroughScreen },
-    // login: { screen: LoginScreen },
-    // signup: { screen: SignupScreen },
-    // userRegistration: { screen: RegistrationWalkthroughScreen },
+    walkthrough: { screen: WalkthroughScreen },
+    signIn: { screen: SignInScreen },
+    signup: { screen: SignupScreen },
+    signInFail: { screen: SignInFailScreen },
+    userRegistration: { screen: RegistrationWalkthroughScreen },
     mainInsetNavStack: { screen: MainInsetNavStack }
   },
   {
@@ -28,4 +30,4 @@ const LoginNavStack = StackNavigator(
   }
 );
 
-export default LoginNavStack;
+export default WelcomeNavStack;

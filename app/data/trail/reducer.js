@@ -1,12 +1,21 @@
 import * as actionTypes from "../../constants/actionTypes";
+import shortid from 'shortid';
 
 const initialState = {
     id: null,
+    trackingStatus: false,
     coordinates: []
 }
 
 const trail = (state = initialState, action) => {
     switch(action.type) {
+        case actionTypes.GENERATE_NEW_TRAIL:
+            return {
+                ...state,
+                    id: shortid.generate(),
+                    trackingStatus: false,
+                    coordinates: []
+            }
         case actionTypes.ADD_LOCATION_POINT_TO_TRAIL:
             return {
                 ...state, 
@@ -17,6 +26,12 @@ const trail = (state = initialState, action) => {
                         action.locationPoint.latitude
                         ]
                     ])
+            }
+        case actionTypes.TOGGLE_TRACKING_STATUS:
+            return {
+                ...state,
+                ...state.trail,
+                    trackingStatus: action.trackingStatus
             }
         default:
             return state;
