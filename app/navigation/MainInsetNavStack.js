@@ -56,7 +56,7 @@ const MainInsetNavStack = DrawerNavigator(
                 tabBarComponent: ({ navigation }) => (
                   <CustomTabBar navigation={navigation} />
                 ),
-                animationEnabled: true,
+                animationEnabled: false,
                 swipeEnabled: false,
                 tabBarOptions: {
                   activeTintColor: "#e91e63",
@@ -69,8 +69,8 @@ const MainInsetNavStack = DrawerNavigator(
                     paddingBottom: 45
                   },
                   tabStyle: {
-                    justifyContent: "center",
-                    alignItems: "center"
+                    //justifyContent: "center",
+                    //alignItems: "center"
                   }
                 }
               }
@@ -81,7 +81,9 @@ const MainInsetNavStack = DrawerNavigator(
           //StackNavigator Navigation Options
           navigationOptions: ({ navigation }) => ({
             headerStyle: headerStyle,
-            headerRight: <MenuIcon navigation={navigation} />
+            headerRight: <MenuIcon navigation={navigation}/>,
+            // swipeEnabled: false,
+            // animationEnabled: false
           })
         }
       )
@@ -92,7 +94,9 @@ const MainInsetNavStack = DrawerNavigator(
     contentComponent: DrawerScreen,
     drawerWidth: SCREEN_WIDTH / 16 * 13,
     navigationOptions: {
-      gesturesEnabled: false
+      gesturesEnabled: false,
+      swipeEnabled: false,
+      animationEnabled: false
     }
   }
 );

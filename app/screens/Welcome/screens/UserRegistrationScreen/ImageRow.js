@@ -84,7 +84,7 @@ class ImageRow extends Component {
 const styles = StyleSheet.create({
   checkContainer: {
     flex: 1,
-    backgroundColor: commonColors.DARK_GREY,
+    backgroundColor: "rgba(0,0,0,0.7)",
     justifyContent: "center",
     alignItems: "center"
   }

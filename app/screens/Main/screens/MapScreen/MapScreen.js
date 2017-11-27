@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import {
   Alert,
   Geolocation,
+  PermissionsAndroid,
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -10,11 +12,12 @@ import {
 } from "react-native";
 import { connect } from "react-redux";
 import * as actions from "../../../../data/appActions";
-import shortid from "shortid"
+import shortid from "shortid";
 
 import BackgroundGeolocation from "react-native-mauron85-background-geolocation";
 import MapboxGL from "@mapbox/react-native-mapbox-gl";
-import Permissions from "react-native-permissions";
+//TODO: Get rid of RN Permisions Library?
+//import Permissions from "react-native-permissions";
 import GoogleAutocompleteSearch from "./GoogleAutocompleteSearch";
 import { lineString as makeLineString } from "@turf/helpers";
 
@@ -33,7 +36,8 @@ class MapScreen extends Component {
   constructor() {
     super();
     this.state = {
-      locationPermission: "undetermined",
+      //TODO: change this to undetermined, and then get to work on android
+      locationPermission: "authorized",
       route: {}
     };
   }
@@ -42,17 +46,51 @@ class MapScreen extends Component {
   // MOUNTING/ CHECKING PERMISSION --> may not need?
   //--------------------------------------------------
 
-  componentDidMount() {
-    Permissions.request("location").then(response => {
-      this.setState({
-        locationPermission: response
-      });
-    });
+  componentWillUpdate = nextProps => {
+    nextProps.trail.trackingStatus
+      ? BackgroundGeolocation.start()
+      : BackgroundGeolocation.stop();
+  };
 
-    componentWillUpdate = nextProps => {
-  
-      nextProps.trail.trackingStatus ? BackgroundGeolocation.start() : BackgroundGeolocation.stop();
+  componentDidMount() {
+    // Permissions.request("location").then(response => {
+    //   alert('Permission is ',response)
+    //   console.log("PERMISSION IS ", response)
+    //   this.setState({
+    //     locationPermission: response
+    //   });
+    // });
+ 
+    async function requestLocationPermission() {
+      if (Platform.OS !== "android" && Platform.Version >= 23) {  
+        try {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+            {
+              title: "Cool Photo App Camera Permission",
+              message:
+                "Cool Photo App needs access to your camera " +
+                "so you can take awesome pictures."
+            }
+          );
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            return "authorized";
+          } else {
+            return "denied";
+          }
+        } catch (err) {
+          console.warn(err);
+        }
+      }
     }
+    requestLocationPermission().then(result => {
+      this.setState({
+        locationPermission: result
+      });
+      console.log("====================================");
+      console.log("AUTH IS ", this.state.locationPermission);
+      console.log("====================================");
+    });
 
     //--------------------------------------------------
     // GEOLOCATION CONFIG
@@ -61,7 +99,7 @@ class MapScreen extends Component {
     BackgroundGeolocation.configure({
       desiredAccuracy: 0,
       stationaryRadius: 10,
-      distanceFilter: 1,
+      distanceFilter: 10,
       notificationTitle: "Background tracking",
       notificationText: "enabled",
       debug: false, //for sounds
@@ -101,13 +139,12 @@ class MapScreen extends Component {
         console.log(
           "[INFO] BackgroundGeolocation auth status: " + status.authorization
         );
-  
+
         if (!status.isRunning) {
           BackgroundGeolocation.start();
         }
       });
-    }
-
+    };
 
     //--------------------------------------------------
     // ACTION AT EACH GPS POINT TAKEN IN
@@ -117,23 +154,11 @@ class MapScreen extends Component {
     });
 
     BackgroundGeolocation.on("location", location => {
-
-      console.log('====================================');
-      console.log("WHATS LOC ",location);
-      console.log('====================================');
       BackgroundGeolocation.startTask(taskKey => {
-
-        console.log('====================================');
-        console.log("ADDING LOC ");
-        console.log('====================================');
         this.props.addLocationPointToTrail({
           longitude: location.longitude,
           latitude: location.latitude
         });
-
-        console.log("====================================");
-        console.log("INPUTTED IS ", this.props.trail);
-        console.log("====================================");
         if (this.props.trail.coordinates.length > 1) {
           const lineString = makeLineString(this.props.trail.coordinates);
 
@@ -141,12 +166,6 @@ class MapScreen extends Component {
             route: lineString
           });
         }
-
-        console.log("====================================");
-       // console.log("LINESTRING IS ", lineString);
-        console.log("ROUTE IS ", this.state.route);
-        console.log("====================================");
-
         BackgroundGeolocation.endTask(taskKey);
       });
     });
@@ -159,8 +178,6 @@ class MapScreen extends Component {
     BackgroundGeolocation.on("error", error => {
       console.log("[ERROR] BackgroundGeolocation error:", error);
     });
-
-
 
     BackgroundGeolocation.on("stop", () => {
       console.log("[INFO] BackgroundGeolocation service has been stopped");
@@ -188,7 +205,7 @@ class MapScreen extends Component {
         );
       }
     });
-  }
+}
 
   //--------------------------------------------------
   // PRESS MODAL UI SEARCH
@@ -215,25 +232,23 @@ class MapScreen extends Component {
   //--------------------------------------------------
 
   _onPressToggleTracking = () => {
-    this.props.trail.trackingStatus ? BackgroundGeolocation.stop() : BackgroundGeolocation.start();
+    this.props.trail.trackingStatus
+      ? BackgroundGeolocation.stop()
+      : BackgroundGeolocation.start();
 
-    this.props.toggleTrackingStatus(!this.props.trail.trackingStatus)
+    this.props.toggleTrackingStatus(!this.props.trail.trackingStatus);
 
-    
-    _checkGeolocationStatus()
-
-  }
+    _checkGeolocationStatus();
+  };
 
   //--------------------------------------------------
   // PRESS START NEW TRAIL
   //--------------------------------------------------
 
   _onPressStartNewTrail = () => {
-
     this.props.addTrailToTrails(this.props.trail);
     this.props.generateNewTrail();
-
-  }
+  };
 
   //--------------------------------------------------
   // REGION CHANGE
@@ -296,56 +311,65 @@ class MapScreen extends Component {
         >
           {this._renderRoute()}
         </MapboxGL.MapView>
-        <View 
+        <View
           style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
+            flexDirection: "row",
+            justifyContent: "space-between",
             padding: 10,
-            position: "absolute", 
-            top: 5, 
-            right: 5, 
-            left: 5, 
-            height: 60, 
-            backgroundColor: "rgba(0,0,0,0.7)", 
+            position: "absolute",
+            top: 5,
+            right: 5,
+            left: 5,
+            height: 60,
+            backgroundColor: "rgba(0,0,0,0.7)",
             borderRadius: 5
-            }}
-            >
+          }}
+        >
+          <TouchableOpacity
+            style={styles.searchIcon}
+            onPress={this._onPressUserLocationSearch}
+          >
+            <Icon name="search-web" size={40} color={commonColors.GREEN} />
+          </TouchableOpacity>
+          <View style={{ flexDirection: "row" }}>
             <TouchableOpacity
-              style={styles.searchIcon}
-              onPress={this._onPressUserLocationSearch}
+              style={styles.trackingIcon}
+              onPress={this._onPressStartNewTrail}
             >
-              <Icon name="search-web" size={40} color={commonColors.GREEN} />
+              <Icon
+                name="map-marker-plus"
+                size={40}
+                color={commonColors.GREEN}
+              />
             </TouchableOpacity>
-            <View style={{flexDirection: 'row'}}>
-              <TouchableOpacity
-                style={styles.trackingIcon}
-                onPress={this._onPressStartNewTrail}
-              >
-                <Icon name="map-marker-plus" size={40} color={commonColors.GREEN} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.trackingIcon}
-                onPress={this._onPressToggleTracking}
-              >
-                <Icon name={this.props.trail.trackingStatus ? "pause-circle-outline" : "play-circle-outline" } 
-                  size={40} 
-                  color={commonColors.PINK} 
-                  />
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity
+              style={styles.trackingIcon}
+              onPress={this._onPressToggleTracking}
+            >
+              <Icon
+                name={
+                  this.props.trail.trackingStatus
+                    ? "pause-circle-outline"
+                    : "play-circle-outline"
+                }
+                size={40}
+                color={commonColors.PINK}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
         <TouchableOpacity
-              style={styles.zoomOutIcon}
-              onPress={this._onPressMapZoomOut}
-            >
-              <Icon name="minus-circle" size={50} color={commonColors.DARK_GREY} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.zoomInIcon}
-              onPress={this._onPressMapZoomIn}
-            >
-              <Icon name="plus-circle" size={50} color={commonColors.DARK_GREY} />
-            </TouchableOpacity>
+          style={styles.zoomOutIcon}
+          onPress={this._onPressMapZoomOut}
+        >
+          <Icon name="minus-circle" size={50} color={commonColors.DARK_GREY} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.zoomInIcon}
+          onPress={this._onPressMapZoomIn}
+        >
+          <Icon name="plus-circle" size={50} color={commonColors.DARK_GREY} />
+        </TouchableOpacity>
         <ModalCitySearch
           explicitSetMapRegion={region => this._explicitSetMapRegion(region)}
         />
@@ -367,23 +391,23 @@ class MapScreen extends Component {
 
 const styles = StyleSheet.create({
   searchIcon: {
-    backgroundColor: "rgba(0,0,0,0)",
+    backgroundColor: "rgba(0,0,0,0)"
   },
   zoomInIcon: {
     backgroundColor: "rgba(0,0,0,0)",
-    position: 'absolute',
+    position: "absolute",
     left: 10,
-    bottom: 70,
+    bottom: 70
   },
   zoomOutIcon: {
     backgroundColor: "rgba(0,0,0,0)",
-    position: 'absolute',
+    position: "absolute",
     left: 10,
-    bottom: 10,
+    bottom: 10
   },
   trackingIcon: {
     backgroundColor: "rgba(0,0,0,0)",
-    marginHorizontal: 10,
+    marginHorizontal: 10
   }
 });
 
@@ -420,7 +444,7 @@ const mapDispatchToProps = dispatch => ({
   toggleTrackingStatus: trackingStatus =>
     dispatch(actions.toggleTrackingStatus(trackingStatus)),
   addTrailToTrails: trail => dispatch(actions.addTrailToTrails(trail)),
-  generateNewTrail: () => dispatch(actions.generateNewTrail()),
+  generateNewTrail: () => dispatch(actions.generateNewTrail())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MapScreen);

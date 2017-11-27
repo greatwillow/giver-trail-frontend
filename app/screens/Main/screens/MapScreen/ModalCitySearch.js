@@ -43,6 +43,7 @@ class ModalCitySearch extends Component {
                 <View style={styles.listContainer}>
                 <GoogleAutocompleteSearch
                   {...this.props}
+                  wantGeocoding={true}
                   explicitSetMapRegion={(region) => this.props.explicitSetMapRegion(region)} 
                 />
                 </View>

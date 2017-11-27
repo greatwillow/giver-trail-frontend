@@ -28,7 +28,7 @@ class GoogleAutocompleteSearch extends Component {
                 latitudeDelta: 0.1,
                 longitudeDelta: 0.1
               }
-              this.props.explicitSetMapRegion(formattedLocation);
+                this.props.explicitSetMapRegion(formattedLocation); 
             },
             error => {
               console.log("GEOCODING ERROR ",error);
@@ -46,7 +46,9 @@ class GoogleAutocompleteSearch extends Component {
             fetchDetails={true}
             renderDescription={row => row.description}
             onPress={(data, details) => {
-              this._geocodeCity(data, details);
+              if(this.props.wantGeocoding) {
+                this._geocodeCity(data, details);
+              }
             }}
             getDefaultValue={() => ""}
             query={{
@@ -70,7 +72,7 @@ class GoogleAutocompleteSearch extends Component {
                 left: 20,
                 right: 20,
                 width: "100%",
-                backgroundColor: "white"
+                backgroundColor: "white",
               },
               textInput: {
                 borderWidth: 1,

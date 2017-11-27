@@ -23,30 +23,59 @@ import {
 import Qs from "qs";
 import debounce from "lodash.debounce";
 
-import TextInputSingleLine from "../components/TextInputSingleLine";
-import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../constants/dimensions";
-import commonColors from "../constants/colors";
+import TextInputSingleLine from "../../../../components/TextInputSingleLine";
+import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../../../constants/dimensions";
+import commonColors from "../../../../constants/colors"
 
 const defaultStyles = {
   textInputContainer: {
     backgroundColor: "white",
     height: 50
   },
-  listView: {
-    backgroundColor: "white",
-    height: SCREEN_HEIGHT / 2 - 200,
-    width: SCREEN_WIDTH / 6 * 4,
-    borderRadius: 5,
+  textInput: {
+    borderWidth: 1,
+    borderColor: commonColors.DARK_GREY,
+    borderRadius: 10,
+    width: SCREEN_WIDTH /12* 9,
+    margin: 10,
+    height: 40,
+  },
+  listContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 10,
+    //backgroundColor: "blue",
+    height: "100%",
+    width: SCREEN_WIDTH / 12 *9,
+    borderWidth: 1,
     borderColor: commonColors.LIGHT_GREY,
+    borderRadius: 5
+  },
+  listView: {
+    flex: 1,
+    alignItems: 'center',
+    // backgroundColor: "blue",
+    // height: "100%",
+    width: SCREEN_WIDTH / 12 * 9,
+    height: "20",
+    backgroundColor: 'blue',
+    borderWidth: 3,
+    borderColor: commonColors.DARK_GREY,
+    borderRadius: 5
+  },
+  rowStyle: {
+    borderColor: 'red',
+    borderWidth: 1,
+    width: SCREEN_WIDTH /12 *9,
+  },
+  rowElementStyle: {
+    borderColor: 'green',
     borderWidth: 1
   },
-  textInput: {
-    width: SCREEN_WIDTH / 6 * 4,
+  rowInsideStyle: {
+    borderColor: 'blue',
     borderWidth: 1,
-    borderColor: "black",
-    borderRadius: 5,
-  },
-  row: {
     padding: 13,
     height: 50,
     flexDirection: "row"
@@ -63,7 +92,7 @@ const defaultStyles = {
   }
 };
 
-export default class GooglePlacesAutocomplete extends Component {
+export default class GooglePlacesCityFind extends Component {
   _isMounted = false;
   _results = [];
   _requests = [];
@@ -513,19 +542,19 @@ export default class GooglePlacesAutocomplete extends Component {
   _renderRow = (rowData = {}, sectionID, rowID) => {
     return (
       <ScrollView
-        style={{ flex: 1 }}
-        scrollEnabled={this.props.isRowScrollable}
+        style={defaultStyles.rowStyle}
+        scrollEnabled={true}
         keyboardShouldPersistTaps={this.props.keyboardShouldPersistTaps}
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        showsVerticalScrollIndicator={false}
+        horizontal={false}
+        showsHorizontalScrollIndicator={true}
+        showsVerticalScrollIndicator={true}
       >
         <TouchableHighlight
-          style={{ width: SCREEN_WIDTH }}
+          style={defaultStyles.rowElementStyle}
           onPress={() => this._onPress(rowData)}
           underlayColor={this.props.listUnderlayColor || "#c8c7cc"}
         >
-          <View style={defaultStyles.row}>
+          <View style={defaultStyles.rowInsideStyle}>
             {this._renderRowData(rowData)}
             {this._renderLoader(rowData)}
           </View>
@@ -543,7 +572,7 @@ export default class GooglePlacesAutocomplete extends Component {
     );
   };
 
-  _getFlatList = () => {
+  _renderFlatList = () => {
     const keyGenerator = () =>
       Math.random()
         .toString(36)
@@ -563,11 +592,11 @@ export default class GooglePlacesAutocomplete extends Component {
   render() {
     let { onFocus, ...userProps } = this.props.textInputProps;
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, alignItems: 'center', width: "100%" }}>
         {!this.props.textInputHide && (
           <TextInputSingleLine
             ref="textInput"
-            style={defaultStyles.textInput}
+            style={[defaultStyles.textInput, this.props.textInput]}
             value={this.state.text}
             placeholder={"Search for your City!"}
             //returnKeyType={"search"}
@@ -584,15 +613,16 @@ export default class GooglePlacesAutocomplete extends Component {
             onChangeText={this._handleChangeText}
           />
         )}
-
-        {this._getFlatList()}
+        <View style={[defaultStyles.listContainer, this.props.style.listContainer]}>
+        {this._renderFlatList()}
         {this.props.children}
+        </View>
       </View>
     );
   }
 }
 
-GooglePlacesAutocomplete.propTypes = {
+GooglePlacesCityFind.propTypes = {
   placeholder: PropTypes.string,
   placeholderTextColor: PropTypes.string,
   underlineColorAndroid: PropTypes.string,
@@ -626,7 +656,7 @@ GooglePlacesAutocomplete.propTypes = {
   text: PropTypes.string,
   textInputHide: PropTypes.bool
 };
-GooglePlacesAutocomplete.defaultProps = {
+GooglePlacesCityFind.defaultProps = {
   placeholder: "Search",
   placeholderTextColor: "#A8A8A8",
   isRowScrollable: true,

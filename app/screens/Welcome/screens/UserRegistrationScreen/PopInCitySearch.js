@@ -14,7 +14,10 @@ import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../../../constants/dimensions";
 import commonColors from "../../../../constants/colors";
 
 //-------------GOOGLE PLACES
+import GooglePlacesCityFind from "./GooglePlacesCityFind";
 import GooglePlacesAutocomplete from "../../../../utils/GooglePlacesAutocomplete";
+import GoogleAutocompleteSearch from "../../../../screens/Main/screens/MapScreen/GoogleAutocompleteSearch"
+
 import { googlePlacesAutocompleteAPIKey } from "../../../../constants/apiKeys";
 
 //--------------
@@ -32,9 +35,10 @@ class PopInCitySearch extends Component {
 
   render() {
     return (
-        <View style={[styles.innerContainer, this.props.style]}>
-          <View style={styles.listContainer}>
-            <GooglePlacesAutocomplete
+      <View style={[styles.movingContainer, this.props.style]}>
+        <View style={styles.innerTopContainer}>
+            {/* <GooglePlacesAutocomplete
+              {...this.props}
               placeholder="Search for your City!"
               minLength={2}
               listViewDisplayed="auto"
@@ -60,6 +64,10 @@ class PopInCitySearch extends Component {
               debounce={200}
               styles={{
                 textInputContainer: {
+                  position: 'absolute',
+                  top: 20,
+                  left: 20,
+                  right: 20,
                   width: "100%",
                   backgroundColor: "white"
                 },
@@ -73,14 +81,52 @@ class PopInCitySearch extends Component {
                   height: SCREEN_HEIGHT / 9
                 }
               }}
-            />
+            /> */}
+                <View style={styles.listContainer}>
+                <GoogleAutocompleteSearch
+                  {...this.props}
+                  explicitSetMapRegion={(region) => this.props.explicitSetMapRegion(region)} 
+                />
+                </View>
           </View>
+          <View style={styles.innerBottomContainer} />
         </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  movingContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
+    flex: 0,
+    width: SCREEN_WIDTH / 6 * 5,
+    height: SCREEN_HEIGHT / 8 *5,
+    backgroundColor: "rgba(0,0,0,0)",
+    //borderColor: commonColors.GREEN,
+    //borderWidth: 2,
+    //borderRadius: 10,
+  },
+  innerTopContainer: {
+    flex: 9,
+    //height: SCREEN_WIDTH / 16 * 4,
+    width: SCREEN_WIDTH / 6 * 5,
+    borderColor: commonColors.GREEN,
+    borderWidth: 2,
+    borderRadius: 10,
+    backgroundColor: "rgba(0,0,0,0)",
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    paddingBottom: 15
+  },
+  innerBottomContainer: {
+    flex: 11,
+    //height: SCREEN_WIDTH / 16 * 6,
+    width: SCREEN_WIDTH / 6 * 5,
+    backgroundColor: "rgba(0,0,0,0)"
+  },
   innerContainer: {
     justifyContent: "center",
     alignItems: "center",
@@ -96,7 +142,6 @@ const styles = StyleSheet.create({
   listContainer: {
     borderRadius: 10,
     margin: 15,
-    marginBottom: 60,
     alignItems: "center",
     justifyContent: "center"
   }

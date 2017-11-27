@@ -23,9 +23,9 @@ import {
 import Qs from "qs";
 import debounce from "lodash.debounce";
 
-import TextInputSingleLine from "../components/TextInputSingleLine";
-import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../constants/dimensions";
-import commonColors from "../constants/colors";
+import TextInputSingleLine from "../../../../components/TextInputSingleLine";
+import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../../../constants/dimensions"
+import commonColors from "../../../../constants/colors";
 
 const defaultStyles = {
   textInputContainer: {
@@ -36,15 +36,10 @@ const defaultStyles = {
     backgroundColor: "white",
     height: SCREEN_HEIGHT / 2 - 200,
     width: SCREEN_WIDTH / 6 * 4,
-    borderRadius: 5,
-    borderColor: commonColors.LIGHT_GREY,
-    borderWidth: 1
+    borderRadius: 5
   },
   textInput: {
-    width: SCREEN_WIDTH / 6 * 4,
-    borderWidth: 1,
-    borderColor: "black",
-    borderRadius: 5,
+    width: SCREEN_WIDTH / 6 * 4
   },
   row: {
     padding: 13,
@@ -63,7 +58,7 @@ const defaultStyles = {
   }
 };
 
-export default class GooglePlacesAutocomplete extends Component {
+export default class GooglePlacesCityFind2 extends Component {
   _isMounted = false;
   _results = [];
   _requests = [];
@@ -592,7 +587,7 @@ export default class GooglePlacesAutocomplete extends Component {
   }
 }
 
-GooglePlacesAutocomplete.propTypes = {
+GooglePlacesCityFind2.propTypes = {
   placeholder: PropTypes.string,
   placeholderTextColor: PropTypes.string,
   underlineColorAndroid: PropTypes.string,
@@ -626,7 +621,7 @@ GooglePlacesAutocomplete.propTypes = {
   text: PropTypes.string,
   textInputHide: PropTypes.bool
 };
-GooglePlacesAutocomplete.defaultProps = {
+GooglePlacesCityFind2.defaultProps = {
   placeholder: "Search",
   placeholderTextColor: "#A8A8A8",
   isRowScrollable: true,

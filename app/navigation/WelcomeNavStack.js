@@ -13,17 +13,17 @@ import MainInsetNavStack from "./MainInsetNavStack";
 
 const loginNavOptions = {
   initialRouteName: "walkthrough",
-  header: null
+  header: null,
 };
 
 const WelcomeNavStack = StackNavigator(
   {
-    walkthrough: { screen: WalkthroughScreen },
-    signIn: { screen: SignInScreen },
-    signup: { screen: SignupScreen },
-    signInFail: { screen: SignInFailScreen },
-    userRegistration: { screen: RegistrationWalkthroughScreen },
-    mainInsetNavStack: { screen: MainInsetNavStack }
+    // walkthrough: { screen: WalkthroughScreen },
+    // signIn: { screen: SignInScreen },
+    // signup: { screen: SignupScreen },
+    // signInFail: { screen: SignInFailScreen },
+    // userRegistration: { screen: RegistrationWalkthroughScreen },
+    mainInsetNavStack: { screen: MainInsetNavStack } 
   },
   {
     navigationOptions: loginNavOptions

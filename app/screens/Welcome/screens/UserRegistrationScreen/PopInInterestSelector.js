@@ -49,13 +49,14 @@ class PopInInterestSelector extends Component {
             style={{
               fontSize: 15,
               textAlign: "center",
-              lineHeight: 40
+              lineHeight: 40,
+              color: "white"
             }}
           >
             Select
             <Text style={{ color: commonColors.PINK, fontSize: 20 }}> 3 </Text>
             Or More Images That Best
-            <Text style={{ color: "black" }}> Describe Your</Text>
+            <Text style={{ color: "white" }}> Describe Your</Text>
             <Text style={{ color: commonColors.PINK, fontSize: 20 }}>
               {" "}
               Passion!
@@ -74,7 +75,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     width: SCREEN_WIDTH / 6 * 5,
     height: SCREEN_HEIGHT / 8 * 5,
-    backgroundColor: "rgba(0,0,0,0)",
+    backgroundColor: "rgba(0,0,0,0.7)",
     borderColor: commonColors.GREEN,
     borderWidth: 2,
     borderRadius: 10,

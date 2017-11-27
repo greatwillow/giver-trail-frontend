@@ -31,7 +31,7 @@ class RegistrationWalkthroughScreen extends Component {
     super(props);
 
     this.state = {
-      userInfoInputItemLeft: 500,
+      userInfoInputItemLeft: 0,
       citySearchItemLeft: 500,
       interestSelectorItemLeft: 500
     };
