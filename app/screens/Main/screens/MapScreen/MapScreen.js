@@ -28,6 +28,19 @@ import ModalCitySearch from "./ModalCitySearch";
 //import { modalCitySearch } from "../../../../data/appActions";
 //import exampleIcon from '../../../../assets/exampleIcon.png';
 
+import {
+  requestGeolocationPermission,
+  configureGeolocation,
+  checkIfAppInBackground,
+  onGeolocationAuthorize,
+  onGeolocationError,
+  //TODO: Can get this into utils?
+  //onGeolocationPing,
+  onGeolocationStart,
+  onGeolocationStop,
+  onGeolocationStationary
+} from "./GeolocationUtils";
+
 MapboxGL.setAccessToken(
   "pk.eyJ1IjoiZ3JlYXR3aWxsb3ciLCJhIjoiY2phNGJkNW05YTg1ajJ3czR2MjRkamN4ZyJ9.4QQ9UW5OoFMq6A5LbCgMXA"
 );
@@ -42,15 +55,9 @@ class MapScreen extends Component {
     };
   }
 
-  //--------------------------------------------------
-  // MOUNTING/ CHECKING PERMISSION --> may not need?
-  //--------------------------------------------------
-
-  componentWillUpdate = nextProps => {
-    nextProps.trail.trackingStatus
-      ? BackgroundGeolocation.start()
-      : BackgroundGeolocation.stop();
-  };
+//--------------------------------------------------
+// MOUNTING
+//--------------------------------------------------
 
   componentDidMount() {
     // Permissions.request("location").then(response => {
@@ -60,99 +67,44 @@ class MapScreen extends Component {
     //     locationPermission: response
     //   });
     // });
- 
-    async function requestLocationPermission() {
-      if (Platform.OS !== "android" && Platform.Version >= 23) {  
-        try {
-          const granted = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-            {
-              title: "Cool Photo App Camera Permission",
-              message:
-                "Cool Photo App needs access to your camera " +
-                "so you can take awesome pictures."
-            }
-          );
-          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-            return "authorized";
-          } else {
-            return "denied";
-          }
-        } catch (err) {
-          console.warn(err);
-        }
-      }
-    }
-    requestLocationPermission().then(result => {
-      this.setState({
-        locationPermission: result
-      });
-      console.log("====================================");
-      console.log("AUTH IS ", this.state.locationPermission);
-      console.log("====================================");
-    });
 
-    //--------------------------------------------------
-    // GEOLOCATION CONFIG
-    //--------------------------------------------------
+    requestGeolocationPermission();
+    configureGeolocation();
+    checkIfAppInBackground();
+    onGeolocationAuthorize();
+    onGeolocationError();
+    this.onGeolocationPing();
+    onGeolocationStart();
+    onGeolocationStop();
+    onGeolocationStationary();
+  }
 
-    BackgroundGeolocation.configure({
-      desiredAccuracy: 0,
-      stationaryRadius: 10,
-      distanceFilter: 10,
-      notificationTitle: "Background tracking",
-      notificationText: "enabled",
-      debug: false, //for sounds
-      startOnBoot: false,
-      stopOnTerminate: false,
-      locationProvider: BackgroundGeolocation.DISTANCE_FILTER_PROVIDER,
-      //interval: 500,
-      stopOnStillActivity: false
-    });
+  //--------------------------------------------------
+  // UPDATING
+  //--------------------------------------------------
 
-    //--------------------------------------------------
-    // CHECK IF APP IS IN BACKGROUND
-    //--------------------------------------------------
+  componentWillUpdate = nextProps => {
+    nextProps.trail.trackingStatus
+      ? BackgroundGeolocation.start()
+      : BackgroundGeolocation.stop();
+  };
 
-    BackgroundGeolocation.on("background", () => {
-      console.log("[INFO] App is in background");
-    });
+  //--------------------------------------------------
+  // UNMOUNTING
+  //--------------------------------------------------
 
-    BackgroundGeolocation.on("foreground", () => {
-      console.log("[INFO] App is in foreground");
-    });
+  componentWillUnmount() {
+    // unregister all event listeners
+    BackgroundGeolocation.events.forEach(event =>
+      BackgroundGeolocation.removeAllListeners(event)
+    );
+  }
 
-    //--------------------------------------------------
-    // CHECKING PERMISSION STATUS
-    //--------------------------------------------------
+  //--------------------------------------------------
+  // ACTION AT EACH GPS POINT TAKEN IN
+  //--------------------------------------------------
 
-    _checkGeolocationStatus = () => {
-      BackgroundGeolocation.checkStatus(status => {
-        console.log(
-          "[INFO] BackgroundGeolocation service is running",
-          status.isRunning
-        );
-        console.log(
-          "[INFO] BackgroundGeolocation service has permissions",
-          status.hasPermissions
-        );
-        console.log(
-          "[INFO] BackgroundGeolocation auth status: " + status.authorization
-        );
-
-        if (!status.isRunning) {
-          BackgroundGeolocation.start();
-        }
-      });
-    };
-
-    //--------------------------------------------------
-    // ACTION AT EACH GPS POINT TAKEN IN
-    //--------------------------------------------------
-    BackgroundGeolocation.on("start", () => {
-      console.log("[INFO] BackgroundGeolocation service has been started");
-    });
-
+  onGeolocationPing = () => {
     BackgroundGeolocation.on("location", location => {
       BackgroundGeolocation.startTask(taskKey => {
         this.props.addLocationPointToTrail({
@@ -169,43 +121,7 @@ class MapScreen extends Component {
         BackgroundGeolocation.endTask(taskKey);
       });
     });
-
-    BackgroundGeolocation.on("stationary", stationaryLocation => {
-      // handle stationary locations here
-      Actions.sendLocation(stationaryLocation);
-    });
-
-    BackgroundGeolocation.on("error", error => {
-      console.log("[ERROR] BackgroundGeolocation error:", error);
-    });
-
-    BackgroundGeolocation.on("stop", () => {
-      console.log("[INFO] BackgroundGeolocation service has been stopped");
-    });
-
-    BackgroundGeolocation.on("authorization", status => {
-      console.log(
-        "[INFO] BackgroundGeolocation authorization status: " + status
-      );
-      if (status !== BackgroundGeolocation.AUTHORIZED) {
-        Alert.alert(
-          "Location services are disabled",
-          "Would you like to open location settings?",
-          [
-            {
-              text: "Yes",
-              onPress: () => BackgroundGeolocation.showLocationSettings()
-            },
-            {
-              text: "No",
-              onPress: () => console.log("No Pressed"),
-              style: "cancel"
-            }
-          ]
-        );
-      }
-    });
-}
+  };
 
   //--------------------------------------------------
   // PRESS MODAL UI SEARCH
@@ -238,7 +154,7 @@ class MapScreen extends Component {
 
     this.props.toggleTrackingStatus(!this.props.trail.trackingStatus);
 
-    _checkGeolocationStatus();
+    this.onGeolocationPing();
   };
 
   //--------------------------------------------------
@@ -374,17 +290,6 @@ class MapScreen extends Component {
           explicitSetMapRegion={region => this._explicitSetMapRegion(region)}
         />
       </View>
-    );
-  }
-
-  //--------------------------------------------------
-  // UNMOUNTING
-  //--------------------------------------------------
-
-  componentWillUnmount() {
-    // unregister all event listeners
-    BackgroundGeolocation.events.forEach(event =>
-      BackgroundGeolocation.removeAllListeners(event)
     );
   }
 }
