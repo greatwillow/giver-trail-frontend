@@ -13,8 +13,9 @@ import {
 import { connect } from "react-redux";
 import * as actions from "../../../../data/appActions";
 import shortid from "shortid";
+import BackgroundTimer from "react-native-background-timer";
 
-import BackgroundGeolocation from "react-native-mauron85-background-geolocation";
+//import BackgroundGeolocation from "react-native-mauron85-background-geolocation";
 import MapboxGL from "@mapbox/react-native-mapbox-gl";
 //TODO: Get rid of RN Permisions Library?
 //import Permissions from "react-native-permissions";
@@ -45,6 +46,7 @@ MapboxGL.setAccessToken(
   "pk.eyJ1IjoiZ3JlYXR3aWxsb3ciLCJhIjoiY2phNGJkNW05YTg1ajJ3czR2MjRkamN4ZyJ9.4QQ9UW5OoFMq6A5LbCgMXA"
 );
 
+let backgroundEvent;
 class MapScreen extends Component {
   constructor() {
     super();
@@ -55,9 +57,9 @@ class MapScreen extends Component {
     };
   }
 
-//--------------------------------------------------
-// MOUNTING
-//--------------------------------------------------
+  //--------------------------------------------------
+  // MOUNTING
+  //--------------------------------------------------
 
   componentDidMount() {
     // Permissions.request("location").then(response => {
@@ -69,59 +71,59 @@ class MapScreen extends Component {
     // });
 
     requestGeolocationPermission();
-    configureGeolocation();
-    checkIfAppInBackground();
-    onGeolocationAuthorize();
-    onGeolocationError();
-    this.onGeolocationPing();
-    onGeolocationStart();
-    onGeolocationStop();
-    onGeolocationStationary();
+    // configureGeolocation();
+    // checkIfAppInBackground();
+    // onGeolocationAuthorize();
+    // //onGeolocationError();
+    // //this.onGeolocationPing();
+    // onGeolocationStart();
+    // onGeolocationStop();
+    // onGeolocationStationary();
   }
 
   //--------------------------------------------------
   // UPDATING
   //--------------------------------------------------
 
-  componentWillUpdate = nextProps => {
-    nextProps.trail.trackingStatus
-      ? BackgroundGeolocation.start()
-      : BackgroundGeolocation.stop();
-  };
+  // componentWillUpdate = nextProps => {
+  //   nextProps.trail.trackingStatus
+  //     ? BackgroundGeolocation.start()
+  //     : BackgroundGeolocation.stop();
+  // };
 
   //--------------------------------------------------
   // UNMOUNTING
   //--------------------------------------------------
 
-  componentWillUnmount() {
-    // unregister all event listeners
-    BackgroundGeolocation.events.forEach(event =>
-      BackgroundGeolocation.removeAllListeners(event)
-    );
-  }
+  // componentWillUnmount() {
+  //   // unregister all event listeners
+  //   BackgroundGeolocation.events.forEach(event =>
+  //     BackgroundGeolocation.removeAllListeners(event)
+  //   );
+  // }
 
-  //--------------------------------------------------
-  // ACTION AT EACH GPS POINT TAKEN IN
-  //--------------------------------------------------
+  // //--------------------------------------------------
+  // // ACTION AT EACH GPS POINT TAKEN IN
+  // //--------------------------------------------------
 
-  onGeolocationPing = () => {
-    BackgroundGeolocation.on("location", location => {
-      BackgroundGeolocation.startTask(taskKey => {
-        this.props.addLocationPointToTrail({
-          longitude: location.longitude,
-          latitude: location.latitude
-        });
-        if (this.props.trail.coordinates.length > 1) {
-          const lineString = makeLineString(this.props.trail.coordinates);
+  // onGeolocationPing = () => {
+  //   BackgroundGeolocation.on("location", location => {
+  //     BackgroundGeolocation.startTask(taskKey => {
+  //       this.props.addLocationPointToTrail({
+  //         longitude: location.longitude,
+  //         latitude: location.latitude
+  //       });
+  //       if (this.props.trail.coordinates.length > 1) {
+  //         const lineString = makeLineString(this.props.trail.coordinates);
 
-          this.setState({
-            route: lineString
-          });
-        }
-        BackgroundGeolocation.endTask(taskKey);
-      });
-    });
-  };
+  //         this.setState({
+  //           route: lineString
+  //         });
+  //       }
+  //       BackgroundGeolocation.endTask(taskKey);
+  //     });
+  //   });
+  // };
 
   //--------------------------------------------------
   // PRESS MODAL UI SEARCH
@@ -148,13 +150,39 @@ class MapScreen extends Component {
   //--------------------------------------------------
 
   _onPressToggleTracking = () => {
-    this.props.trail.trackingStatus
-      ? BackgroundGeolocation.stop()
-      : BackgroundGeolocation.start();
+    // this.props.trail.trackingStatus
+    //   ? BackgroundGeolocation.stop()
+    //   : BackgroundGeolocation.start();
+
+    if (this.props.trail.trackingStatus === false) {
+      backgroundEvent = BackgroundTimer.setInterval(() => {
+        console.log("tic");
+
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            this.props.addLocationPointToTrail({
+              longitude: position.coords.longitude,
+              latitude: position.coords.latitude
+            });
+            if (this.props.trail.coordinates.length > 1) {
+              const lineString = makeLineString(this.props.trail.coordinates);
+
+              this.setState({
+                route: lineString
+              });
+            }
+          },
+          error => console.log("ERROR IN GEOLOCATOR IS: ", error),
+          { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+        );
+      }, 400);
+    } else {
+      BackgroundTimer.clearInterval(backgroundEvent);
+    }
 
     this.props.toggleTrackingStatus(!this.props.trail.trackingStatus);
-
-    this.onGeolocationPing();
+    //TODO: TURN THIS ON***?
+    //this.onGeolocationPing();
   };
 
   //--------------------------------------------------

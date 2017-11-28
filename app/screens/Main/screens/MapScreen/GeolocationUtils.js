@@ -1,5 +1,7 @@
 import BackgroundGeolocation from "react-native-mauron85-background-geolocation";
 
+import BackgroundTimer from 'react-native-background-timer';
+
 
 //--------------------------------------------------
 // REQUESTING GEOLOC PERMISSION
@@ -156,16 +158,25 @@ export function checkGeolocationStatus() {
 
 
 export function onGeolocationStart() {
-    BackgroundGeolocation.on("start", () => {
-      console.log("[INFO] BackgroundGeolocation service has been started");
-    });
-  }
-  
-  export function onGeolocationStop() {
-    BackgroundGeolocation.on("stop", () => {
-      console.log("[INFO] BackgroundGeolocation service has been stopped");
-    });
-  }
+  BackgroundGeolocation.on("start", () => {
+    console.log("[INFO] BackgroundGeolocation service has been started");
+
+    
+        // const intervalId = BackgroundTimer.setInterval(() => {
+        //   console.log('tic');
+        // }, 200);
+        
+
+        //BackgroundTimer.clearInterval(intervalId);
+
+  });
+}
+
+export function onGeolocationStop() {
+  BackgroundGeolocation.on("stop", () => {
+    console.log("[INFO] BackgroundGeolocation service has been stopped");
+  });
+}
 
 //--------------------------------------------------
 // STATIONARY

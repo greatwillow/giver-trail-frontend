@@ -6,6 +6,7 @@ import com.android.build.OutputFile
 
 
 dependencies {
+    compile project(':react-native-background-timer')
     compile project(':react-native-vector-icons')
     compile project(':mapbox_react-native-mapbox-gl')
     compile project(':react-native-mauron85-background-geolocation')
