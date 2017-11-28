@@ -31,6 +31,7 @@ import {
 import {
   setMapRegion,
   setMapZoom,
+  setMapFollowMode
 } from "./mapUI/actions";
 
 import {
@@ -71,6 +72,7 @@ export {
   //mapUI
   setMapRegion,
   setMapZoom,
+  setMapFollowMode,
   //trail
   generateNewTrail,
   addLocationPointToTrail,

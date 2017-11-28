@@ -7,11 +7,12 @@ import {
   TabNavigator,
   DrawerNavigator
 } from "react-navigation";
+import { connect } from "react-redux";
 
 import UserProfileScreen from "../screens/Main/screens/UserProfileScreen/UserProfileScreen";
 import MapScreen from "../screens/Main/screens/MapScreen/MapScreen";
 //import BackgroundGeoPage from "../screens/Main/screens/MapScreen/BackgroundGeoPage"
-//import StatisticsScreen from "../screens/Main/screens/StatisticsScreen/StatisticsScreen";
+import StatisticsScreen from "../screens/Main/screens/StatisticsScreen/StatisticsScreen";
 import CauseListScreen from "../screens/Main/screens/CauseListScreen/CauseListScreen";
 import CauseDetailScreen from "../screens/Main/screens/CauseDetailScreen/CauseDetailScreen";
 import DrawerScreen from "../screens/Main/screens/DrawerScreen/DrawerScreen";
@@ -33,12 +34,13 @@ const MainInsetNavStack = DrawerNavigator(
               {
                 userProfile: { screen: UserProfileScreen },
                 map: { screen: MapScreen },
-                statistics: { screen: UserProfileScreen },
+                statistics: { screen: StatisticsScreen },
                 causes: {
                   screen: StackNavigator(
                     {
                       causeList: {
-                        screen: CauseListScreen
+                        screen: CauseListScreen,
+                        title: 'CAUSE LIST'
                       },
                       causeDetail: {
                         screen: CauseDetailScreen
@@ -79,9 +81,20 @@ const MainInsetNavStack = DrawerNavigator(
         },
         {
           //StackNavigator Navigation Options
-          navigationOptions: ({ navigation }) => ({
+          navigationOptions: ({ navigation }) => (
+            console.log("NAV IS ",navigation),
+            console.log("PARAMS ", navigation.state.params),
+            {
+            title: typeof(navigation.state.params)==='undefined' || typeof(navigation.state.params.title) === 'undefined' ? 'find': navigation.state.params.title,
             headerStyle: headerStyle,
+            headerTitleStyle: {
+              alignSelf: 'center',
+              fontFamily: 'TitilliumWeb-Light',
+              fontSize: 20,
+              color: commonColors.LIGHT_GREY
+            },
             headerRight: <MenuIcon navigation={navigation}/>,
+            headerLeft: <View style={{flex: 0, width: 10, height: 100}} />
             // swipeEnabled: false,
             // animationEnabled: false
           })
@@ -101,4 +114,11 @@ const MainInsetNavStack = DrawerNavigator(
   }
 );
 
-export default MainInsetNavStack;
+
+// const mapStateToProps = state => ({
+//   mapUI: state.mapUI,
+// });
+
+// export default connect(mapStateToProps)(MainInsetNavStack);
+
+export default MainInsetNavStack

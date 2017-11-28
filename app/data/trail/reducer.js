@@ -3,6 +3,7 @@ import shortid from 'shortid';
 
 const initialState = {
     id: null,
+    name: null,
     trackingStatus: false,
     coordinates: []
 }
@@ -13,6 +14,7 @@ const trail = (state = initialState, action) => {
             return {
                 ...state,
                     id: shortid.generate(),
+                    name: "No Name Trail",
                     trackingStatus: false,
                     coordinates: []
             }

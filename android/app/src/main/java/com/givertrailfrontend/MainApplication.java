@@ -2,7 +2,6 @@ package com.givertrailfrontend;
 
 import android.app.Application;
 
-import com.marianhello.react.BackgroundGeolocationPackage;
 import com.mapbox.rctmgl.RCTMGLPackage;
 import com.facebook.react.ReactApplication;
 import com.ocetnik.timer.BackgroundTimerPackage;
@@ -29,8 +28,7 @@ public class MainApplication extends Application implements ReactApplication {
           new MainReactPackage(),
             new BackgroundTimerPackage(),
             new VectorIconsPackage(),
-            new RCTMGLPackage(),
-            new BackgroundGeolocationPackage()
+            new RCTMGLPackage()
       );
     }
 

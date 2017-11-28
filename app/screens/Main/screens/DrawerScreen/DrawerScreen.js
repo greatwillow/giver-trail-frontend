@@ -39,7 +39,7 @@ class DrawerScreen extends Component {
     const logoutNavAction = NavigationActions.reset({
       index: 0,
       key: null,
-      actions: [NavigationActions.navigate({ routeName: "loginNavStack" })]
+      actions: [NavigationActions.navigate({ routeName: "welcomeNavStack" })]
     });
     this.props.navigation.dispatch(logoutNavAction);
   };
@@ -63,12 +63,6 @@ class DrawerScreen extends Component {
           </ImageBackground>
         </View>
         <View style={styles.innerBottomContainer}>
-          <DrawerItem
-            {...this.props}
-            onPress={() => navigation.navigate("userRegistration")}
-            text="~  User Registration  ~"
-            tabName="userRegistration"
-          />
           <DrawerItem
             {...this.props}
             onPress={this._handleNavToUserProfile}

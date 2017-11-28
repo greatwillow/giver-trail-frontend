@@ -31,15 +31,7 @@ import ModalCitySearch from "./ModalCitySearch";
 
 import {
   requestGeolocationPermission,
-  configureGeolocation,
-  checkIfAppInBackground,
-  onGeolocationAuthorize,
-  onGeolocationError,
-  //TODO: Can get this into utils?
-  //onGeolocationPing,
-  onGeolocationStart,
-  onGeolocationStop,
-  onGeolocationStationary
+  euclideanDistance
 } from "./GeolocationUtils";
 
 MapboxGL.setAccessToken(
@@ -53,7 +45,9 @@ class MapScreen extends Component {
     this.state = {
       //TODO: change this to undetermined, and then get to work on android
       locationPermission: "authorized",
-      route: {}
+      followingUser: true,
+      trail: {},
+      trails: []
     };
   }
 
@@ -62,6 +56,7 @@ class MapScreen extends Component {
   //--------------------------------------------------
 
   componentDidMount() {
+    //TODO: May still need the following for IOS?
     // Permissions.request("location").then(response => {
     //   alert('Permission is ',response)
     //   console.log("PERMISSION IS ", response)
@@ -69,61 +64,31 @@ class MapScreen extends Component {
     //     locationPermission: response
     //   });
     // });
-
     requestGeolocationPermission();
-    // configureGeolocation();
-    // checkIfAppInBackground();
-    // onGeolocationAuthorize();
-    // //onGeolocationError();
-    // //this.onGeolocationPing();
-    // onGeolocationStart();
-    // onGeolocationStop();
-    // onGeolocationStationary();
   }
 
   //--------------------------------------------------
-  // UPDATING
+  // RECEIVING NEW PROPS
   //--------------------------------------------------
 
-  // componentWillUpdate = nextProps => {
-  //   nextProps.trail.trackingStatus
-  //     ? BackgroundGeolocation.start()
-  //     : BackgroundGeolocation.stop();
-  // };
+  componentWillReceiveProps = nextProps => {
+    if(this.props.mapUI.mapFollowMode !== nextProps.mapUI.mapFollowMode) {
+      this.setState({
+        followingUser: nextProps.mapUI.mapFollowMode
+      });
+    }
+    //With New Trails Props
+    if(this.props.trails.trails !== nextProps.trails.trails) {
 
-  //--------------------------------------------------
-  // UNMOUNTING
-  //--------------------------------------------------
-
-  // componentWillUnmount() {
-  //   // unregister all event listeners
-  //   BackgroundGeolocation.events.forEach(event =>
-  //     BackgroundGeolocation.removeAllListeners(event)
-  //   );
-  // }
-
-  // //--------------------------------------------------
-  // // ACTION AT EACH GPS POINT TAKEN IN
-  // //--------------------------------------------------
-
-  // onGeolocationPing = () => {
-  //   BackgroundGeolocation.on("location", location => {
-  //     BackgroundGeolocation.startTask(taskKey => {
-  //       this.props.addLocationPointToTrail({
-  //         longitude: location.longitude,
-  //         latitude: location.latitude
-  //       });
-  //       if (this.props.trail.coordinates.length > 1) {
-  //         const lineString = makeLineString(this.props.trail.coordinates);
-
-  //         this.setState({
-  //           route: lineString
-  //         });
-  //       }
-  //       BackgroundGeolocation.endTask(taskKey);
-  //     });
-  //   });
-  // };
+     console.log('====================================');
+     console.log("TRAILS MODIFIES ",this.state.trails);
+     console.log('====================================');
+      this.setState({
+        trails: nextProps.trails.trails
+      })
+      console.log(this.state.trails);
+    }
+  };
 
   //--------------------------------------------------
   // PRESS MODAL UI SEARCH
@@ -150,39 +115,76 @@ class MapScreen extends Component {
   //--------------------------------------------------
 
   _onPressToggleTracking = () => {
-    // this.props.trail.trackingStatus
-    //   ? BackgroundGeolocation.stop()
-    //   : BackgroundGeolocation.start();
-
     if (this.props.trail.trackingStatus === false) {
       backgroundEvent = BackgroundTimer.setInterval(() => {
-        console.log("tic");
-
         navigator.geolocation.getCurrentPosition(
           position => {
-            this.props.addLocationPointToTrail({
-              longitude: position.coords.longitude,
-              latitude: position.coords.latitude
-            });
-            if (this.props.trail.coordinates.length > 1) {
-              const lineString = makeLineString(this.props.trail.coordinates);
+            //initially setting distance above 5 which is min distance to get point
+            let givenDistance = 6;
+            //Calculating distance
+            if (this.props.trail.coordinates.length > 2) {
+              const lastPointLongitude = this.props.trail.coordinates[
+                this.props.trail.coordinates.length - 1
+              ][0];
+              const lastPointLatitude = this.props.trail.coordinates[
+                this.props.trail.coordinates.length - 1
+              ][1];
+              const currentPointLongitude = position.coords.longitude;
+              const currentPointLatitude = position.coords.latitude;
 
-              this.setState({
-                route: lineString
+              givenDistance = euclideanDistance(
+                lastPointLongitude,
+                lastPointLatitude,
+                currentPointLongitude,
+                currentPointLatitude
+              );
+            }
+            //If distance within bounds -> Add point to Line
+            if (givenDistance > 5 && givenDistance < 70) {
+              this.props.addLocationPointToTrail({
+                longitude: position.coords.longitude,
+                latitude: position.coords.latitude
               });
+              if (this.props.trail.coordinates.length > 1) {
+                const lineString = makeLineString(this.props.trail.coordinates);
+
+                this.setState({
+                  trail: lineString
+                });
+              }
+              //If User is far from last point -> need to make a new trail array
+            } else if (givenDistance >= 70) {
+              this.setState({trail: {}})
+              this.props.addTrailToTrails(this.props.trail);
+              this.props.generateNewTrail();
             }
           },
           error => console.log("ERROR IN GEOLOCATOR IS: ", error),
-          { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+          { enableHighAccuracy: true, timeout: 20000, maximumAge: 2000 }
         );
-      }, 400);
+      }, 100);
     } else {
       BackgroundTimer.clearInterval(backgroundEvent);
     }
-
+    //Toggle back the tracking
     this.props.toggleTrackingStatus(!this.props.trail.trackingStatus);
-    //TODO: TURN THIS ON***?
-    //this.onGeolocationPing();
+  };
+
+  //--------------------------------------------------
+  // PRESS SAVE TRAILS
+  //--------------------------------------------------
+
+  _onPressSaveTrailsToServer = () => {
+
+
+  };
+
+  //--------------------------------------------------
+  // PRESS TOGGLE FOLLOW MODE
+  //--------------------------------------------------
+
+  _onPressToggleFollowMode = () => {
+    this.props.setMapFollowMode(!this.props.mapUI.mapFollowMode);
   };
 
   //--------------------------------------------------
@@ -212,10 +214,31 @@ class MapScreen extends Component {
   // SUB-RENDERING
   //--------------------------------------------------
 
-  _renderRoute() {
+  _renderTrails = () => {
+    console.log('====================================');
+    console.log("RENDERING ALL");
+    console.log('====================================');
+    this.state.trails.map(trail => {
+      const lineString = makeLineString(trail.coordinates);
+        console.log('====================================');
+        console.log("COORDS ",trail.coordinates);
+        console.log("Line ",lineString);
+        console.log('====================================');
+        return (
+          <MapboxGL.Animated.ShapeSource id={"myTrail"} shape={lineString}>
+            <MapboxGL.Animated.LineLayer id={"myTrail"} style={layerStyles.otherTrails} />
+          </MapboxGL.Animated.ShapeSource>
+        );
+    })
+  }
+
+  _renderCurrentTrail = () => {
+    console.log('====================================');
+    console.log("RENDERING CURRENT");
+    console.log('====================================');
     return (
-      <MapboxGL.Animated.ShapeSource id="routeSource" shape={this.state.route}>
-        <MapboxGL.Animated.LineLayer id="routeFill" style={layerStyles.route} />
+      <MapboxGL.Animated.ShapeSource id="trailSource" shape={this.state.trail}>
+        <MapboxGL.Animated.LineLayer id="trailFill" style={layerStyles.currentTrail} />
       </MapboxGL.Animated.ShapeSource>
     );
   }
@@ -247,13 +270,18 @@ class MapScreen extends Component {
             this.props.user.userCity.longitude,
             this.props.user.userCity.latitude
           ]}
-          userTrackingMode={MapboxGL.UserTrackingModes.Follow}
+          userTrackingMode={
+            this.state.followingUser
+              ? MapboxGL.UserTrackingModes.Follow
+              : MapboxGL.UserTrackingModes.None
+          }
           styleURL={"mapbox://styles/greatwillow/cja5e63er3g7s2ul5mqr5i3w7"}
           style={{ flex: 1 }}
           zoomLevel={this.props.mapUI.mapZoom}
           onRegionDidChange={region => this._onRegionDidChange(region)}
         >
-          {this._renderRoute()}
+          {this._renderTrails()}
+          {this._renderCurrentTrail()}
         </MapboxGL.MapView>
         <View
           style={{
@@ -275,9 +303,28 @@ class MapScreen extends Component {
           >
             <Icon name="search-web" size={40} color={commonColors.GREEN} />
           </TouchableOpacity>
-          <View style={{ flexDirection: "row" }}>
+          <TouchableOpacity
+            style={styles.searchIcon}
+            onPress={this._onPressSaveTrails}
+          >
+            <Icon name="content-save" size={40} color={commonColors.GREEN} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.searchIcon}
+            onPress={this._onPressToggleFollowMode}
+          >
+            <Icon
+              name="walk"
+              size={40}
+              color={
+                this.state.followingUser
+                  ? commonColors.GREEN
+                  : commonColors.PINK
+              }
+            />
+          </TouchableOpacity>
             <TouchableOpacity
-              style={styles.trackingIcon}
+              style={styles.searchIcon}
               onPress={this._onPressStartNewTrail}
             >
               <Icon
@@ -287,7 +334,7 @@ class MapScreen extends Component {
               />
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.trackingIcon}
+              style={styles.searchIcon}
               onPress={this._onPressToggleTracking}
             >
               <Icon
@@ -300,7 +347,6 @@ class MapScreen extends Component {
                 color={commonColors.PINK}
               />
             </TouchableOpacity>
-          </View>
         </View>
         <TouchableOpacity
           style={styles.zoomOutIcon}
@@ -349,11 +395,16 @@ const styles = StyleSheet.create({
 //--------------------------------------------------
 
 const layerStyles = MapboxGL.StyleSheet.create({
-  route: {
+  currentTrail: {
     lineColor: commonColors.PINK,
     lineWidth: 5,
     lineOpacity: 0.84
-  }
+  },
+  otherTrails: {
+    lineColor: commonColors.DARK_GREY,
+    lineWidth: 5,
+    lineOpacity: 0.84
+  },
 });
 
 //--------------------------------------------------
@@ -364,7 +415,8 @@ const mapStateToProps = state => ({
   user: state.user,
   mapUI: state.mapUI,
   modalUI: state.modalUI,
-  trail: state.trail
+  trail: state.trail,
+  trails: state.trails,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -377,7 +429,9 @@ const mapDispatchToProps = dispatch => ({
   toggleTrackingStatus: trackingStatus =>
     dispatch(actions.toggleTrackingStatus(trackingStatus)),
   addTrailToTrails: trail => dispatch(actions.addTrailToTrails(trail)),
-  generateNewTrail: () => dispatch(actions.generateNewTrail())
+  generateNewTrail: () => dispatch(actions.generateNewTrail()),
+  setMapFollowMode: mapFollowMode =>
+    dispatch(actions.setMapFollowMode(mapFollowMode))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MapScreen);
