@@ -86,6 +86,7 @@ class PopInCitySearch extends Component {
                 <GoogleAutocompleteSearch
                   {...this.props}
                   explicitSetMapRegion={(region) => this.props.explicitSetMapRegion(region)} 
+                  onSubmitEditing={this.props.onSubmitEditing}
                 />
                 </View>
           </View>

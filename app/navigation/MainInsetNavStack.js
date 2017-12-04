@@ -23,11 +23,13 @@ import { headerStyle } from "../styles/mainInsetHeaderStyle";
 import commonColors from "../constants/colors";
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../constants/dimensions";
 
-const MainInsetNavStack = DrawerNavigator(
+const MainInsetNavStack = 
+DrawerNavigator(
   {
     drawer: {
       headerMode: "none",
-      screen: StackNavigator(
+      screen: 
+      StackNavigator(
         {
           tabs: {
             screen: TabNavigator(

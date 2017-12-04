@@ -3,6 +3,7 @@
 import React, { Component } from "react";
 import {
   Image,
+  InteractionManager,
   KeyboardAvoidingView,
   LayoutAnimation,
   Modal,
@@ -62,15 +63,19 @@ class RegistrationWalkthroughScreen extends Component {
 
   _navForward = () => {
     if (this.props.registrationUI.chosenRegPage === "userInfoInput") {
-      this.userInfoInputRef._onRequestClose();
-      if (this.props.registrationUI.userInfoInputIsFinished === true) {
-        this.props.setRegistrationUI("citySearch");
-        LayoutAnimation.configureNext(this.createCustomLayoutAnimation());
-        this.setState({
-          userInfoInputItemLeft: -400,
-          citySearchItemLeft: SCREEN_WIDTH / 6 * 0.5
-        });
-      }
+      const self = this;
+      (async function whenValidatedNavForward() {
+        const validating = await self.userInfoInputRef._onRequestClose();
+      })().then(() => {
+        if (this.props.registrationUI.userInfoInputIsFinished === true) {
+          this.props.setRegistrationUI("citySearch");
+          LayoutAnimation.configureNext(this.createCustomLayoutAnimation());
+          this.setState({
+            userInfoInputItemLeft: -400,
+            citySearchItemLeft: SCREEN_WIDTH / 6 * 0.5
+          });
+        }
+      })
     } else if (this.props.registrationUI.chosenRegPage === "citySearch") {
       this.props.setRegistrationUI("interestSelector");
       LayoutAnimation.configureNext(this.createCustomLayoutAnimation());
@@ -80,11 +85,14 @@ class RegistrationWalkthroughScreen extends Component {
       });
     } else if (this.props.registrationUI.chosenRegPage === "interestSelector") {
       this.props.setRegistrationUI("userInfoInput");
-      LayoutAnimation.configureNext(this.createCustomLayoutAnimation());
+            LayoutAnimation.configureNext(this.createCustomLayoutAnimation());
       this.setState({
         interestSelectorItemLeft: -400
       });
-      this.props.navigation.navigate("drawer");
+  //USE INTERACTION MANAGER TO ENSURE ANIMATION IS FINISHED BEFORE TRANSITION
+      InteractionManager.runAfterInteractions(()=> {
+        this.props.navigation.navigate("drawer");
+      })
     }
   };
 
@@ -155,6 +163,7 @@ class RegistrationWalkthroughScreen extends Component {
             {...this.props}
             ref={ref => (this.userInfoInputRef = ref)}
             data={ageData}
+            onSubmitEditing = {this._navForward}
             style={{
               position: "absolute",
               bottom: 0,
@@ -163,6 +172,7 @@ class RegistrationWalkthroughScreen extends Component {
           />
             <PopInCitySearch
               {...this.props}
+              onSubmitEditing={this._navForward}
               style={{
                 position: "absolute",
                 bottom: 0,

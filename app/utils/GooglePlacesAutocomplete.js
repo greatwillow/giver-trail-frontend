@@ -580,6 +580,7 @@ export default class GooglePlacesAutocomplete extends Component {
                   }
                 : null //this._onFocus
             }
+            onSubmitEditing={this.props.onSubmitEditing}
             {...userProps}
             onChangeText={this._handleChangeText}
           />

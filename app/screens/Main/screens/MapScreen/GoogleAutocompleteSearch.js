@@ -49,7 +49,9 @@ class GoogleAutocompleteSearch extends Component {
               if(this.props.wantGeocoding) {
                 this._geocodeCity(data, details);
               }
+              this.props.onSubmitEditing
             }}
+            onSubmitEditing={this.props.onSubmitEditing}
             getDefaultValue={() => ""}
             query={{
               key: googlePlacesAutocompleteAPIKey,

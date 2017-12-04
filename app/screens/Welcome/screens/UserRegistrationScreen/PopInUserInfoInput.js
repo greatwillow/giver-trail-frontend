@@ -127,6 +127,7 @@ class PopInUserInfoInput extends Component {
                 style={styles.standardTextInput}
                 onChangeText={this._handleLastNameChangeText}
                 onEndEditing={this._handleLastNameSubmit}
+                onSubmitEditing={this.props.onSubmitEditing}
               />
               {/* <TextFontTitillium style={styles.standardText}>
             Age Range
@@ -157,13 +158,9 @@ const styles = StyleSheet.create({
     width: SCREEN_WIDTH / 6 * 5,
     height: SCREEN_HEIGHT / 8 * 5,
     backgroundColor: "rgba(0,0,0,0)",
-    //borderColor: commonColors.GREEN,
-    //borderWidth: 2,
-    //borderRadius: 10,
   },
   innerTopContainer: {
     flex: 9,
-    //height: SCREEN_WIDTH / 16 * 4,
     width: SCREEN_WIDTH / 6 * 5,
     borderColor: commonColors.GREEN,
     borderWidth: 2,

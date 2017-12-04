@@ -26,6 +26,7 @@ import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../../../constants/dimensions";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import commonColors from "../../../../constants/colors";
 import ModalCitySearch from "./ModalCitySearch";
+import MapButtons from "./MapButtons";
 //import { modalCitySearch } from "../../../../data/appActions";
 //import exampleIcon from '../../../../assets/exampleIcon.png';
 
@@ -45,7 +46,6 @@ class MapScreen extends Component {
     this.state = {
       //TODO: change this to undetermined, and then get to work on android
       locationPermission: "authorized",
-      followingUser: true,
       trail: {},
       trails: []
     };
@@ -72,42 +72,13 @@ class MapScreen extends Component {
   //--------------------------------------------------
 
   componentWillReceiveProps = nextProps => {
-    if(this.props.mapUI.mapFollowMode !== nextProps.mapUI.mapFollowMode) {
-      this.setState({
-        followingUser: nextProps.mapUI.mapFollowMode
-      });
-    }
     //With New Trails Props
-    if(this.props.trails.trails !== nextProps.trails.trails) {
-
-     console.log('====================================');
-     console.log("TRAILS MODIFIES ",this.state.trails);
-     console.log('====================================');
+    if (this.props.trails.trails !== nextProps.trails.trails) {
       this.setState({
         trails: nextProps.trails.trails
-      })
+      });
       console.log(this.state.trails);
     }
-  };
-
-  //--------------------------------------------------
-  // PRESS MODAL UI SEARCH
-  //--------------------------------------------------
-
-  _onPressUserLocationSearch = () => {
-    this.props.modalCitySearch(true);
-  };
-
-  //--------------------------------------------------
-  // PRESS ZOOM
-  //--------------------------------------------------
-
-  _onPressMapZoomIn = () => {
-    this.props.setMapZoom(this.props.mapUI.mapZoom + 1);
-  };
-
-  _onPressMapZoomOut = () => {
-    this.props.setMapZoom(this.props.mapUI.mapZoom - 1);
   };
 
   //--------------------------------------------------
@@ -154,7 +125,7 @@ class MapScreen extends Component {
               }
               //If User is far from last point -> need to make a new trail array
             } else if (givenDistance >= 70) {
-              this.setState({trail: {}})
+              this.setState({ trail: {} });
               this.props.addTrailToTrails(this.props.trail);
               this.props.generateNewTrail();
             }
@@ -168,32 +139,6 @@ class MapScreen extends Component {
     }
     //Toggle back the tracking
     this.props.toggleTrackingStatus(!this.props.trail.trackingStatus);
-  };
-
-  //--------------------------------------------------
-  // PRESS SAVE TRAILS
-  //--------------------------------------------------
-
-  _onPressSaveTrailsToServer = () => {
-
-
-  };
-
-  //--------------------------------------------------
-  // PRESS TOGGLE FOLLOW MODE
-  //--------------------------------------------------
-
-  _onPressToggleFollowMode = () => {
-    this.props.setMapFollowMode(!this.props.mapUI.mapFollowMode);
-  };
-
-  //--------------------------------------------------
-  // PRESS START NEW TRAIL
-  //--------------------------------------------------
-
-  _onPressStartNewTrail = () => {
-    this.props.addTrailToTrails(this.props.trail);
-    this.props.generateNewTrail();
   };
 
   //--------------------------------------------------
@@ -215,33 +160,36 @@ class MapScreen extends Component {
   //--------------------------------------------------
 
   _renderTrails = () => {
-    console.log('====================================');
+    console.log("====================================");
     console.log("RENDERING ALL");
-    console.log('====================================');
+    console.log("====================================");
     this.state.trails.map(trail => {
       const lineString = makeLineString(trail.coordinates);
-        console.log('====================================');
-        console.log("COORDS ",trail.coordinates);
-        console.log("Line ",lineString);
-        console.log('====================================');
-        return (
-          <MapboxGL.Animated.ShapeSource id={"myTrail"} shape={lineString}>
-            <MapboxGL.Animated.LineLayer id={"myTrail"} style={layerStyles.otherTrails} />
-          </MapboxGL.Animated.ShapeSource>
-        );
-    })
-  }
+      console.log("====================================");
+      console.log("COORDS ", trail.coordinates);
+      console.log("Line ", lineString);
+      console.log("====================================");
+      return (
+        <MapboxGL.Animated.ShapeSource id={"myTrail"} shape={lineString}>
+          <MapboxGL.Animated.LineLayer
+            id={"myTrail"}
+            style={layerStyles.otherTrails}
+          />
+        </MapboxGL.Animated.ShapeSource>
+      );
+    });
+  };
 
   _renderCurrentTrail = () => {
-    console.log('====================================');
-    console.log("RENDERING CURRENT");
-    console.log('====================================');
     return (
       <MapboxGL.Animated.ShapeSource id="trailSource" shape={this.state.trail}>
-        <MapboxGL.Animated.LineLayer id="trailFill" style={layerStyles.currentTrail} />
+        <MapboxGL.Animated.LineLayer
+          id="trailFill"
+          style={layerStyles.currentTrail}
+        />
       </MapboxGL.Animated.ShapeSource>
     );
-  }
+  };
 
   //--------------------------------------------------
   // RENDERING
@@ -283,83 +231,10 @@ class MapScreen extends Component {
           {this._renderTrails()}
           {this._renderCurrentTrail()}
         </MapboxGL.MapView>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            padding: 10,
-            position: "absolute",
-            top: 5,
-            right: 5,
-            left: 5,
-            height: 60,
-            backgroundColor: "rgba(0,0,0,0.7)",
-            borderRadius: 5
-          }}
-        >
-          <TouchableOpacity
-            style={styles.searchIcon}
-            onPress={this._onPressUserLocationSearch}
-          >
-            <Icon name="search-web" size={40} color={commonColors.GREEN} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.searchIcon}
-            onPress={this._onPressSaveTrails}
-          >
-            <Icon name="content-save" size={40} color={commonColors.GREEN} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.searchIcon}
-            onPress={this._onPressToggleFollowMode}
-          >
-            <Icon
-              name="walk"
-              size={40}
-              color={
-                this.state.followingUser
-                  ? commonColors.GREEN
-                  : commonColors.PINK
-              }
-            />
-          </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.searchIcon}
-              onPress={this._onPressStartNewTrail}
-            >
-              <Icon
-                name="map-marker-plus"
-                size={40}
-                color={commonColors.GREEN}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.searchIcon}
-              onPress={this._onPressToggleTracking}
-            >
-              <Icon
-                name={
-                  this.props.trail.trackingStatus
-                    ? "pause-circle-outline"
-                    : "play-circle-outline"
-                }
-                size={40}
-                color={commonColors.PINK}
-              />
-            </TouchableOpacity>
-        </View>
-        <TouchableOpacity
-          style={styles.zoomOutIcon}
-          onPress={this._onPressMapZoomOut}
-        >
-          <Icon name="minus-circle" size={50} color={commonColors.DARK_GREY} />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.zoomInIcon}
-          onPress={this._onPressMapZoomIn}
-        >
-          <Icon name="plus-circle" size={50} color={commonColors.DARK_GREY} />
-        </TouchableOpacity>
+        <MapButtons
+          onPressToggleTracking={this._onPressToggleTracking}
+          {...this.props}
+        />
         <ModalCitySearch
           explicitSetMapRegion={region => this._explicitSetMapRegion(region)}
         />
@@ -367,28 +242,6 @@ class MapScreen extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  searchIcon: {
-    backgroundColor: "rgba(0,0,0,0)"
-  },
-  zoomInIcon: {
-    backgroundColor: "rgba(0,0,0,0)",
-    position: "absolute",
-    left: 10,
-    bottom: 70
-  },
-  zoomOutIcon: {
-    backgroundColor: "rgba(0,0,0,0)",
-    position: "absolute",
-    left: 10,
-    bottom: 10
-  },
-  trackingIcon: {
-    backgroundColor: "rgba(0,0,0,0)",
-    marginHorizontal: 10
-  }
-});
 
 //--------------------------------------------------
 // LAYER STYLES
@@ -404,7 +257,7 @@ const layerStyles = MapboxGL.StyleSheet.create({
     lineColor: commonColors.DARK_GREY,
     lineWidth: 5,
     lineOpacity: 0.84
-  },
+  }
 });
 
 //--------------------------------------------------
@@ -416,7 +269,7 @@ const mapStateToProps = state => ({
   mapUI: state.mapUI,
   modalUI: state.modalUI,
   trail: state.trail,
-  trails: state.trails,
+  trails: state.trails
 });
 
 const mapDispatchToProps = dispatch => ({
