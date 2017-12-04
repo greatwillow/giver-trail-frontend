@@ -61,7 +61,6 @@
 		E12FAF761FC3A44800496CD8 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E12FAF6B1FC3A44800496CD8 /* Zocial.ttf */; };
 		E12FAF7D1FC3A59500496CD8 /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E12FAF7C1FC3A57F00496CD8 /* libRNVectorIcons.a */; };
 		E12FAFC31FC3B7DA00496CD8 /* libReactNativePermissions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E12FAFC11FC3B7A000496CD8 /* libReactNativePermissions.a */; };
-		E12FAFCA1FC5D8B100496CD8 /* libRCTBackgroundGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E12FAFC91FC5D87600496CD8 /* libRCTBackgroundGeolocation.a */; };
 		E12FAFD71FC9F51600496CD8 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E12FAFCC1FC9F51600496CD8 /* Entypo.ttf */; };
 		E12FAFD81FC9F51600496CD8 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E12FAFCD1FC9F51600496CD8 /* EvilIcons.ttf */; };
 		E12FAFDA1FC9F51600496CD8 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E12FAFCF1FC9F51600496CD8 /* FontAwesome.ttf */; };
@@ -490,7 +489,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E12FAFCA1FC5D8B100496CD8 /* libRCTBackgroundGeolocation.a in Frameworks */,
 				E12FAFC31FC3B7DA00496CD8 /* libReactNativePermissions.a in Frameworks */,
 				E12FAF7D1FC3A59500496CD8 /* libRNVectorIcons.a in Frameworks */,
 				E12FAF5E1FC3A2FA00496CD8 /* libRCTMGL.a in Frameworks */,
