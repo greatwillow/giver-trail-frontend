@@ -22,7 +22,7 @@ const WelcomeNavStack = StackNavigator(
     // signIn: { screen: SignInScreen },
     // signup: { screen: SignupScreen },
     // signInFail: { screen: SignInFailScreen },
-    // userRegistration: { screen: RegistrationWalkthroughScreen },
+   // userRegistration: { screen: RegistrationWalkthroughScreen },
     mainInsetNavStack: { screen: MainInsetNavStack } 
   },
   {

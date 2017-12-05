@@ -33,8 +33,8 @@ class RegistrationWalkthroughScreen extends Component {
 
     this.state = {
       userInfoInputItemLeft: 0,
-      citySearchItemLeft: 500,
-      interestSelectorItemLeft: 500
+      citySearchItemLeft: SCREEN_WIDTH,
+      interestSelectorItemLeft: SCREEN_WIDTH
     };
   }
 
@@ -71,7 +71,7 @@ class RegistrationWalkthroughScreen extends Component {
           this.props.setRegistrationUI("citySearch");
           LayoutAnimation.configureNext(this.createCustomLayoutAnimation());
           this.setState({
-            userInfoInputItemLeft: -400,
+            userInfoInputItemLeft: -SCREEN_WIDTH,
             citySearchItemLeft: SCREEN_WIDTH / 6 * 0.5
           });
         }
@@ -80,14 +80,14 @@ class RegistrationWalkthroughScreen extends Component {
       this.props.setRegistrationUI("interestSelector");
       LayoutAnimation.configureNext(this.createCustomLayoutAnimation());
       this.setState({
-        citySearchItemLeft: -400,
+        citySearchItemLeft: -SCREEN_WIDTH,
         interestSelectorItemLeft: SCREEN_WIDTH / 6 * 0.5
       });
     } else if (this.props.registrationUI.chosenRegPage === "interestSelector") {
       this.props.setRegistrationUI("userInfoInput");
             LayoutAnimation.configureNext(this.createCustomLayoutAnimation());
       this.setState({
-        interestSelectorItemLeft: -400
+        interestSelectorItemLeft: -SCREEN_WIDTH
       });
   //USE INTERACTION MANAGER TO ENSURE ANIMATION IS FINISHED BEFORE TRANSITION
       InteractionManager.runAfterInteractions(()=> {
@@ -102,14 +102,14 @@ class RegistrationWalkthroughScreen extends Component {
       this.props.setRegistrationUI("userInfoInput");
       LayoutAnimation.configureNext(this.createCustomLayoutAnimation());
       this.setState({
-        citySearchItemLeft: 500,
+        citySearchItemLeft: SCREEN_WIDTH,
         userInfoInputItemLeft: SCREEN_WIDTH / 6 * 0.5
       });
     } else if (this.props.registrationUI.chosenRegPage === "interestSelector") {
       this.props.setRegistrationUI("citySearch");
       LayoutAnimation.configureNext(this.createCustomLayoutAnimation());
       this.setState({
-        interestSelectorItemLeft: 500,
+        interestSelectorItemLeft: SCREEN_WIDTH,
         citySearchItemLeft: SCREEN_WIDTH / 6 * 0.5
       });
     }

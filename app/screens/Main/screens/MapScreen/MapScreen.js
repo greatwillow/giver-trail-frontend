@@ -28,7 +28,6 @@ import commonColors from "../../../../constants/colors";
 import ModalCitySearch from "./ModalCitySearch";
 import MapButtons from "./MapButtons";
 //import { modalCitySearch } from "../../../../data/appActions";
-//import exampleIcon from '../../../../assets/exampleIcon.png';
 
 import {
   requestGeolocationPermission,
@@ -47,7 +46,8 @@ class MapScreen extends Component {
       //TODO: change this to undetermined, and then get to work on android
       locationPermission: "authorized",
       trail: {},
-      trails: []
+      trails: [],
+      followingUser: true
     };
   }
 
@@ -72,13 +72,35 @@ class MapScreen extends Component {
   //--------------------------------------------------
 
   componentWillReceiveProps = nextProps => {
+    //Following Mode
+    if (this.props.mapUI.mapFollowMode !== nextProps.mapUI.mapFollowMode) {
+      this.setState({
+        followingUser: nextProps.mapUI.mapFollowMode
+      });
+    }
     //With New Trails Props
     if (this.props.trails.trails !== nextProps.trails.trails) {
       this.setState({
         trails: nextProps.trails.trails
       });
-      console.log(this.state.trails);
+      console.log('====================================');
+      console.log("TRAILS In STATE IS ",this.state.trails);
+      console.log('====================================');
     }
+  };
+
+  //--------------------------------------------------
+  // PRESS TOGGLE FOLLOW MODE
+  //--------------------------------------------------
+
+  _onPressToggleFollowMode = () => {
+    this.setState(
+      {
+        followingUser: !this.props.mapUI.mapFollowMode
+      },() => {
+        this.props.setMapFollowMode(!this.props.mapUI.mapFollowMode)
+      }
+    );
   };
 
   //--------------------------------------------------
@@ -87,6 +109,7 @@ class MapScreen extends Component {
 
   _onPressToggleTracking = () => {
     if (this.props.trail.trackingStatus === false) {
+      this.props.toggleTrackingStatus(true);
       backgroundEvent = BackgroundTimer.setInterval(() => {
         navigator.geolocation.getCurrentPosition(
           position => {
@@ -136,9 +159,11 @@ class MapScreen extends Component {
       }, 100);
     } else {
       BackgroundTimer.clearInterval(backgroundEvent);
+      this.props.toggleTrackingStatus(false);
+      this.setState({ trail: {} });
+      this.props.addTrailToTrails(this.props.trail);
+      this.props.generateNewTrail();
     }
-    //Toggle back the tracking
-    this.props.toggleTrackingStatus(!this.props.trail.trackingStatus);
   };
 
   //--------------------------------------------------
@@ -160,19 +185,24 @@ class MapScreen extends Component {
   //--------------------------------------------------
 
   _renderTrails = () => {
-    console.log("====================================");
-    console.log("RENDERING ALL");
-    console.log("====================================");
-    this.state.trails.map(trail => {
-      const lineString = makeLineString(trail.coordinates);
+    // console.log("====================================");
+    // console.log("RENDERING ALL");
+    // console.log("====================================");
+    return this.state.trails.map(trail => {
+    
+      let lineString = {}
+      if(trail.coordinates.length >= 2) {
+        lineString = makeLineString(trail.coordinates);
+      }
+
       console.log("====================================");
       console.log("COORDS ", trail.coordinates);
       console.log("Line ", lineString);
       console.log("====================================");
       return (
-        <MapboxGL.Animated.ShapeSource id={"myTrail"} shape={lineString}>
+        <MapboxGL.Animated.ShapeSource id={shortid.generate()} shape={lineString}>
           <MapboxGL.Animated.LineLayer
-            id={"myTrail"}
+            id={shortid.generate()}
             style={layerStyles.otherTrails}
           />
         </MapboxGL.Animated.ShapeSource>
@@ -181,10 +211,14 @@ class MapScreen extends Component {
   };
 
   _renderCurrentTrail = () => {
+
+    console.log('====================================');
+    console.log("ONE TRAIL IS ",this.state.trail);
+    console.log('====================================');
     return (
-      <MapboxGL.Animated.ShapeSource id="trailSource" shape={this.state.trail}>
+      <MapboxGL.Animated.ShapeSource id={shortid.generate()} shape={this.state.trail}>
         <MapboxGL.Animated.LineLayer
-          id="trailFill"
+          id={shortid.generate()}
           style={layerStyles.currentTrail}
         />
       </MapboxGL.Animated.ShapeSource>
@@ -233,6 +267,7 @@ class MapScreen extends Component {
         </MapboxGL.MapView>
         <MapButtons
           onPressToggleTracking={this._onPressToggleTracking}
+          onPressToggleFollowMode={this._onPressToggleFollowMode}
           {...this.props}
         />
         <ModalCitySearch

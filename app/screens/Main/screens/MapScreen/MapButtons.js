@@ -5,20 +5,6 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import commonColors from "../../../../constants/colors";
 
 class MapButtons extends Component {
-  constructor() {
-    super();
-    this.state = {
-      followingUser: true
-    };
-  }
-
-  componentWillReceiveProps = nextProps => {
-    if (this.props.mapUI.mapFollowMode !== nextProps.mapUI.mapFollowMode) {
-      this.setState({
-        followingUser: nextProps.mapUI.mapFollowMode
-      });
-    }
-  };
 
   //--------------------------------------------------
   // PRESS MODAL UI SEARCH
@@ -47,14 +33,6 @@ class MapButtons extends Component {
   _onPressSaveTrailsToServer = () => {};
 
   //--------------------------------------------------
-  // PRESS TOGGLE FOLLOW MODE
-  //--------------------------------------------------
-
-  _onPressToggleFollowMode = () => {
-    this.props.setMapFollowMode(!this.props.mapUI.mapFollowMode);
-  };
-
-  //--------------------------------------------------
   // PRESS START NEW TRAIL
   //--------------------------------------------------
 
@@ -65,9 +43,7 @@ class MapButtons extends Component {
 
   render() {
     return (
-      <View
-        style={{ position: "absolute", top: 0, bottom: 0, right: 0, left: 0 }}
-      >
+
         <View style={styles.topButtonContainer}>
           <TouchableOpacity
             style={styles.icon}
@@ -83,13 +59,13 @@ class MapButtons extends Component {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.icon}
-            onPress={this._onPressToggleFollowMode}
+            onPress={this.props.onPressToggleFollowMode}
           >
             <Icon
               name="walk"
               size={40}
               color={
-                this.state.followingUser
+                this.props.mapUI.mapFollowMode
                   ? commonColors.GREEN
                   : commonColors.PINK
               }
@@ -115,20 +91,20 @@ class MapButtons extends Component {
               color={commonColors.PINK}
             />
           </TouchableOpacity>
-        </View>
-        <TouchableOpacity
-          style={styles.zoomOutIcon}
+          <TouchableOpacity
+          style={styles.icon}
           onPress={this._onPressMapZoomOut}
         >
-          <Icon name="minus-circle" size={50} color={commonColors.DARK_GREY} />
+          <Icon name="minus-circle" size={40} color={commonColors.GREEN} />
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.zoomInIcon}
+          style={styles.icon}
           onPress={this._onPressMapZoomIn}
         >
-          <Icon name="plus-circle" size={50} color={commonColors.DARK_GREY} />
+          <Icon name="plus-circle" size={40} color={commonColors.GREEN} />
         </TouchableOpacity>
-      </View>
+        </View>
+
     );
   }
 }
@@ -169,3 +145,25 @@ const styles = StyleSheet.create({
 });
 
 export default MapButtons;
+
+
+
+
+
+      // <View
+      //   style={{ position: "absolute", top: 0, bottom: 0, right: 0, left: 0 }}
+      // >
+
+        // <TouchableOpacity
+        //   style={styles.zoomOutIcon}
+        //   onPress={this._onPressMapZoomOut}
+        // >
+        //   <Icon name="minus-circle" size={50} color={commonColors.DARK_GREY} />
+        // </TouchableOpacity>
+        // <TouchableOpacity
+        //   style={styles.zoomInIcon}
+        //   onPress={this._onPressMapZoomIn}
+        // >
+        //   <Icon name="plus-circle" size={50} color={commonColors.DARK_GREY} />
+        // </TouchableOpacity>
+      // </View>
