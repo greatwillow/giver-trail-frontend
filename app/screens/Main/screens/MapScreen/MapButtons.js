@@ -4,6 +4,11 @@ import { StyleSheet, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import commonColors from "../../../../constants/colors";
 
+import {
+  calculateTrailLength,
+  //euclideanDistance
+} from "./GeolocationUtils";
+
 class MapButtons extends Component {
 
   //--------------------------------------------------
@@ -41,6 +46,17 @@ class MapButtons extends Component {
     this.props.generateNewTrail();
   };
 
+  //--------------------------------------------------
+  // CALCULATE TRAIL LENGTH
+  //--------------------------------------------------
+
+  _onPressCalculateTrailLength = () => {
+    const trailLength = calculateTrailLength(this.props.trails.trails)
+    console.log('====================================');
+    console.log("TRAAAAAILS ", trailLength);
+    console.log('====================================');
+  }
+
   render() {
     return (
 
@@ -66,8 +82,8 @@ class MapButtons extends Component {
               size={40}
               color={
                 this.props.mapUI.mapFollowMode
-                  ? commonColors.GREEN
-                  : commonColors.PINK
+                  ? commonColors.PINK
+                  : commonColors.GREEN
               }
             />
           </TouchableOpacity>
@@ -102,6 +118,12 @@ class MapButtons extends Component {
           onPress={this._onPressMapZoomIn}
         >
           <Icon name="plus-circle" size={40} color={commonColors.GREEN} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.icon}
+          onPress={this._onPressCalculateTrailLength}
+        >
+          <Icon name="walk" size={40} color={commonColors.GREEN} />
         </TouchableOpacity>
         </View>
 

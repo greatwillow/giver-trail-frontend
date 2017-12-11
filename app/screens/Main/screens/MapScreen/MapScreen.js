@@ -31,6 +31,7 @@ import MapButtons from "./MapButtons";
 
 import {
   requestGeolocationPermission,
+  calculateTrailLength,
   euclideanDistance
 } from "./GeolocationUtils";
 
@@ -47,7 +48,7 @@ class MapScreen extends Component {
       locationPermission: "authorized",
       trail: {},
       trails: [],
-      followingUser: true
+      followingUser: false
     };
   }
 
@@ -55,7 +56,7 @@ class MapScreen extends Component {
   // MOUNTING
   //--------------------------------------------------
 
-  componentDidMount() {
+  componentDidMount = () => {
     //TODO: May still need the following for IOS?
     // Permissions.request("location").then(response => {
     //   alert('Permission is ',response)
@@ -83,9 +84,6 @@ class MapScreen extends Component {
       this.setState({
         trails: nextProps.trails.trails
       });
-      console.log('====================================');
-      console.log("TRAILS In STATE IS ",this.state.trails);
-      console.log('====================================');
     }
   };
 
@@ -148,9 +146,12 @@ class MapScreen extends Component {
               }
               //If User is far from last point -> need to make a new trail array
             } else if (givenDistance >= 70) {
-              this.setState({ trail: {} });
-              this.props.addTrailToTrails(this.props.trail);
-              this.props.generateNewTrail();
+              this.setState({ trail: {} },
+                () => {
+                  this.props.addTrailToTrails(this.props.trail);
+                  this.props.generateNewTrail();
+                }
+              );
             }
           },
           error => console.log("ERROR IN GEOLOCATOR IS: ", error),
@@ -160,9 +161,12 @@ class MapScreen extends Component {
     } else {
       BackgroundTimer.clearInterval(backgroundEvent);
       this.props.toggleTrackingStatus(false);
-      this.setState({ trail: {} });
-      this.props.addTrailToTrails(this.props.trail);
-      this.props.generateNewTrail();
+      this.setState({ trail: {} },
+        () => {
+          this.props.addTrailToTrails(this.props.trail);
+          this.props.generateNewTrail();
+        }
+      );
     }
   };
 
@@ -185,20 +189,12 @@ class MapScreen extends Component {
   //--------------------------------------------------
 
   _renderTrails = () => {
-    // console.log("====================================");
-    // console.log("RENDERING ALL");
-    // console.log("====================================");
     return this.state.trails.map(trail => {
     
       let lineString = {}
       if(trail.coordinates.length >= 2) {
         lineString = makeLineString(trail.coordinates);
       }
-
-      console.log("====================================");
-      console.log("COORDS ", trail.coordinates);
-      console.log("Line ", lineString);
-      console.log("====================================");
       return (
         <MapboxGL.Animated.ShapeSource id={shortid.generate()} shape={lineString}>
           <MapboxGL.Animated.LineLayer

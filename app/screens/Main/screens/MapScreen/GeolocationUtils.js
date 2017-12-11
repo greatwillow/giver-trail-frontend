@@ -1,6 +1,73 @@
 import BackgroundTimer from "react-native-background-timer";
 
 //--------------------------------------------------
+// CALCULATE TRAIL LENGTH
+//--------------------------------------------------
+
+export function calculateTrailLength(trails) {
+  //let incrementDistance;
+  //let distanceArray;
+  //let trailDistance;
+  let totalDistance;
+
+  // for(i=0; i<trails.length-1; i++) {
+  //   incrementDistance = euclideanDistance(trails[i][0], trails[i][1], trails[i+1],[0], trails[i+1],[1])
+  //   distanceArray = distanceArray.concat(incrementDistance)
+  // }
+
+  console.log('====================================');
+  console.log("INPUT T IS ", trails);
+  console.log("EUC is ", euclideanDistance(-122.02335996,37.32463487,-122.02339656,37.32463256));
+  console.log('====================================');
+
+  totalDistance = trails.map(trail => {
+    trail.coordinates.map((coordinate, i, arr) => {
+      if (i < arr.length - 1) {
+
+        console.log('====================================');
+        console.log("ARR 1 ",arr[i][0]);
+        console.log("ARR 1 ",arr[i][1]);
+        console.log("ARR 1 ",arr[i+1][0]);
+        console.log("ARR 1 ",arr[i+1][1]);
+        console.log('====================================');
+          return (async function testFunction() {
+            const val = await euclideanDistance(
+              arr[i][0],
+              arr[i][1],
+              arr[i + 1],
+              [0],
+              arr[i + 1],
+              [1]
+            );
+            console.log('====================================');
+            console.log("VAL IS ",val);
+            console.log('====================================');
+            return val
+          })();
+
+        }
+        return
+    }).reduce((a, b) => {
+      console.log('====================================');
+      console.log("A is ",a);
+      console.log("RED1 IS ",a+b);
+      console.log('====================================');
+      return a + b;
+    })
+  }).reduce((a, b) => {
+    console.log('====================================');
+    console.log("A2 is ",a);
+    console.log("RED2 IS ",a+b);
+    console.log('====================================');
+    return a + b;
+  });
+  console.log('====================================');
+  console.log("TOTAL IS ",totalDistance);
+  console.log('====================================');
+  return totalDistance;
+}
+
+//--------------------------------------------------
 // REQUESTING GEOLOC PERMISSION
 //--------------------------------------------------
 
@@ -40,7 +107,6 @@ export function requestGeolocationPermission() {
 //--------------------------------------------------
 
 export function euclideanDistance(lon1, lat1, lon2, lat2) {
-
   function deg2rad(degrees) {
     radians = degrees * (Math.PI / 180);
     return radians;
