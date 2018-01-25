@@ -12,22 +12,22 @@ import RegistrationWalkthroughScreen from "../screens/Welcome/screens/UserRegist
 import MainInsetNavStack from "./MainInsetNavStack";
 
 const loginNavOptions = {
-  initialRouteName: "walkthrough",
-  header: null,
+    initialRouteName: "walkthrough",
+    header: null
 };
 
 const WelcomeNavStack = StackNavigator(
-  {
-    // walkthrough: { screen: WalkthroughScreen },
-    // signIn: { screen: SignInScreen },
-    // signup: { screen: SignupScreen },
-    // signInFail: { screen: SignInFailScreen },
-   // userRegistration: { screen: RegistrationWalkthroughScreen },
-    mainInsetNavStack: { screen: MainInsetNavStack } 
-  },
-  {
-    navigationOptions: loginNavOptions
-  }
+    {
+        // walkthrough: { screen: WalkthroughScreen },
+        // signIn: { screen: SignInScreen },
+        // signup: { screen: SignupScreen },
+        // signInFail: { screen: SignInFailScreen },
+        // userRegistration: { screen: RegistrationWalkthroughScreen },
+        mainInsetNavStack: { screen: MainInsetNavStack }
+    },
+    {
+        navigationOptions: loginNavOptions
+    }
 );
 
 export default WelcomeNavStack;

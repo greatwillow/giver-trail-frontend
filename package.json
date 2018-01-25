@@ -9,7 +9,7 @@
     "android-linux": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res && react-native run-android"
   },
   "dependencies": {
-    "@mapbox/react-native-mapbox-gl": "^6.0.0",
+    "@mapbox/react-native-mapbox-gl": "^6.0.2",
     "@turf/turf": "^5.0.4",
     "dot-prop-immutable": "^1.4.0",
     "lodash.debounce": "^4.0.8",

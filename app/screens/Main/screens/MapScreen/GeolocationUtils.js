@@ -4,67 +4,78 @@ import BackgroundTimer from "react-native-background-timer";
 // CALCULATE TRAIL LENGTH
 //--------------------------------------------------
 
-export function calculateTrailLength(trails) {
-  //let incrementDistance;
-  //let distanceArray;
-  //let trailDistance;
-  let totalDistance;
-
-  // for(i=0; i<trails.length-1; i++) {
-  //   incrementDistance = euclideanDistance(trails[i][0], trails[i][1], trails[i+1],[0], trails[i+1],[1])
-  //   distanceArray = distanceArray.concat(incrementDistance)
-  // }
-
-  console.log('====================================');
-  console.log("INPUT T IS ", trails);
-  console.log("EUC is ", euclideanDistance(-122.02335996,37.32463487,-122.02339656,37.32463256));
-  console.log('====================================');
-
-  totalDistance = trails.map(trail => {
-    trail.coordinates.map((coordinate, i, arr) => {
-      if (i < arr.length - 1) {
-
-        console.log('====================================');
-        console.log("ARR 1 ",arr[i][0]);
-        console.log("ARR 1 ",arr[i][1]);
-        console.log("ARR 1 ",arr[i+1][0]);
-        console.log("ARR 1 ",arr[i+1][1]);
-        console.log('====================================');
-          return (async function testFunction() {
-            const val = await euclideanDistance(
-              arr[i][0],
-              arr[i][1],
-              arr[i + 1],
-              [0],
-              arr[i + 1],
-              [1]
-            );
-            console.log('====================================');
-            console.log("VAL IS ",val);
-            console.log('====================================');
-            return val
-          })();
-
+function calculateIndividualTrailLength(trail) {
+  const trailIncrementDistances = new Promise(resolve => {
+    let trailIncrement = trail.coordinates.map(
+      (coordinate, i, arr) => {
+        if (i < arr.length - 1) {
+          return euclideanDistance(
+            arr[i][0],
+            arr[i][1],
+            arr[i + 1][0],
+            arr[i + 1][1]
+          );
         }
-        return
-    }).reduce((a, b) => {
-      console.log('====================================');
-      console.log("A is ",a);
-      console.log("RED1 IS ",a+b);
-      console.log('====================================');
-      return a + b;
-    })
-  }).reduce((a, b) => {
-    console.log('====================================');
-    console.log("A2 is ",a);
-    console.log("RED2 IS ",a+b);
-    console.log('====================================');
-    return a + b;
-  });
-  console.log('====================================');
-  console.log("TOTAL IS ",totalDistance);
-  console.log('====================================');
-  return totalDistance;
+        return;
+      })
+    resolve(trailIncrement)
+  }
+  );
+
+  function individualTrailLength() {
+    return Promise.all(trailIncrementDistances).then(results => {
+      return results.reduce((a, b) => {
+        if (a !== undefined && b !== undefined) {
+          const c = Number(a) + Number(b);
+          console.log('====================================');
+          console.log("C IS ",c);
+          console.log('====================================');
+          return c;
+        }
+      });
+    });
+  }
+
+  console.log("====================================");
+  console.log("UNZIP ", individualTrailLength());
+  console.log("====================================");
+  return individualTrailLength();
+}
+
+export function calculateTrailLength(trails) {
+  let totalDistance = [];
+
+  if (trails.trails.length > 0) {
+    totalDistance = Promise.all(
+      trails.trails.map(trail => {
+        return calculateIndividualTrailLength(trail);
+      })
+    );
+
+    const finalDistance = totalDistance.then(results => {
+      console.log("====================================");
+      console.log("RESULTS 2 ARE ", results);
+      console.log("====================================");
+      return Promise.all(results).then(innerResults => {
+        return innerResults.reduce((a, b) => {
+          if (a !== undefined && b !== undefined) {
+            console.log("====================================");
+            console.log("A2 is ", a);
+            console.log("RED2 IS ", Number(a) + Number(b));
+            console.log("====================================");
+            return Number(a) + Number(b);
+          }
+          return;
+        });
+      });
+    });
+
+    console.log("====================================");
+    console.log("TOTAL IS ", totalDistance);
+    console.log("Final dist is ", finalDistance);
+    console.log("====================================");
+    return finalDistance;
+  }
 }
 
 //--------------------------------------------------
