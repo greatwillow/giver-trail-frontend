@@ -27,6 +27,8 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import commonColors from "../../../../constants/colors";
 import ModalCitySearch from "./ModalCitySearch";
 import MapButtons from "./MapButtons";
+import { mockData } from "./mockData";
+import { generateUserTrailsFeatureCollection } from "./mockData";
 //import { modalCitySearch } from "../../../../data/appActions";
 
 import {
@@ -172,6 +174,7 @@ class MapScreen extends Component {
             BackgroundTimer.clearInterval(backgroundEvent);
             this.props.toggleTrackingStatus(false);
             this.setState({ trail: {} }, () => {
+                this.props.setTrailCenterPoint(this.props.trail);
                 this.props.addTrailToTrails(this.props.trail);
                 this.props.generateNewTrail();
             });
@@ -197,31 +200,43 @@ class MapScreen extends Component {
     //--------------------------------------------------
 
     _renderAnnotations() {
-        return this.state.trails.map(trail => {
-            console.log(
-                "Int Array Val is ",
-                parseInt(trail.coordinates.length / 2)
-            );
-            console.log(
-                "Int Array Val ",
-                trail.coordinates[parseInt(trail.coordinates.length / 2)]
-            );
-            let centerPoint =
-                trail.coordinates[parseInt(trail.coordinates.length / 2)];
-            return (
-                <MapboxGL.PointAnnotation
-                    key="pointAnnotation"
-                    id="pointAnnotation"
-                    coordinate={centerPoint}
-                >
-                    {/* <View style={styles.annotationContainer}>
+        return (
+            // <MapboxGL.PointAnnotation
+            //     key="pointAnnotation"
+            //     id="pointAnnotation"
+            //     coordinate={centerPoint}
+            // >
+
+            <MapboxGL.ShapeSource
+                id={shortid.generate()}
+                cluster
+                clusterRadius={50}
+                clusterMaxZoom={14}
+                //url="https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
+                shape={generateUserTrailsFeatureCollection(this.state.trails)}
+            >
+                {/* <View style={styles.annotationContainer}>
                         <View style={styles.annotationFill} />
                     </View> */}
+                <MapboxGL.SymbolLayer
+                    id={shortid.generate()}
+                    style={layerStyles.clusterCount}
+                />
 
-                    <MapboxGL.Callout title="Look! An annotation!" />
-                </MapboxGL.PointAnnotation>
-            );
-        });
+                <MapboxGL.CircleLayer
+                    id={shortid.generate()}
+                    //belowLayerID="pointCount"
+                    filter={["has", "point_count"]}
+                    style={layerStyles.clusteredPoints}
+                />
+
+                <MapboxGL.CircleLayer
+                    id={shortid.generate()}
+                    filter={["!has", "point_count"]}
+                    style={layerStyles.singlePoint}
+                />
+            </MapboxGL.ShapeSource>
+        );
     }
 
     _renderTrails = () => {
@@ -266,6 +281,12 @@ class MapScreen extends Component {
     //--------------------------------------------------
 
     render() {
+        let generatedTrailPoints = generateUserTrailsFeatureCollection(
+            this.state.trails
+        );
+
+        console.log("TRAIL PNTS ARE ", generatedTrailPoints);
+
         return (
             <View
                 style={{
@@ -308,11 +329,12 @@ class MapScreen extends Component {
                     {this._renderCurrentTrail()}
                     {this._renderAnnotations()}
                     <MapboxGL.ShapeSource
-                        id="earthquakes"
+                        id={shortid.generate()}
                         cluster
                         clusterRadius={50}
                         clusterMaxZoom={14}
-                        url="https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
+                        //url="https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
+                        shape={generatedTrailPoints}
                     >
                         <MapboxGL.SymbolLayer
                             id="pointCount"
@@ -320,14 +342,14 @@ class MapScreen extends Component {
                         />
 
                         <MapboxGL.CircleLayer
-                            id="clusteredPoints"
+                            id={shortid.generate()} //"clusteredPoints"
                             belowLayerID="pointCount"
                             filter={["has", "point_count"]}
                             style={layerStyles.clusteredPoints}
                         />
 
                         <MapboxGL.CircleLayer
-                            id="singlePoint"
+                            id={shortid.generate()} //"singlePoint"
                             filter={["!has", "point_count"]}
                             style={layerStyles.singlePoint}
                         />
@@ -369,7 +391,7 @@ const layerStyles = MapboxGL.StyleSheet.create({
         circleOpacity: 0.84,
         circleStrokeWidth: 2,
         circleStrokeColor: "white",
-        circleRadius: 5
+        circleRadius: 10
         //circlePitchAlignment: MapboxGL.CirclePitchAlignment.Map
     },
 
@@ -377,19 +399,19 @@ const layerStyles = MapboxGL.StyleSheet.create({
         //circlePitchAlignment: MapboxGL.CirclePitchAlignment.Map,
         circleColor: MapboxGL.StyleSheet.source(
             [
-                [25, "yellow"],
-                [50, "red"],
-                [75, "blue"],
-                [100, "orange"],
-                [300, "pink"],
-                [750, "white"]
+                [3, "yellow"],
+                [5, "red"],
+                [7, "blue"],
+                [10, "orange"],
+                [15, "pink"],
+                [100, "white"]
             ],
             "point_count",
             MapboxGL.InterpolationMode.Exponential
         ),
 
         circleRadius: MapboxGL.StyleSheet.source(
-            [[0, 15], [100, 20], [750, 30]],
+            [[0, 15], [3, 20], [5, 25], [7, 30], [10, 35]],
             "point_count",
             MapboxGL.InterpolationMode.Exponential
         ),
@@ -401,7 +423,7 @@ const layerStyles = MapboxGL.StyleSheet.create({
 
     clusterCount: {
         textField: "{point_count}",
-        textSize: 12,
+        textSize: 18,
         textPitchAlignment: MapboxGL.TextPitchAlignment.Map
     }
 });
@@ -449,6 +471,7 @@ const mapDispatchToProps = dispatch => ({
         dispatch(actions.addLocationPointToTrail(locationPoint)),
     toggleTrackingStatus: trackingStatus =>
         dispatch(actions.toggleTrackingStatus(trackingStatus)),
+    setTrailCenterPoint: trail => dispatch(actions.setTrailCenterPoint(trail)),
     addTrailToTrails: trail => dispatch(actions.addTrailToTrails(trail)),
     generateNewTrail: () => dispatch(actions.generateNewTrail()),
     setMapFollowMode: mapFollowMode =>

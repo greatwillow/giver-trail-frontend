@@ -1,82 +1,78 @@
 import {
-  postNewUserSignup,
-  attemptUserSignIn,
-  sendNewUserRegistrationData,
-  getUserData,
-  setUserToken,
-  setUserID,
-  setUserEmail,
-  setUserFirstName,
-  setUserLastName,
-  setUserAge,
-  setUserCity,
-  setUserPassionsList,
-  addToUserPassionsList,
-  removeFromUserPassionsList,
+    postNewUserSignup,
+    attemptUserSignIn,
+    sendNewUserRegistrationData,
+    getUserData,
+    setUserToken,
+    setUserID,
+    setUserEmail,
+    setUserFirstName,
+    setUserLastName,
+    setUserAge,
+    setUserCity,
+    setUserPassionsList,
+    addToUserPassionsList,
+    removeFromUserPassionsList
 } from "./user/actions";
 
 import {
-  modalUserInfoInput,
-  modalCitySearch,
-  modalInterestSelector
+    modalUserInfoInput,
+    modalCitySearch,
+    modalInterestSelector
 } from "./modalUI/actions";
 
 import { setInsetTabUI } from "./insetTabUI/actions";
 
 import {
-  setRegistrationUI,
-  setUserInfoInputFinished
+    setRegistrationUI,
+    setUserInfoInputFinished
 } from "./registrationUI/actions";
 
-import {
-  setMapRegion,
-  setMapZoom,
-  setMapFollowMode
-} from "./mapUI/actions";
+import { setMapRegion, setMapZoom, setMapFollowMode } from "./mapUI/actions";
 
 import {
-  generateNewTrail,
-  addLocationPointToTrail,
-  toggleTrackingStatus
-} from "./trail/actions"
+    generateNewTrail,
+    addLocationPointToTrail,
+    toggleTrackingStatus,
+    setTrailCenterPoint
+} from "./trail/actions";
 
-import {
-  addTrailToTrails,
-} from "./trails/actions"
+import { addTrailToTrails } from "./trails/actions";
 
 export {
-  //modalUI
-  modalUserInfoInput,
-  modalCitySearch,
-  modalInterestSelector,
-  //insetTabUI
-  setInsetTabUI,
-  //user
-  postNewUserSignup,
-  attemptUserSignIn,
-  sendNewUserRegistrationData,
-  getUserData,
-  setUserToken,
-  setUserID,
-  setUserEmail,
-  setUserFirstName,
-  setUserLastName,
-  setUserAge,
-  setUserCity,
-  setUserPassionsList,
-  addToUserPassionsList,
-  removeFromUserPassionsList,
-  //registrationUI
-  setRegistrationUI,
-  setUserInfoInputFinished,
-  //mapUI
-  setMapRegion,
-  setMapZoom,
-  setMapFollowMode,
-  //trail
-  generateNewTrail,
-  addLocationPointToTrail,
-  toggleTrackingStatus,
-  //trails
-  addTrailToTrails,
+    //modalUI
+    modalUserInfoInput,
+    modalCitySearch,
+    modalInterestSelector,
+    //insetTabUI
+    setInsetTabUI,
+    //user
+    postNewUserSignup,
+    attemptUserSignIn,
+    sendNewUserRegistrationData,
+    getUserData,
+    setUserToken,
+    setUserID,
+    setUserEmail,
+    setUserFirstName,
+    setUserLastName,
+    setUserAge,
+    setUserCity,
+    setUserPassionsList,
+    addToUserPassionsList,
+    removeFromUserPassionsList,
+    //registrationUI
+    setRegistrationUI,
+    setUserInfoInputFinished,
+    //mapUI
+    setMapRegion,
+    setMapZoom,
+    setMapFollowMode,
+    //trail
+    generateNewTrail,
+    addLocationPointToTrail,
+    toggleTrackingStatus,
+    setTrailCenterPoint,
+    //trails
+    addTrailToTrails
 };
