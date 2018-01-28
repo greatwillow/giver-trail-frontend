@@ -110,15 +110,19 @@ class MapScreen extends Component {
     //--------------------------------------------------
 
     _onPressToggleTracking = () => {
-        if (this.props.trail.trackingStatus === false) {
+        // console.log("======GENERATING TRAIL=============");
+        // this.props.generateNewTrail();
+
+        if (this.props.mapUI.trackingStatus === false) {
             this.props.toggleTrackingStatus(true);
             backgroundEvent = BackgroundTimer.setInterval(() => {
                 navigator.geolocation.getCurrentPosition(
                     position => {
                         //initially setting distance above 5 which is min distance to get point
-                        let givenDistance = 6;
+                        let givenDistance;
                         //Calculating distance
-                        if (this.props.trail.coordinates.length > 2) {
+
+                        if (this.props.trail.coordinates.length >= 1) {
                             const lastPointLongitude = this.props.trail
                                 .coordinates[
                                 this.props.trail.coordinates.length - 1
@@ -139,13 +143,23 @@ class MapScreen extends Component {
                                 currentPointLatitude
                             );
                         }
-                        //If distance within bounds -> Add point to Line
-                        if (givenDistance > 5 && givenDistance < 200) {
+
+                        if (this.props.trail.coordinates.length < 1) {
+                            givenDistance = 0;
                             this.props.addLocationPointToTrail({
                                 longitude: position.coords.longitude,
                                 latitude: position.coords.latitude
                             });
-                            if (this.props.trail.coordinates.length > 1) {
+                        }
+
+                        //If distance within bounds -> Add point to Line
+                        if (givenDistance >= 1 && givenDistance < 20) {
+                            console.log("=========GIVEN DIS ", givenDistance);
+                            this.props.addLocationPointToTrail({
+                                longitude: position.coords.longitude,
+                                latitude: position.coords.latitude
+                            });
+                            if (this.props.trail.coordinates.length >= 1) {
                                 const lineString = makeLineString(
                                     this.props.trail.coordinates
                                 );
@@ -155,11 +169,30 @@ class MapScreen extends Component {
                                 });
                             }
                             //If User is far from last point -> need to make a new trail array
-                        } else if (givenDistance >= 200) {
+                        } else if (givenDistance >= 20) {
+                            console.log("=========GIVEN DIS2 ", givenDistance);
                             this.setState({ trail: {} }, () => {
+                                // this.props.setTrailCenterPoint(
+                                //     this.props.trail
+                                // );
                                 this.props.addTrailToTrails(this.props.trail);
                                 this.props.generateNewTrail();
                             });
+                            ///
+                            // this.props.addLocationPointToTrail({
+                            //     longitude: position.coords.longitude,
+                            //     latitude: position.coords.latitude
+                            // });
+                            // if (this.props.trail.coordinates.length > 1) {
+                            //     const lineString = makeLineString(
+                            //         this.props.trail.coordinates
+                            //     );
+
+                            //     this.setState({
+                            //         trail: lineString
+                            //     });
+                            // }
+                            ///
                         }
                     },
                     error => console.log("ERROR IN GEOLOCATOR IS: ", error),
@@ -169,13 +202,14 @@ class MapScreen extends Component {
                         maximumAge: 2000
                     }
                 );
-            }, 1000);
+            }, 300);
         } else {
             BackgroundTimer.clearInterval(backgroundEvent);
             this.props.toggleTrackingStatus(false);
             this.setState({ trail: {} }, () => {
-                this.props.setTrailCenterPoint(this.props.trail);
+                console.log("THIS TRAIL IS ", this.props.trail);
                 this.props.addTrailToTrails(this.props.trail);
+                this.props.setTrailCenterPoint(this.props.trail);
                 this.props.generateNewTrail();
             });
         }
@@ -199,39 +233,29 @@ class MapScreen extends Component {
     // SUB-RENDERING
     //--------------------------------------------------
 
-    _renderAnnotations() {
+    _renderTrailPoints(generatedTrailPoints) {
         return (
-            // <MapboxGL.PointAnnotation
-            //     key="pointAnnotation"
-            //     id="pointAnnotation"
-            //     coordinate={centerPoint}
-            // >
-
             <MapboxGL.ShapeSource
                 id={shortid.generate()}
                 cluster
                 clusterRadius={50}
                 clusterMaxZoom={14}
                 //url="https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
-                shape={generateUserTrailsFeatureCollection(this.state.trails)}
+                shape={generatedTrailPoints}
             >
-                {/* <View style={styles.annotationContainer}>
-                        <View style={styles.annotationFill} />
-                    </View> */}
                 <MapboxGL.SymbolLayer
-                    id={shortid.generate()}
+                    id="pointCount"
                     style={layerStyles.clusterCount}
                 />
-
                 <MapboxGL.CircleLayer
-                    id={shortid.generate()}
-                    //belowLayerID="pointCount"
+                    id={shortid.generate()} //"clusteredPoints"
+                    belowLayerID="pointCount"
                     filter={["has", "point_count"]}
                     style={layerStyles.clusteredPoints}
                 />
 
                 <MapboxGL.CircleLayer
-                    id={shortid.generate()}
+                    id={shortid.generate()} //"singlePoint"
                     filter={["!has", "point_count"]}
                     style={layerStyles.singlePoint}
                 />
@@ -327,33 +351,7 @@ class MapScreen extends Component {
                 >
                     {this._renderTrails()}
                     {this._renderCurrentTrail()}
-                    {this._renderAnnotations()}
-                    <MapboxGL.ShapeSource
-                        id={shortid.generate()}
-                        cluster
-                        clusterRadius={50}
-                        clusterMaxZoom={14}
-                        //url="https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
-                        shape={generatedTrailPoints}
-                    >
-                        <MapboxGL.SymbolLayer
-                            id="pointCount"
-                            style={layerStyles.clusterCount}
-                        />
-
-                        <MapboxGL.CircleLayer
-                            id={shortid.generate()} //"clusteredPoints"
-                            belowLayerID="pointCount"
-                            filter={["has", "point_count"]}
-                            style={layerStyles.clusteredPoints}
-                        />
-
-                        <MapboxGL.CircleLayer
-                            id={shortid.generate()} //"singlePoint"
-                            filter={["!has", "point_count"]}
-                            style={layerStyles.singlePoint}
-                        />
-                    </MapboxGL.ShapeSource>
+                    {this._renderTrailPoints(generatedTrailPoints)}
                 </MapboxGL.MapView>
                 <MapButtons
                     onPressToggleTracking={this._onPressToggleTracking}
@@ -388,15 +386,15 @@ const layerStyles = MapboxGL.StyleSheet.create({
 
     singlePoint: {
         circleColor: "green",
-        circleOpacity: 0.84,
+        circleOpacity: 1,
         circleStrokeWidth: 2,
         circleStrokeColor: "white",
-        circleRadius: 10
-        //circlePitchAlignment: MapboxGL.CirclePitchAlignment.Map
+        circleRadius: 10,
+        circlePitchAlignment: MapboxGL.CirclePitchAlignment.Map
     },
 
     clusteredPoints: {
-        //circlePitchAlignment: MapboxGL.CirclePitchAlignment.Map,
+        circlePitchAlignment: MapboxGL.CirclePitchAlignment.Map,
         circleColor: MapboxGL.StyleSheet.source(
             [
                 [3, "yellow"],
@@ -416,7 +414,7 @@ const layerStyles = MapboxGL.StyleSheet.create({
             MapboxGL.InterpolationMode.Exponential
         ),
 
-        circleOpacity: 0.84,
+        circleOpacity: 1,
         circleStrokeWidth: 2,
         circleStrokeColor: "white"
     },
@@ -424,6 +422,7 @@ const layerStyles = MapboxGL.StyleSheet.create({
     clusterCount: {
         textField: "{point_count}",
         textSize: 18,
+        textColor: commonColors.PINK,
         textPitchAlignment: MapboxGL.TextPitchAlignment.Map
     }
 });

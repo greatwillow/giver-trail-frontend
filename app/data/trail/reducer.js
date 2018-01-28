@@ -2,11 +2,10 @@ import * as actionTypes from "../../constants/actionTypes";
 import shortid from "shortid";
 
 const initialState = {
-    id: null,
-    name: null,
-    trackingStatus: false,
+    id: null, //shortid.generate(),
+    name: "Initial Trail",
     coordinates: [],
-    centerPoint: null
+    centerPoint: []
 };
 
 const trail = (state = initialState, action) => {
@@ -15,8 +14,7 @@ const trail = (state = initialState, action) => {
             return {
                 ...state,
                 id: shortid.generate(),
-                name: "No Name Trail",
-                trackingStatus: false,
+                name: "Generated Trail",
                 coordinates: []
             };
         case actionTypes.ADD_LOCATION_POINT_TO_TRAIL:
@@ -30,24 +28,18 @@ const trail = (state = initialState, action) => {
                     ]
                 ])
             };
-        case actionTypes.TOGGLE_TRACKING_STATUS:
-            return {
-                ...state,
-                ...state.trail,
-                trackingStatus: action.trackingStatus
-            };
 
-        case actionTypes.SET_TRAIL_CENTER_POINT:
-            const determinedCenterPoint =
-                action.trail.coordinates[
-                    parseInt(action.trail.coordinates.length / 2)
-                ];
+        // case actionTypes.SET_TRAIL_CENTER_POINT:
+        //     const determinedCenterPoint =
+        //         action.trail.coordinates[
+        //             parseInt(action.trail.coordinates.length / 2)
+        //         ];
 
-            return {
-                ...state,
-                ...state.trail,
-                centerPoint: determinedCenterPoint
-            };
+        //     return {
+        //         ...state,
+        //         ...state.trail,
+        //         centerPoint: determinedCenterPoint
+        //     };
         default:
             return state;
     }

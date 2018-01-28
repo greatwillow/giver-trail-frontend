@@ -28,16 +28,16 @@ import {
     setUserInfoInputFinished
 } from "./registrationUI/actions";
 
-import { setMapRegion, setMapZoom, setMapFollowMode } from "./mapUI/actions";
-
 import {
-    generateNewTrail,
-    addLocationPointToTrail,
-    toggleTrackingStatus,
-    setTrailCenterPoint
-} from "./trail/actions";
+    setMapRegion,
+    setMapZoom,
+    setMapFollowMode,
+    toggleTrackingStatus
+} from "./mapUI/actions";
 
-import { addTrailToTrails } from "./trails/actions";
+import { generateNewTrail, addLocationPointToTrail } from "./trail/actions";
+
+import { addTrailToTrails, setTrailCenterPoint } from "./trails/actions";
 
 export {
     //modalUI
@@ -68,11 +68,11 @@ export {
     setMapRegion,
     setMapZoom,
     setMapFollowMode,
+    toggleTrackingStatus,
     //trail
     generateNewTrail,
     addLocationPointToTrail,
-    toggleTrackingStatus,
-    setTrailCenterPoint,
     //trails
-    addTrailToTrails
+    addTrailToTrails,
+    setTrailCenterPoint
 };

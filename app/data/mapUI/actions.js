@@ -24,3 +24,10 @@ export function setMapFollowMode(mapFollowMode) {
   }
 }
 
+export function toggleTrackingStatus(trackingStatus) {
+  return {
+      type: actionTypes.TOGGLE_TRACKING_STATUS,
+      trackingStatus
+  };
+}
+

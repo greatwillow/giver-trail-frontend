@@ -13,17 +13,3 @@ export function addLocationPointToTrail(locationPoint) {
         locationPoint
     };
 }
-
-export function toggleTrackingStatus(trackingStatus) {
-    return {
-        type: actionTypes.TOGGLE_TRACKING_STATUS,
-        trackingStatus
-    };
-}
-
-export function setTrailCenterPoint(trail) {
-    return {
-        type: actionTypes.SET_TRAIL_CENTER_POINT,
-        trail
-    };
-}
