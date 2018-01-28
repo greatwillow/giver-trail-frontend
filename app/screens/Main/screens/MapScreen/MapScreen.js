@@ -27,8 +27,9 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import commonColors from "../../../../constants/colors";
 import ModalCitySearch from "./ModalCitySearch";
 import MapButtons from "./MapButtons";
-import { mockData } from "./mockData";
-import { generateUserTrailsFeatureCollection } from "./mockData";
+import TrailCenterPoints from "./TrailCenterPoints";
+import TrailLines from "./TrailLines";
+import { generateTrailCenterPointFeatureCollection } from "./generateTrailCenterPointFeatureCollection";
 //import { modalCitySearch } from "../../../../data/appActions";
 
 import {
@@ -42,6 +43,7 @@ MapboxGL.setAccessToken(
 );
 
 let backgroundEvent;
+
 class MapScreen extends Component {
     constructor() {
         super();
@@ -176,23 +178,11 @@ class MapScreen extends Component {
                                 //     this.props.trail
                                 // );
                                 this.props.addTrailToTrails(this.props.trail);
+                                // this.props.setTrailCenterPoint(
+                                //     this.props.trail
+                                // );
                                 this.props.generateNewTrail();
                             });
-                            ///
-                            // this.props.addLocationPointToTrail({
-                            //     longitude: position.coords.longitude,
-                            //     latitude: position.coords.latitude
-                            // });
-                            // if (this.props.trail.coordinates.length > 1) {
-                            //     const lineString = makeLineString(
-                            //         this.props.trail.coordinates
-                            //     );
-
-                            //     this.setState({
-                            //         trail: lineString
-                            //     });
-                            // }
-                            ///
                         }
                     },
                     error => console.log("ERROR IN GEOLOCATOR IS: ", error),
@@ -202,7 +192,7 @@ class MapScreen extends Component {
                         maximumAge: 2000
                     }
                 );
-            }, 300);
+            }, 1500);
         } else {
             BackgroundTimer.clearInterval(backgroundEvent);
             this.props.toggleTrackingStatus(false);
@@ -233,60 +223,7 @@ class MapScreen extends Component {
     // SUB-RENDERING
     //--------------------------------------------------
 
-    _renderTrailPoints(generatedTrailPoints) {
-        return (
-            <MapboxGL.ShapeSource
-                id={shortid.generate()}
-                cluster
-                clusterRadius={50}
-                clusterMaxZoom={14}
-                //url="https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
-                shape={generatedTrailPoints}
-            >
-                <MapboxGL.SymbolLayer
-                    id="pointCount"
-                    style={layerStyles.clusterCount}
-                />
-                <MapboxGL.CircleLayer
-                    id={shortid.generate()} //"clusteredPoints"
-                    belowLayerID="pointCount"
-                    filter={["has", "point_count"]}
-                    style={layerStyles.clusteredPoints}
-                />
-
-                <MapboxGL.CircleLayer
-                    id={shortid.generate()} //"singlePoint"
-                    filter={["!has", "point_count"]}
-                    style={layerStyles.singlePoint}
-                />
-            </MapboxGL.ShapeSource>
-        );
-    }
-
-    _renderTrails = () => {
-        return this.state.trails.map(trail => {
-            let lineString = {};
-            if (trail.coordinates.length >= 2) {
-                lineString = makeLineString(trail.coordinates);
-            }
-            return (
-                <MapboxGL.Animated.ShapeSource
-                    id={shortid.generate()}
-                    shape={lineString}
-                >
-                    <MapboxGL.Animated.LineLayer
-                        id={shortid.generate()}
-                        style={layerStyles.otherTrails}
-                    />
-                </MapboxGL.Animated.ShapeSource>
-            );
-        });
-    };
-
     _renderCurrentTrail = () => {
-        console.log("====================================");
-        console.log("ONE TRAIL IS ", this.state.trail);
-        console.log("====================================");
         return (
             <MapboxGL.Animated.ShapeSource
                 id={shortid.generate()}
@@ -305,7 +242,7 @@ class MapScreen extends Component {
     //--------------------------------------------------
 
     render() {
-        let generatedTrailPoints = generateUserTrailsFeatureCollection(
+        let generatedTrailPoints = generateTrailCenterPointFeatureCollection(
             this.state.trails
         );
 
@@ -349,9 +286,12 @@ class MapScreen extends Component {
                         this._onRegionDidChange(region)
                     }
                 >
-                    {this._renderTrails()}
                     {this._renderCurrentTrail()}
-                    {this._renderTrailPoints(generatedTrailPoints)}
+                    <TrailCenterPoints
+                        {...this.props}
+                        generatedTrailPoints={generatedTrailPoints}
+                    />
+                    <TrailLines {...this.props} />
                 </MapboxGL.MapView>
                 <MapButtons
                     onPressToggleTracking={this._onPressToggleTracking}
@@ -377,53 +317,6 @@ const layerStyles = MapboxGL.StyleSheet.create({
         lineColor: commonColors.PINK,
         lineWidth: 5,
         lineOpacity: 0.84
-    },
-    otherTrails: {
-        lineColor: commonColors.DARK_GREY,
-        lineWidth: 5,
-        lineOpacity: 0.84
-    },
-
-    singlePoint: {
-        circleColor: "green",
-        circleOpacity: 1,
-        circleStrokeWidth: 2,
-        circleStrokeColor: "white",
-        circleRadius: 10,
-        circlePitchAlignment: MapboxGL.CirclePitchAlignment.Map
-    },
-
-    clusteredPoints: {
-        circlePitchAlignment: MapboxGL.CirclePitchAlignment.Map,
-        circleColor: MapboxGL.StyleSheet.source(
-            [
-                [3, "yellow"],
-                [5, "red"],
-                [7, "blue"],
-                [10, "orange"],
-                [15, "pink"],
-                [100, "white"]
-            ],
-            "point_count",
-            MapboxGL.InterpolationMode.Exponential
-        ),
-
-        circleRadius: MapboxGL.StyleSheet.source(
-            [[0, 15], [3, 20], [5, 25], [7, 30], [10, 35]],
-            "point_count",
-            MapboxGL.InterpolationMode.Exponential
-        ),
-
-        circleOpacity: 1,
-        circleStrokeWidth: 2,
-        circleStrokeColor: "white"
-    },
-
-    clusterCount: {
-        textField: "{point_count}",
-        textSize: 18,
-        textColor: commonColors.PINK,
-        textPitchAlignment: MapboxGL.TextPitchAlignment.Map
     }
 });
 
@@ -431,23 +324,7 @@ const layerStyles = MapboxGL.StyleSheet.create({
 // STYLES
 //--------------------------------------------------
 
-const styles = StyleSheet.create({
-    annotationContainer: {
-        width: 25,
-        height: 25,
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: commonColors.PINK,
-        borderRadius: 10
-    },
-    annotationFill: {
-        width: 25,
-        height: 25,
-        borderRadius: 10,
-        backgroundColor: commonColors.GREEN,
-        transform: [{ scale: 0.6 }]
-    }
-});
+const styles = StyleSheet.create({});
 
 //--------------------------------------------------
 // CONNECT

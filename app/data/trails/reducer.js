@@ -11,41 +11,32 @@ const trails = (state = initialState, action) => {
                 trails: state.trails.concat(action.trail)
             };
         case actionTypes.SET_TRAIL_CENTER_POINT:
-            console.log("INSIDE CENTER POINT REDUCER ===================");
             function addCenterPointToTrail(array, action) {
                 const wantedIndex = array
                     .map(e => {
-                        console.log("INSIDE MAP FOR INDEX ", e, " AND ", e.id);
                         return e.id;
                     })
                     .indexOf(action.trail.id);
-
-                console.log("WANTED INDEX ", wantedIndex);
-                console.log("Action.trail.id ", action.trail.id);
-
                 return array.map((trail, index) => {
-                    if (index !== wantedIndex) {
-                        console.log(
-                            "INSIDE2222 MAP FOR INDEX ",
-                            trail,
-                            " AND ",
-                            index
-                        );
-                        return trail;
+                    function centerPointToAdd(coordinates) {
+                        console.log("IS A ONE POINTER=================");
+                        if (coordinates.length <= 1) {
+                            return coordinates[0] || [0, 0];
+                        } else {
+                            return coordinates[coordinates.length / 2];
+                        }
                     }
-                    console.log(
-                        "WHATS RETURNED ",
-                        action.trail.coordinates[
-                            parseInt(action.trail.coordinates.length / 2)
-                        ]
-                    );
-                    return {
-                        ...trail,
-                        centerPoint:
-                            action.trail.coordinates[
-                                parseInt(action.trail.coordinates.length / 2)
-                            ]
-                    };
+
+                    if (index !== wantedIndex) {
+                        return trail;
+                    } else {
+                        return {
+                            ...trail,
+                            centerPoint: centerPointToAdd(
+                                action.trail.coordinates
+                            )
+                        };
+                    }
                 });
             }
 

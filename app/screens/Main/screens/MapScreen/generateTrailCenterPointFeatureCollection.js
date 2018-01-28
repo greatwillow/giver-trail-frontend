@@ -1,6 +1,6 @@
 import shortid from "shortid";
 
-export function generateUserTrailsFeatureCollection(trails) {
+export function generateTrailCenterPointFeatureCollection(trails) {
     let trailFeatures = `{
         "type": "Feature",
         "key" : "${shortid.generate()}",
@@ -20,36 +20,38 @@ export function generateUserTrailsFeatureCollection(trails) {
     if (trails.length > 0) {
         trailFeatures = trails
             .map(trail => {
-                let currentFeature = `{
-                    "type": "Feature",
-                    "key" : "${shortid.generate()}",
-                    "geometry": {
-                            "type": "Point",
-                            "coordinates": [0,0]
-                        },
-                        "properties": {
-                            "name": "${shortid.generate()}"
-                        }
-                }`;
+                // let currentFeature = `{
+                //     "type": "Feature",
+                //     "key" : "${shortid.generate()}",
+                //     "geometry": {
+                //             "type": "Point",
+                //             "coordinates": [0,0]
+                //         },
+                //         "properties": {
+                //             "name": "${shortid.generate()}"
+                //         }
+                // }`;
                 console.log("T CENTER ", trail.centerPoint);
                 if (trail.centerPoint instanceof Array) {
-                    currentFeature = `{
+                    let currentFeature = `{
                     "type": "Feature",
-                    "key" : "${shortid.generate()}",
+                    "key" : "${trail.id}",
                     "geometry": {
                             "type": "Point",
                             "coordinates": [${trail.centerPoint}]
                         },
                         "properties": {
-                            "name": "${shortid.generate()}"
+                            "name": "${trail.id}"
                         }
                     }`;
                     return currentFeature;
                 }
-                return currentFeature;
+                return;
             })
             .reduce((combined, toCombine) => {
-                return combined + "," + toCombine;
+                let result = combined + "," + toCombine;
+                console.log("COMBINED RESULT ", result);
+                return result;
             });
 
         console.log("====FEATURES ", trailFeatures);
