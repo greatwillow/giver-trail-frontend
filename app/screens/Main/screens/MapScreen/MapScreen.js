@@ -13,10 +13,10 @@ import {
 import { connect } from "react-redux";
 import * as actions from "../../../../data/appActions";
 import shortid from "shortid";
-import BackgroundTimer from "react-native-background-timer";
 
 //import BackgroundGeolocation from "react-native-mauron85-background-geolocation";
 import MapboxGL from "@mapbox/react-native-mapbox-gl";
+import BackgroundTimer from "react-native-background-timer";
 //TODO: Get rid of RN Permisions Library?
 //import Permissions from "react-native-permissions";
 import GoogleAutocompleteSearch from "./GoogleAutocompleteSearch";
@@ -29,13 +29,15 @@ import ModalCitySearch from "./ModalCitySearch";
 import MapButtons from "./MapButtons";
 import TrailCenterPoints from "./TrailCenterPoints";
 import TrailLines from "./TrailLines";
+import CurrentTrailLine from "./CurrentTrailLine";
+
 import { generateTrailCenterPointFeatureCollection } from "./generateTrailCenterPointFeatureCollection";
 //import { modalCitySearch } from "../../../../data/appActions";
 
 import {
+    euclideanDistance,
     requestGeolocationPermission,
-    calculateTrailLength,
-    euclideanDistance
+    calculateTrailLength
 } from "./GeolocationUtils";
 
 MapboxGL.setAccessToken(
@@ -108,81 +110,68 @@ class MapScreen extends Component {
     };
 
     //--------------------------------------------------
-    // PRESS TOGGLE TRACKING
+    // GETTING DISTANCE TO LAST POINT
     //--------------------------------------------------
 
-    _onPressToggleTracking = () => {
-        // console.log("======GENERATING TRAIL=============");
-        // this.props.generateNewTrail();
+    getDistanceToLastPoint(position) {
+        let givenDistance;
+        if (this.props.trail.coordinates.length >= 1) {
+            const lastPointLongitude = this.props.trail.coordinates[
+                this.props.trail.coordinates.length - 1
+            ][0];
+            const lastPointLatitude = this.props.trail.coordinates[
+                this.props.trail.coordinates.length - 1
+            ][1];
+            const currentPointLongitude = position.coords.longitude;
+            const currentPointLatitude = position.coords.latitude;
 
-        if (this.props.mapUI.trackingStatus === false) {
-            this.props.toggleTrackingStatus(true);
+            givenDistance = euclideanDistance(
+                lastPointLongitude,
+                lastPointLatitude,
+                currentPointLongitude,
+                currentPointLatitude
+            );
+            return givenDistance;
+        }
+        return;
+    }
+
+    //--------------------------------------------------
+    // ADD POINT TO TRAIL
+    //--------------------------------------------------
+
+    addTrailPoint(position) {
+        const givenDistance = this.getDistanceToLastPoint(position);
+
+        if (this.props.trail.coordinates.length < 1) {
+            this.props.addLocationPointToTrail({
+                longitude: position.coords.longitude,
+                latitude: position.coords.latitude
+            });
+        }
+
+        //If distance within bounds -> Add point to Line
+        if (givenDistance >= 1) {
+            console.log("=========GIVEN DIS ", givenDistance);
+            this.props.addLocationPointToTrail({
+                longitude: position.coords.longitude,
+                latitude: position.coords.latitude
+            });
+        }
+    }
+
+    //--------------------------------------------------
+    // TRACK TRAIL
+    //--------------------------------------------------
+
+    trackCurrentTrail() {
+        let backgroundEvent;
+        if (this.props.mapUI.trackingStatus === true) {
             backgroundEvent = BackgroundTimer.setInterval(() => {
                 navigator.geolocation.getCurrentPosition(
                     position => {
-                        //initially setting distance above 5 which is min distance to get point
-                        let givenDistance;
-                        //Calculating distance
-
-                        if (this.props.trail.coordinates.length >= 1) {
-                            const lastPointLongitude = this.props.trail
-                                .coordinates[
-                                this.props.trail.coordinates.length - 1
-                            ][0];
-                            const lastPointLatitude = this.props.trail
-                                .coordinates[
-                                this.props.trail.coordinates.length - 1
-                            ][1];
-                            const currentPointLongitude =
-                                position.coords.longitude;
-                            const currentPointLatitude =
-                                position.coords.latitude;
-
-                            givenDistance = euclideanDistance(
-                                lastPointLongitude,
-                                lastPointLatitude,
-                                currentPointLongitude,
-                                currentPointLatitude
-                            );
-                        }
-
-                        if (this.props.trail.coordinates.length < 1) {
-                            givenDistance = 0;
-                            this.props.addLocationPointToTrail({
-                                longitude: position.coords.longitude,
-                                latitude: position.coords.latitude
-                            });
-                        }
-
-                        //If distance within bounds -> Add point to Line
-                        if (givenDistance >= 1 && givenDistance < 20) {
-                            console.log("=========GIVEN DIS ", givenDistance);
-                            this.props.addLocationPointToTrail({
-                                longitude: position.coords.longitude,
-                                latitude: position.coords.latitude
-                            });
-                            if (this.props.trail.coordinates.length >= 1) {
-                                const lineString = makeLineString(
-                                    this.props.trail.coordinates
-                                );
-
-                                this.setState({
-                                    trail: lineString
-                                });
-                            }
-                            //If User is far from last point -> need to make a new trail array
-                        } else if (givenDistance >= 20) {
-                            console.log("=========GIVEN DIS2 ", givenDistance);
-                            this.setState({ trail: {} }, () => {
-                                // this.props.setTrailCenterPoint(
-                                //     this.props.trail
-                                // );
-                                this.props.addTrailToTrails(this.props.trail);
-                                // this.props.setTrailCenterPoint(
-                                //     this.props.trail
-                                // );
-                                this.props.generateNewTrail();
-                            });
+                        if (this.props.mapUI.trackingStatus === true) {
+                            this.addTrailPoint(position);
                         }
                     },
                     error => console.log("ERROR IN GEOLOCATOR IS: ", error),
@@ -192,17 +181,39 @@ class MapScreen extends Component {
                         maximumAge: 2000
                     }
                 );
-            }, 1500);
+            }, 500);
         } else {
             BackgroundTimer.clearInterval(backgroundEvent);
-            this.props.toggleTrackingStatus(false);
-            this.setState({ trail: {} }, () => {
-                console.log("THIS TRAIL IS ", this.props.trail);
-                this.props.addTrailToTrails(this.props.trail);
-                this.props.setTrailCenterPoint(this.props.trail);
-                this.props.generateNewTrail();
+            this.props.addTrailToTrails(this.props.trail);
+            this.props.setTrailCenterPoint(this.props.trail);
+            this.props.generateNewTrail();
+        }
+    }
+
+    //--------------------------------------------------
+    // PRESS TOGGLE TRACKING
+    //--------------------------------------------------
+
+    _onPressToggleTracking = () => {
+        let self = this;
+        function setTrackingStatus() {
+            let self2 = self;
+            return new Promise(resolve => {
+                self2.props.mapUI.trackingStatus === false
+                    ? self2.props.toggleTrackingStatus(true)
+                    : self2.props.toggleTrackingStatus(false);
+                resolve("It's resolved");
             });
         }
+
+        async function trackingSetup() {
+            const response = await setTrackingStatus();
+            console.log("ASYNC RESPONSE IS ", response);
+            if (self.props.mapUI.trackingStatus === true) {
+                self.trackCurrentTrail();
+            }
+        }
+        trackingSetup();
     };
 
     //--------------------------------------------------
@@ -220,34 +231,13 @@ class MapScreen extends Component {
     };
 
     //--------------------------------------------------
-    // SUB-RENDERING
-    //--------------------------------------------------
-
-    _renderCurrentTrail = () => {
-        return (
-            <MapboxGL.Animated.ShapeSource
-                id={shortid.generate()}
-                shape={this.state.trail}
-            >
-                <MapboxGL.Animated.LineLayer
-                    id={shortid.generate()}
-                    style={layerStyles.currentTrail}
-                />
-            </MapboxGL.Animated.ShapeSource>
-        );
-    };
-
-    //--------------------------------------------------
     // RENDERING
     //--------------------------------------------------
 
     render() {
         let generatedTrailPoints = generateTrailCenterPointFeatureCollection(
-            this.state.trails
+            this.props.trails.trails
         );
-
-        console.log("TRAIL PNTS ARE ", generatedTrailPoints);
-
         return (
             <View
                 style={{
@@ -286,12 +276,12 @@ class MapScreen extends Component {
                         this._onRegionDidChange(region)
                     }
                 >
-                    {this._renderCurrentTrail()}
+                    <TrailLines {...this.props} />
+                    <CurrentTrailLine {...this.props} />
                     <TrailCenterPoints
                         {...this.props}
                         generatedTrailPoints={generatedTrailPoints}
                     />
-                    <TrailLines {...this.props} />
                 </MapboxGL.MapView>
                 <MapButtons
                     onPressToggleTracking={this._onPressToggleTracking}
@@ -307,18 +297,6 @@ class MapScreen extends Component {
         );
     }
 }
-
-//--------------------------------------------------
-// LAYER STYLES
-//--------------------------------------------------
-
-const layerStyles = MapboxGL.StyleSheet.create({
-    currentTrail: {
-        lineColor: commonColors.PINK,
-        lineWidth: 5,
-        lineOpacity: 0.84
-    }
-});
 
 //--------------------------------------------------
 // STYLES

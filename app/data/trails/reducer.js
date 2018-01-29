@@ -23,7 +23,9 @@ const trails = (state = initialState, action) => {
                         if (coordinates.length <= 1) {
                             return coordinates[0] || [0, 0];
                         } else {
-                            return coordinates[coordinates.length / 2];
+                            return coordinates[
+                                Math.floor(coordinates.length / 2)
+                            ];
                         }
                     }
 

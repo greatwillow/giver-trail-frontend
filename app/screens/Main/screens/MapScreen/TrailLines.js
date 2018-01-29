@@ -22,18 +22,20 @@ class TrailLines extends Component {
         return this.props.trails.trails.map(trail => {
             let lineString = {};
             if (trail.coordinates.length >= 2) {
-                lineString = makeLineString(trail.coordinates);
+                lineString = makeLineString(trail.coordinates, {
+                    name: shortid.generate()
+                });
             }
             return (
-                <MapboxGL.Animated.ShapeSource
+                <MapboxGL.ShapeSource
                     id={shortid.generate()}
                     shape={lineString}
                 >
-                    <MapboxGL.Animated.LineLayer
+                    <MapboxGL.LineLayer
                         id={shortid.generate()}
                         style={layerStyles.trailLine}
                     />
-                </MapboxGL.Animated.ShapeSource>
+                </MapboxGL.ShapeSource>
             );
         });
     }
