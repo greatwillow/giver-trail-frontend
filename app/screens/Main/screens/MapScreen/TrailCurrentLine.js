@@ -5,7 +5,7 @@ import { lineString as makeLineString } from "@turf/helpers";
 
 import commonColors from "../../../../constants/colors";
 
-class CurrentTrailLine extends Component {
+class TrailCurrentLine extends Component {
     shouldComponentUpdate(nextProps, nextState) {
         let shouldUpdate;
         this.props.trail.coordinates.length !==
@@ -59,4 +59,4 @@ const layerStyles = MapboxGL.StyleSheet.create({
     }
 });
 
-export default CurrentTrailLine;
+export default TrailCurrentLine;

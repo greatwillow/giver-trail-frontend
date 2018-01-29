@@ -29,9 +29,8 @@ import ModalCitySearch from "./ModalCitySearch";
 import MapButtons from "./MapButtons";
 import TrailCenterPoints from "./TrailCenterPoints";
 import TrailLines from "./TrailLines";
-import CurrentTrailLine from "./CurrentTrailLine";
+import TrailCurrentLine from "./TrailCurrentLine";
 
-import { generateTrailCenterPointFeatureCollection } from "./generateTrailCenterPointFeatureCollection";
 //import { modalCitySearch } from "../../../../data/appActions";
 
 import {
@@ -143,16 +142,7 @@ class MapScreen extends Component {
     addTrailPoint(position) {
         const givenDistance = this.getDistanceToLastPoint(position);
 
-        if (this.props.trail.coordinates.length < 1) {
-            this.props.addLocationPointToTrail({
-                longitude: position.coords.longitude,
-                latitude: position.coords.latitude
-            });
-        }
-
-        //If distance within bounds -> Add point to Line
-        if (givenDistance >= 1) {
-            console.log("=========GIVEN DIS ", givenDistance);
+        if (this.props.trail.coordinates.length < 1 || givenDistance >= 1) {
             this.props.addLocationPointToTrail({
                 longitude: position.coords.longitude,
                 latitude: position.coords.latitude
@@ -202,13 +192,12 @@ class MapScreen extends Component {
                 self2.props.mapUI.trackingStatus === false
                     ? self2.props.toggleTrackingStatus(true)
                     : self2.props.toggleTrackingStatus(false);
-                resolve("It's resolved");
+                resolve();
             });
         }
 
         async function trackingSetup() {
-            const response = await setTrackingStatus();
-            console.log("ASYNC RESPONSE IS ", response);
+            await setTrackingStatus();
             if (self.props.mapUI.trackingStatus === true) {
                 self.trackCurrentTrail();
             }
@@ -235,9 +224,6 @@ class MapScreen extends Component {
     //--------------------------------------------------
 
     render() {
-        let generatedTrailPoints = generateTrailCenterPointFeatureCollection(
-            this.props.trails.trails
-        );
         return (
             <View
                 style={{
@@ -277,11 +263,9 @@ class MapScreen extends Component {
                     }
                 >
                     <TrailLines {...this.props} />
-                    <CurrentTrailLine {...this.props} />
-                    <TrailCenterPoints
-                        {...this.props}
-                        generatedTrailPoints={generatedTrailPoints}
-                    />
+                    <TrailCurrentLine {...this.props} />
+                    <TrailCenterPoints {...this.props} />
+                    {/* <TrailLinesAndPoints {...this.props} /> */}
                 </MapboxGL.MapView>
                 <MapButtons
                     onPressToggleTracking={this._onPressToggleTracking}

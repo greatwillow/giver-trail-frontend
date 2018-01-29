@@ -16,18 +16,22 @@ class TrailLines extends Component {
     }
 
     render() {
-        console.log("====================================");
-        console.log("RENDERING ALL TRAILS");
-        console.log("====================================");
-        return this.props.trails.trails.map(trail => {
+        const linesArray = this.props.trails.trails.map((trail, index) => {
             let lineString = {};
             if (trail.coordinates.length >= 2) {
                 lineString = makeLineString(trail.coordinates, {
-                    name: shortid.generate()
+                    id: shortid.generate()
                 });
             }
+            if (index === this.props.trails.trails.length - 1) {
+                console.log("LINES DONE LOADING");
+                console.log("LINES DONE LOADING");
+                console.log("LINES DONE LOADING");
+            }
+
             return (
                 <MapboxGL.ShapeSource
+                    key={shortid.generate()}
                     id={shortid.generate()}
                     shape={lineString}
                 >
@@ -38,6 +42,8 @@ class TrailLines extends Component {
                 </MapboxGL.ShapeSource>
             );
         });
+
+        return linesArray;
     }
 }
 
@@ -45,7 +51,7 @@ const layerStyles = MapboxGL.StyleSheet.create({
     trailLine: {
         lineColor: commonColors.DARK_GREY,
         lineWidth: 5,
-        lineOpacity: 0.84
+        lineOpacity: 0.5
     }
 });
 

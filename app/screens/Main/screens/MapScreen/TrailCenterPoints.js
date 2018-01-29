@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import MapboxGL from "@mapbox/react-native-mapbox-gl";
 import shortid from "shortid";
 import commonColors from "../../../../constants/colors";
+import { generateTrailCenterPointFeatureCollection } from "./generateTrailCenterPointFeatureCollection";
 
 class TrailCenterPoints extends Component {
     shouldComponentUpdate(nextProps, nextState) {
@@ -15,31 +16,29 @@ class TrailCenterPoints extends Component {
     }
 
     render() {
-        console.log("====================================");
-        console.log("RENDERING ALL POINTS");
-        console.log("====================================");
         return (
             <MapboxGL.ShapeSource
                 id={shortid.generate()}
                 cluster
                 clusterRadius={50}
                 clusterMaxZoom={14}
-                //url="https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
-                shape={this.props.generatedTrailPoints}
+                shape={generateTrailCenterPointFeatureCollection(
+                    this.props.trails.trails
+                )}
             >
                 <MapboxGL.SymbolLayer
                     id="pointCount"
                     style={layerStyles.clusterCount}
                 />
                 <MapboxGL.CircleLayer
-                    id={shortid.generate()} //"clusteredPoints"
+                    id="clusteredPoints"
                     belowLayerID="pointCount"
                     filter={["has", "point_count"]}
                     style={layerStyles.clusteredPoints}
                 />
 
                 <MapboxGL.CircleLayer
-                    id={shortid.generate()} //"singlePoint"
+                    id="singlePoint"
                     filter={["!has", "point_count"]}
                     style={layerStyles.singlePoint}
                 />
@@ -50,23 +49,25 @@ class TrailCenterPoints extends Component {
 
 const layerStyles = MapboxGL.StyleSheet.create({
     singlePoint: {
-        circleColor: "green",
+        iconAllowOverlap: true,
+        circleColor: "#05668D",
         circleOpacity: 1,
         circleStrokeWidth: 2,
-        circleStrokeColor: "white",
-        circleRadius: 10,
+        circleStrokeColor: "black",
+        circleRadius: 12,
         circlePitchAlignment: MapboxGL.CirclePitchAlignment.Map
     },
     clusteredPoints: {
+        iconAllowOverlap: true,
         circlePitchAlignment: MapboxGL.CirclePitchAlignment.Map,
         circleColor: MapboxGL.StyleSheet.source(
             [
-                [3, "yellow"],
-                [5, "red"],
-                [7, "blue"],
-                [10, "orange"],
-                [15, "pink"],
-                [100, "white"]
+                [2, "#028090"],
+                [3, "#00A896"],
+                [5, "#02C39A"],
+                [7, "#70C1B3"],
+                [10, "#B2DBBF"],
+                [15, "#F3FFBD"]
             ],
             "point_count",
             MapboxGL.InterpolationMode.Exponential
@@ -80,12 +81,12 @@ const layerStyles = MapboxGL.StyleSheet.create({
 
         circleOpacity: 1,
         circleStrokeWidth: 2,
-        circleStrokeColor: "white"
+        circleStrokeColor: "black"
     },
     clusterCount: {
         textField: "{point_count}",
-        textSize: 18,
-        textColor: commonColors.PINK,
+        textSize: 25,
+        textColor: "black",
         textPitchAlignment: MapboxGL.TextPitchAlignment.Map
     }
 });
