@@ -27,9 +27,12 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import commonColors from "../../../../constants/colors";
 import ModalCitySearch from "./ModalCitySearch";
 import MapButtons from "./MapButtons";
+import MapButtonsZoom from "./MapButtonsZoom";
 import TrailCenterPoints from "./TrailCenterPoints";
 import TrailLines from "./TrailLines";
 import TrailCurrentLine from "./TrailCurrentLine";
+import MockTrails from "./MockTrails";
+import MockCenterPoints from "./MockCenterPoints";
 
 //import { modalCitySearch } from "../../../../data/appActions";
 
@@ -265,13 +268,15 @@ class MapScreen extends Component {
                     <TrailLines {...this.props} />
                     <TrailCurrentLine {...this.props} />
                     <TrailCenterPoints {...this.props} />
-                    {/* <TrailLinesAndPoints {...this.props} /> */}
+                    <MockTrails {...this.props} />
+                    <MockCenterPoints {...this.props} />
                 </MapboxGL.MapView>
                 <MapButtons
                     onPressToggleTracking={this._onPressToggleTracking}
                     onPressToggleFollowMode={this._onPressToggleFollowMode}
                     {...this.props}
                 />
+                <MapButtonsZoom {...this.props} />
                 <ModalCitySearch
                     explicitSetMapRegion={region =>
                         this._explicitSetMapRegion(region)

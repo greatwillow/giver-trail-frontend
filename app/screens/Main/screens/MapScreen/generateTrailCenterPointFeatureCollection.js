@@ -48,6 +48,8 @@ export function generateTrailCenterPointFeatureCollection(trails) {
                     "type":"FeatureCollection",
                     "features":[${trailFeatures}]
                 }`;
+
+        console.log("FEATURES COL ", trailFeatureCollection);
     }
 
     const parsedFeatureCollection = JSON.parse(trailFeatureCollection);

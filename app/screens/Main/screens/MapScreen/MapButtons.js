@@ -19,18 +19,6 @@ class MapButtons extends Component {
     };
 
     //--------------------------------------------------
-    // PRESS ZOOM
-    //--------------------------------------------------
-
-    _onPressMapZoomIn = () => {
-        this.props.setMapZoom(this.props.mapUI.mapZoom + 1);
-    };
-
-    _onPressMapZoomOut = () => {
-        this.props.setMapZoom(this.props.mapUI.mapZoom - 1);
-    };
-
-    //--------------------------------------------------
     // PRESS SAVE TRAILS
     //--------------------------------------------------
 
@@ -51,9 +39,6 @@ class MapButtons extends Component {
 
     _onPressCalculateTrailLength = () => {
         const trailLength = calculateTrailLength(this.props.trails.trails);
-        console.log("====================================");
-        console.log("TRAAAAAILS ", trailLength);
-        console.log("====================================");
     };
 
     render() {
@@ -117,32 +102,6 @@ class MapButtons extends Component {
                         color={commonColors.PINK}
                     />
                 </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.icon}
-                    onPress={this._onPressMapZoomOut}
-                >
-                    <Icon
-                        name="minus-circle"
-                        size={40}
-                        color={commonColors.GREEN}
-                    />
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.icon}
-                    onPress={this._onPressMapZoomIn}
-                >
-                    <Icon
-                        name="plus-circle"
-                        size={40}
-                        color={commonColors.GREEN}
-                    />
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.icon}
-                    onPress={this._onPressCalculateTrailLength}
-                >
-                    <Icon name="walk" size={40} color={commonColors.GREEN} />
-                </TouchableOpacity>
             </View>
         );
     }
@@ -160,45 +119,13 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "row",
         justifyContent: "space-between",
-        padding: 10
+        padding: 10,
+        paddingLeft: 20,
+        paddingRight: 20
     },
     icon: {
         backgroundColor: "rgba(0,0,0,0)"
-    },
-    zoomInIcon: {
-        backgroundColor: "rgba(0,0,0,0)",
-        position: "absolute",
-        left: 10,
-        bottom: 70
-    },
-    zoomOutIcon: {
-        backgroundColor: "rgba(0,0,0,0)",
-        position: "absolute",
-        left: 10,
-        bottom: 10
-    },
-    trackingIcon: {
-        backgroundColor: "rgba(0,0,0,0)",
-        marginHorizontal: 10
     }
 });
 
 export default MapButtons;
-
-// <View
-//   style={{ position: "absolute", top: 0, bottom: 0, right: 0, left: 0 }}
-// >
-
-// <TouchableOpacity
-//   style={styles.zoomOutIcon}
-//   onPress={this._onPressMapZoomOut}
-// >
-//   <Icon name="minus-circle" size={50} color={commonColors.DARK_GREY} />
-// </TouchableOpacity>
-// <TouchableOpacity
-//   style={styles.zoomInIcon}
-//   onPress={this._onPressMapZoomIn}
-// >
-//   <Icon name="plus-circle" size={50} color={commonColors.DARK_GREY} />
-// </TouchableOpacity>
-// </View>

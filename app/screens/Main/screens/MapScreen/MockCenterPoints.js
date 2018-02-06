@@ -2,10 +2,9 @@ import React, { Component } from "react";
 import MapboxGL from "@mapbox/react-native-mapbox-gl";
 import shortid from "shortid";
 import commonColors from "../../../../constants/colors";
-import { generateTrailCenterPointFeatureCollection } from "./generateTrailCenterPointFeatureCollection";
 import mockTrailCenterData from "../../../../assets/pureData/mockTrailCenterData";
 
-class TrailCenterPoints extends Component {
+class MockCenterPoints extends Component {
     shouldComponentUpdate(nextProps, nextState) {
         if (
             this.props.trails.trails.length === nextProps.trails.trails.length
@@ -23,26 +22,21 @@ class TrailCenterPoints extends Component {
                 cluster
                 clusterRadius={50}
                 clusterMaxZoom={14}
-                shape={
-                    //mockTrailCenterData
-                    generateTrailCenterPointFeatureCollection(
-                        this.props.trails.trails
-                    )
-                }
+                shape={mockTrailCenterData}
             >
                 <MapboxGL.SymbolLayer
-                    id="pointCount"
+                    id="pointCount2"
                     style={layerStyles.clusterCount}
                 />
                 <MapboxGL.CircleLayer
-                    id="clusteredPoints"
-                    belowLayerID="pointCount"
+                    id="clusteredPoints2"
+                    belowLayerID="pointCount2"
                     filter={["has", "point_count"]}
                     style={layerStyles.clusteredPoints}
                 />
 
                 <MapboxGL.CircleLayer
-                    id="singlePoint"
+                    id="singlePoint2"
                     filter={["!has", "point_count"]}
                     style={layerStyles.singlePoint}
                 />
@@ -95,4 +89,4 @@ const layerStyles = MapboxGL.StyleSheet.create({
     }
 });
 
-export default TrailCenterPoints;
+export default MockCenterPoints;
