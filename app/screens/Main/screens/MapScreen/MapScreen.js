@@ -14,7 +14,6 @@ import { connect } from "react-redux";
 import * as actions from "../../../../data/appActions";
 import shortid from "shortid";
 
-//import BackgroundGeolocation from "react-native-mauron85-background-geolocation";
 import MapboxGL from "@mapbox/react-native-mapbox-gl";
 import BackgroundTimer from "react-native-background-timer";
 //TODO: Get rid of RN Permisions Library?
@@ -34,13 +33,11 @@ import TrailCurrentLine from "./TrailCurrentLine";
 import MockTrails from "./MockTrails";
 import MockCenterPoints from "./MockCenterPoints";
 
-//import { modalCitySearch } from "../../../../data/appActions";
-
 import {
   euclideanDistance,
   requestGeolocationPermission,
   calculateTrailLength
-} from "./GeolocationUtils";
+} from "./geolocationUtils";
 
 MapboxGL.setAccessToken(
   "pk.eyJ1IjoiZ3JlYXR3aWxsb3ciLCJhIjoiY2phNGJkNW05YTg1ajJ3czR2MjRkamN4ZyJ9.4QQ9UW5OoFMq6A5LbCgMXA"

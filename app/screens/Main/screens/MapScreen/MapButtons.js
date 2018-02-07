@@ -4,11 +4,6 @@ import { StyleSheet, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import commonColors from "../../../../constants/colors";
 
-import {
-  calculateTrailLength
-  //euclideanDistance
-} from "./GeolocationUtils";
-
 class MapButtons extends Component {
   //--------------------------------------------------
   // PRESS MODAL UI SEARCH
@@ -31,14 +26,6 @@ class MapButtons extends Component {
   _onPressStartNewTrail = () => {
     this.props.addTrailToTrails(this.props.trail);
     this.props.generateNewTrail();
-  };
-
-  //--------------------------------------------------
-  // CALCULATE TRAIL LENGTH
-  //--------------------------------------------------
-
-  _onPressCalculateTrailLength = () => {
-    const trailLength = calculateTrailLength(this.props.trails.trails);
   };
 
   render() {

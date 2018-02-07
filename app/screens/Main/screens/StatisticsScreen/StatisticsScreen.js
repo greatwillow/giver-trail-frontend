@@ -26,6 +26,7 @@ class StatisticsScreen extends Component {
             backgroundColor: commonColors.DARK_GREY
           }}
         >
+          {/*------------------- POINTS SECTION HEADER--------------------*/}
           <View style={styles.sectionTitleContainer}>
             <View style={{ flex: 1 }}>
               <TextFontTitillium style={styles.sectionTitleText}>
@@ -43,6 +44,7 @@ class StatisticsScreen extends Component {
               </TextFontTitillium>
             </View>
           </View>
+          {/*------------------- POINTS SECTION CHART--------------------*/}
           <View style={styles.chartContainer}>
             <PureChart data={activityPointsData} type="line" />
             <View
@@ -108,6 +110,7 @@ class StatisticsScreen extends Component {
               </View>
             </View>
           </View>
+          {/*------------------- DONATIONS SECTION HEADER--------------------*/}
           <View style={styles.sectionTitleContainer}>
             <View style={{ flex: 1 }}>
               <TextFontTitillium style={styles.sectionTitleText}>
@@ -125,6 +128,7 @@ class StatisticsScreen extends Component {
               </TextFontTitillium>
             </View>
           </View>
+          {/*------------------- DONATIONS SECTION CHART--------------------*/}
           <View style={styles.chartContainer}>
             <PureChart data={donationsData} type="bar" />
 
@@ -163,7 +167,7 @@ class StatisticsScreen extends Component {
               </TextFontTitillium>
             </View>
           </View>
-
+          {/*------------------- LEADERS SECTION HEADER--------------------*/}
           <View style={styles.sectionTitleContainer}>
             <View style={{ flex: 1 }}>
               <TextFontTitillium style={styles.sectionTitleText}>
@@ -181,6 +185,7 @@ class StatisticsScreen extends Component {
               </TextFontTitillium>
             </View>
           </View>
+          {/*------------------- LEADERS SECTION CHART--------------------*/}
           <View style={styles.chartContainer}>
             <PureChart data={leadersData} type="line" />
             <View

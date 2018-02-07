@@ -8,12 +8,14 @@ function calculateIndividualTrailLength(trail) {
   const trailIncrementDistances = new Promise(resolve => {
     let trailIncrement = trail.coordinates.map((coordinate, i, arr) => {
       if (i < arr.length - 1) {
-        return euclideanDistance(
+        const distance = euclideanDistance(
           arr[i][0],
           arr[i][1],
           arr[i + 1][0],
           arr[i + 1][1]
         );
+        console.log("INDIV RETURNED DISTANCE IS ", distance);
+        return distance;
       }
       return;
     });
@@ -21,14 +23,18 @@ function calculateIndividualTrailLength(trail) {
   });
 
   function individualTrailLength() {
-    return Promise.all(trailIncrementDistances).then(results => {
-      return results.reduce((a, b) => {
-        if (a !== undefined && b !== undefined) {
-          const c = Number(a) + Number(b);
-          return c;
-        }
-      });
-    });
+    return Promise.all(trailIncrementDistances)
+      .then(results => {
+        console.log("RESULTS ARE ", results);
+        return results.reduce((a, b) => {
+          if (a !== undefined && b !== undefined) {
+            const c = Number(a) + Number(b);
+            console.log("C IS ", c);
+            return c;
+          }
+        }, 0);
+      })
+      .catch(err => console.error("INDIV TRAIL LENGTH PROMISE ERROR: ", err));
   }
 
   return individualTrailLength();
@@ -40,21 +46,31 @@ export function calculateTrailLength(trails) {
   if (trails.trails.length > 0) {
     totalDistance = Promise.all(
       trails.trails.map(trail => {
+        console.log("TRAIL IS ", trail);
+        console.log(
+          "INDIV TRAIL LENGTH ",
+          calculateIndividualTrailLength(trail).then(res =>
+            console.log("RES IS ", res)
+          )
+        );
         return calculateIndividualTrailLength(trail);
       })
+    ).catch(err =>
+      console.error("CALCULATE TRAIL LENGTH PROMISE ERROR: ", err)
     );
 
     const finalDistance = totalDistance.then(results => {
-      return Promise.all(results).then(innerResults => {
-        return innerResults.reduce((a, b) => {
-          if (a !== undefined && b !== undefined) {
-            return Number(a) + Number(b);
-          }
-          return;
-        });
-      });
+      return Promise.all(results)
+        .then(innerResults => {
+          return innerResults.reduce((a, b) => {
+            if (a !== undefined && b !== undefined) {
+              return Number(a) + Number(b);
+            }
+            return;
+          });
+        })
+        .catch(err => console.error("FINAL DISTANCE PROMISE ERROR: ", err));
     });
-
     return finalDistance;
   }
 }
