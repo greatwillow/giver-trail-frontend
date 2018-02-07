@@ -2,7 +2,7 @@ import { NetInfo } from "react-native";
 
 import * as actionTypes from "../../constants/actionTypes";
 import * as actions from "../appActions";
-import { NavigationActions } from 'react-navigation'
+import { NavigationActions } from "react-navigation";
 
 //--------------------------------------------------
 //   SET USER DATA
@@ -139,15 +139,9 @@ const attemptSendingNewUserRegistrationData = inputObject => (
 ) => {
   const age = inputObject.userAge;
   const city = inputObject.userCity;
-  //const description = inputObject.userPassionsList;
-  // console.log("USER AGE", age);
-  // console.log("USER City", city);
-  // console.log("USER Description", description);
-  // console.log("USER", inputObject);
 
   const USER = {
     age: age
-    //description: description
   };
 
   const USER_PUT_URI =
@@ -237,21 +231,19 @@ export const attemptUserSignIn = (userEmail, userPassword) => (
     password: userPassword.userPassword
   };
 
-  const USER_POST_URI =
-    "https://damp-tor-16286.herokuapp.com/users/login";
+  const USER_POST_URI = "https://damp-tor-16286.herokuapp.com/users/login";
 
   return fetch(USER_POST_URI, {
     headers: new Headers({
       Accept: "application/json",
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     }),
     method: "POST",
     body: JSON.stringify(USER)
   })
     .then(res => {
       if (res.status == 200) {
-
-        dispatch(actions.setUserToken(res.headers.map["x-auth"][0]))
+        dispatch(actions.setUserToken(res.headers.map["x-auth"][0]));
 
         return res.json();
       } else {
@@ -259,24 +251,20 @@ export const attemptUserSignIn = (userEmail, userPassword) => (
       }
     })
     .then(data => {
-      
-        console.log('====================================');
-        console.log("DATA is ",data);
-        console.log('====================================');
+      console.log("====================================");
+      console.log("DATA is ", data);
+      console.log("====================================");
 
-        dispatch(actions.setUserEmail(data.email))
-        dispatch(actions.setUserAge(data.age))
-        dispatch(actions.setUserPassionsList(data.interestList))
+      dispatch(actions.setUserEmail(data.email));
+      dispatch(actions.setUserAge(data.age));
+      dispatch(actions.setUserPassionsList(data.interestList));
 
-        //TODO: Get Abdalla to modify user city data - add lat,long,name params
-        //dispatch(actions.setUserCity(data.address.city))
+      //TODO: Get Abdalla to modify user city data - add lat,long,name params
+      //dispatch(actions.setUserCity(data.address.city))
 
-        dispatch(NavigationActions.navigate({ routeName: 'mainInsetNavStack'}))
-
+      dispatch(NavigationActions.navigate({ routeName: "mainInsetNavStack" }));
     })
     .catch(error => {
-        dispatch(NavigationActions.navigate({ routeName: 'signInFail'}))
-      //console.error(error);
+      dispatch(NavigationActions.navigate({ routeName: "signInFail" }));
     });
-}
-
+};

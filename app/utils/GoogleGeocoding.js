@@ -1,7 +1,7 @@
 //note: The code in this file is a modified version of code taken from react-native-geocoding
 //found at https://github.com/marlove/react-native-geocoding/
 
-const googleApiUrl = 'https://maps.google.com/maps/api/geocode/json';
+const googleApiUrl = "https://maps.google.com/maps/api/geocode/json";
 
 export default {
   apiKey: null,
@@ -20,8 +20,10 @@ export default {
     }
 
     const latLng = `${lat},${lng}`;
-    const url = `${googleApiUrl}?key=${this.apiKey}&latlng=${encodeURI(latLng)}`;
-    
+    const url = `${googleApiUrl}?key=${this.apiKey}&latlng=${encodeURI(
+      latLng
+    )}`;
+
     return this.handleUrl(url);
   },
 
@@ -34,29 +36,28 @@ export default {
       return Promise.reject(new Error("Provided address is invalid"));
     }
 
-    const url = `${googleApiUrl}?key=${this.apiKey}&address=${encodeURI(address)}`;
-    
+    const url = `${googleApiUrl}?key=${this.apiKey}&address=${encodeURI(
+      address
+    )}`;
+
     return this.handleUrl(url);
   },
 
   async handleUrl(url) {
-  	const response = await fetch(url).catch(
-      error => {
-        return Promise.reject(new Error("Error fetching data"));
-      }
-    );
+    const response = await fetch(url).catch(error => {
+      return Promise.reject(new Error("Error fetching data"));
+    });
 
-    const json = await response.json().catch(
-      error => {
-        return Promise.reject(new Error("Error parsing server response"));
-      }
-    );
+    const json = await response.json().catch(error => {
+      return Promise.reject(new Error("Error parsing server response"));
+    });
 
-    if (json.status === 'OK') {
+    if (json.status === "OK") {
       return json;
-    }
-    else {
-      return Promise.reject(new Error(`Server returned status code ${json.status}`));
+    } else {
+      return Promise.reject(
+        new Error(`Server returned status code ${json.status}`)
+      );
     }
   }
-}
+};

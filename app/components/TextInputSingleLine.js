@@ -26,7 +26,7 @@ class TextInputSingleLine extends Component {
             this.props.invalid ? "red" : this.props.placeholderTextColor
           }
           keyboardType={this.props.keyboardType}
-          underlineColorAndroid={'rgba(0,0,0,0)'}
+          underlineColorAndroid={"rgba(0,0,0,0)"}
           //returnKeyType={this.props.returnKeyType || "next"}
           secureTextEntry={this.props.secureTextEntry}
           autoCapitalize="words"

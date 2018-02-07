@@ -17,9 +17,10 @@ class MainWalkthroughContainer extends Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-      <ImageBackground
+        <ImageBackground
           source={this.props.backgroundImageFile}
-          style={styles.backgroundImage}>
+          style={styles.backgroundImage}
+        >
           <View style={styles.statusBar}>
             <StatusBar
               backgroundColor={"transparent"}
@@ -28,7 +29,7 @@ class MainWalkthroughContainer extends Component {
             />
           </View>
           {this.props.children}
-          </ImageBackground>
+        </ImageBackground>
       </View>
     );
   }
@@ -43,7 +44,7 @@ const styles = {
     alignItems: "center"
   },
   statusBar: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,

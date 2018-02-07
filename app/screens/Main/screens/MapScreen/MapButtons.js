@@ -5,127 +5,112 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import commonColors from "../../../../constants/colors";
 
 import {
-    calculateTrailLength
-    //euclideanDistance
+  calculateTrailLength
+  //euclideanDistance
 } from "./GeolocationUtils";
 
 class MapButtons extends Component {
-    //--------------------------------------------------
-    // PRESS MODAL UI SEARCH
-    //--------------------------------------------------
+  //--------------------------------------------------
+  // PRESS MODAL UI SEARCH
+  //--------------------------------------------------
 
-    _onPressUserLocationSearch = () => {
-        this.props.modalCitySearch(true);
-    };
+  _onPressUserLocationSearch = () => {
+    this.props.modalCitySearch(true);
+  };
 
-    //--------------------------------------------------
-    // PRESS SAVE TRAILS
-    //--------------------------------------------------
+  //--------------------------------------------------
+  // PRESS SAVE TRAILS
+  //--------------------------------------------------
 
-    _onPressSaveTrailsToServer = () => {};
+  _onPressSaveTrailsToServer = () => {};
 
-    //--------------------------------------------------
-    // PRESS START NEW TRAIL
-    //--------------------------------------------------
+  //--------------------------------------------------
+  // PRESS START NEW TRAIL
+  //--------------------------------------------------
 
-    _onPressStartNewTrail = () => {
-        this.props.addTrailToTrails(this.props.trail);
-        this.props.generateNewTrail();
-    };
+  _onPressStartNewTrail = () => {
+    this.props.addTrailToTrails(this.props.trail);
+    this.props.generateNewTrail();
+  };
 
-    //--------------------------------------------------
-    // CALCULATE TRAIL LENGTH
-    //--------------------------------------------------
+  //--------------------------------------------------
+  // CALCULATE TRAIL LENGTH
+  //--------------------------------------------------
 
-    _onPressCalculateTrailLength = () => {
-        const trailLength = calculateTrailLength(this.props.trails.trails);
-    };
+  _onPressCalculateTrailLength = () => {
+    const trailLength = calculateTrailLength(this.props.trails.trails);
+  };
 
-    render() {
-        return (
-            <View style={styles.topButtonContainer}>
-                <TouchableOpacity
-                    style={styles.icon}
-                    onPress={this._onPressUserLocationSearch}
-                >
-                    <Icon
-                        name="search-web"
-                        size={40}
-                        color={commonColors.GREEN}
-                    />
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.icon}
-                    onPress={this._onPressSaveTrails}
-                >
-                    <Icon
-                        name="content-save"
-                        size={40}
-                        color={commonColors.GREEN}
-                    />
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.icon}
-                    onPress={this.props.onPressToggleFollowMode}
-                >
-                    <Icon
-                        name="walk"
-                        size={40}
-                        color={
-                            this.props.mapUI.mapFollowMode
-                                ? commonColors.PINK
-                                : commonColors.GREEN
-                        }
-                    />
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.icon}
-                    onPress={this._onPressStartNewTrail}
-                >
-                    <Icon
-                        name="map-marker-plus"
-                        size={40}
-                        color={commonColors.GREEN}
-                    />
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.icon}
-                    onPress={this.props.onPressToggleTracking}
-                >
-                    <Icon
-                        name={
-                            this.props.mapUI.trackingStatus
-                                ? "pause-circle-outline"
-                                : "play-circle-outline"
-                        }
-                        size={40}
-                        color={commonColors.PINK}
-                    />
-                </TouchableOpacity>
-            </View>
-        );
-    }
+  render() {
+    return (
+      <View style={styles.topButtonContainer}>
+        <TouchableOpacity
+          style={styles.icon}
+          onPress={this._onPressUserLocationSearch}
+        >
+          <Icon name="search-web" size={40} color={commonColors.GREEN} />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.icon} onPress={this._onPressSaveTrails}>
+          <Icon name="content-save" size={40} color={commonColors.GREEN} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.icon}
+          onPress={this.props.onPressToggleFollowMode}
+        >
+          <Icon
+            name="walk"
+            size={40}
+            color={
+              this.props.mapUI.mapFollowMode
+                ? commonColors.PINK
+                : commonColors.GREEN
+            }
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.icon}
+          onPress={this._onPressStartNewTrail}
+        >
+          <Icon name="map-marker-plus" size={40} color={commonColors.GREEN} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.icon}
+          onPress={this.props.onPressToggleTracking}
+        >
+          <Icon
+            name={
+              this.props.mapUI.trackingStatus
+                ? "pause-circle-outline"
+                : "play-circle-outline"
+            }
+            size={40}
+            color={commonColors.PINK}
+          />
+        </TouchableOpacity>
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
-    topButtonContainer: {
-        position: "absolute",
-        top: 5,
-        right: 5,
-        left: 5,
-        height: 60,
-        backgroundColor: "rgba(0,0,0,0.7)",
-        borderRadius: 5,
-        flex: 1,
-        flexDirection: "row",
-        justifyContent: "space-between",
-        padding: 10,
-        paddingLeft: 20,
-        paddingRight: 20
-    },
-    icon: {
-        backgroundColor: "rgba(0,0,0,0)"
-    }
+  topButtonContainer: {
+    position: "absolute",
+    top: 5,
+    right: 5,
+    left: 5,
+    height: 60,
+    backgroundColor: "rgba(0,0,0,0.7)",
+    borderRadius: 5,
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 10,
+    paddingLeft: 20,
+    paddingRight: 20
+  },
+  icon: {
+    backgroundColor: "rgba(0,0,0,0)"
+  }
 });
 
 export default MapButtons;

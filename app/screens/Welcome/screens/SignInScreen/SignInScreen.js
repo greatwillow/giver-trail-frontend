@@ -33,16 +33,13 @@ class SignInScreen extends Component {
       showInvalidEmailUI: false,
       userPassword: "",
       userPasswordValid: null,
-      showInvalidPasswordUI: false,
+      showInvalidPasswordUI: false
     };
   }
 
   _onPressSignIn = () => {
-    if(this.props.isConnected) {
-      if (
-        this.state.userEmailValid &&
-        this.state.userPasswordValid
-      ) {
+    if (this.props.isConnected) {
+      if (this.state.userEmailValid && this.state.userPasswordValid) {
         this.setState({ modalVisible: false });
         this.props.attemptUserSignIn(
           { userEmail: this.state.userEmail },
@@ -50,7 +47,7 @@ class SignInScreen extends Component {
         );
       }
     } else {
-      alert("You are currently Offline. You must be online to Sign In!")
+      alert("You are currently Offline. You must be online to Sign In!");
     }
   };
 
@@ -89,7 +86,6 @@ class SignInScreen extends Component {
       : this.setState({ showInvalidPasswordUI: true });
   };
 
-
   render() {
     return (
       <View style={{ flex: 1 }}>
@@ -103,49 +99,48 @@ class SignInScreen extends Component {
             source={require("../../../../assets/images/starry-headlamp.jpeg")}
             style={styles.backgroundImage}
           >
-            
-              <View style={styles.titleContainer}>
-                <TextFontTitillium style={styles.textStyle}>
-                  Sign In!
-                </TextFontTitillium>
-              </View>
-              <View style={{ flex: 6 }}>
-                <TextInputSingleLine
-                  autoFocuse={true}
-                  placeholder={"Email Address"}
-                  keyboardType={"ascii-capable"}
-                  onChangeText={this._handleEmailTextChange}
-                  onEndEditing={this._handleEmailSubmit}
-                  invalid={this.state.showInvalidEmailUI}
-                  invalidText={"Invalid Email!"}
-                />
-                <TextInputSingleLine
-                  placeholder={"Password"}
-                  keyboardType={"ascii-capable"}
-                  secureTextEntry={true}
-                  onChangeText={this._handlePasswordTextChange}
-                  onEndEditing={this._handlePasswordSubmit}
-                  invalid={this.state.showInvalidPasswordUI}
-                  invalidText={"Password should be at least 8 characters!"}
-                />
-                <GenericButton
-                  style={{
-                    backgroundColor: commonColors.GREEN,
-                    borderColor: commonColors.GREEN
-                  }}
-                  textStyle={{ color: "white" }}
-                  text={"Sign In!"}
-                  onPress={this._onPressSignIn}
-                />
-              </View>
-            
+            <View style={styles.titleContainer}>
+              <TextFontTitillium style={styles.textStyle}>
+                Sign In!
+              </TextFontTitillium>
+            </View>
+            <View style={{ flex: 6 }}>
+              <TextInputSingleLine
+                autoFocuse={true}
+                placeholder={"Email Address"}
+                keyboardType={"ascii-capable"}
+                onChangeText={this._handleEmailTextChange}
+                onEndEditing={this._handleEmailSubmit}
+                invalid={this.state.showInvalidEmailUI}
+                invalidText={"Invalid Email!"}
+              />
+              <TextInputSingleLine
+                placeholder={"Password"}
+                keyboardType={"ascii-capable"}
+                secureTextEntry={true}
+                onChangeText={this._handlePasswordTextChange}
+                onEndEditing={this._handlePasswordSubmit}
+                invalid={this.state.showInvalidPasswordUI}
+                invalidText={"Password should be at least 8 characters!"}
+              />
+              <GenericButton
+                style={{
+                  backgroundColor: commonColors.GREEN,
+                  borderColor: commonColors.GREEN
+                }}
+                textStyle={{ color: "white" }}
+                text={"Sign In!"}
+                onPress={this._onPressSignIn}
+              />
+            </View>
+
             <View style={styles.statusBar}>
-          <StatusBar
-            backgroundColor={"transparent"}
-            translucent
-            hidden={true}
-          />
-        </View>
+              <StatusBar
+                backgroundColor={"transparent"}
+                translucent
+                hidden={true}
+              />
+            </View>
           </ImageBackground>
         </Modal>
       </View>
@@ -187,7 +182,7 @@ const styles = StyleSheet.create({
     alignSelf: "center"
   },
   statusBar: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,

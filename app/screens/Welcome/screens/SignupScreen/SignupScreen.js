@@ -112,7 +112,6 @@ class SignupScreen extends Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-      {/* <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding"> */}
         <Modal
           animationType="slide"
           transparent={true}
@@ -123,62 +122,60 @@ class SignupScreen extends Component {
             source={require("../../../../assets/images/hooded-sitter.jpeg")}
             style={styles.backgroundImage}
           >
-            
-              <View style={styles.titleContainer}>
-                <TextFontTitillium style={styles.textStyle}>
-                  Sign Up!
-                </TextFontTitillium>
-              </View>
-              <View style={{ flex: 6 }}>
-                <TextInputSingleLine
-                  autoFocuse={true}
-                  placeholder={"Email Address"}
-                  keyboardType={"ascii-capable"}
-                  onChangeText={this._handleEmailTextChange}
-                  onEndEditing={this._handleEmailSubmit}
-                  invalid={this.state.showInvalidEmailUI}
-                  invalidText={"Invalid Email!"}
-                />
-                <TextInputSingleLine
-                  placeholder={"Password"}
-                  keyboardType={"ascii-capable"}
-                  secureTextEntry={true}
-                  onChangeText={this._handlePasswordTextChange}
-                  onEndEditing={this._handlePasswordSubmit}
-                  invalid={this.state.showInvalidPasswordUI}
-                  invalidText={"Password should be at least 8 characters!"}
-                />
-                <TextInputSingleLine
-                  placeholder={"Retype Password"}
-                  keyboardType={"email-address"}
-                  secureTextEntry={true}
-                  //returnKeyType={"done"}
-                  onChangeText={this._handleRetypedPasswordTextChange}
-                  onEndEditing={this._handleRetypedPasswordSubmit}
-                  invalid={this.state.showInvalidRetypedPasswordUI}
-                  invalidText={"Passwords don't match!"}
-                />
-                <GenericButton
-                  style={{
-                    backgroundColor: commonColors.GREEN,
-                    borderColor: commonColors.GREEN
-                  }}
-                  textStyle={{ color: "white" }}
-                  text={"Signup!"}
-                  onPress={this._onPressSignup}
-                />
-              </View>
-            
+            <View style={styles.titleContainer}>
+              <TextFontTitillium style={styles.textStyle}>
+                Sign Up!
+              </TextFontTitillium>
+            </View>
+            <View style={{ flex: 6 }}>
+              <TextInputSingleLine
+                autoFocuse={true}
+                placeholder={"Email Address"}
+                keyboardType={"ascii-capable"}
+                onChangeText={this._handleEmailTextChange}
+                onEndEditing={this._handleEmailSubmit}
+                invalid={this.state.showInvalidEmailUI}
+                invalidText={"Invalid Email!"}
+              />
+              <TextInputSingleLine
+                placeholder={"Password"}
+                keyboardType={"ascii-capable"}
+                secureTextEntry={true}
+                onChangeText={this._handlePasswordTextChange}
+                onEndEditing={this._handlePasswordSubmit}
+                invalid={this.state.showInvalidPasswordUI}
+                invalidText={"Password should be at least 8 characters!"}
+              />
+              <TextInputSingleLine
+                placeholder={"Retype Password"}
+                keyboardType={"email-address"}
+                secureTextEntry={true}
+                //returnKeyType={"done"}
+                onChangeText={this._handleRetypedPasswordTextChange}
+                onEndEditing={this._handleRetypedPasswordSubmit}
+                invalid={this.state.showInvalidRetypedPasswordUI}
+                invalidText={"Passwords don't match!"}
+              />
+              <GenericButton
+                style={{
+                  backgroundColor: commonColors.GREEN,
+                  borderColor: commonColors.GREEN
+                }}
+                textStyle={{ color: "white" }}
+                text={"Signup!"}
+                onPress={this._onPressSignup}
+              />
+            </View>
+
             <View style={styles.statusBar}>
-          <StatusBar
-            backgroundColor={"transparent"}
-            translucent
-            hidden={true}
-          />
-        </View>
+              <StatusBar
+                backgroundColor={"transparent"}
+                translucent
+                hidden={true}
+              />
+            </View>
           </ImageBackground>
         </Modal>
-        {/* </KeyboardAvoidingView> */}
       </View>
     );
   }
@@ -218,7 +215,7 @@ const styles = StyleSheet.create({
     alignSelf: "center"
   },
   statusBar: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,

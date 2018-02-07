@@ -7,25 +7,11 @@ import { StyleSheet, Text, View } from "react-native";
 //import { Font } from "expo";
 
 class TextFontTitillium extends Component {
-  // constructor(props) {
-  //   super(props);
-  //   this.state = {
-  //     fontLoaded: false
-  //   };
-  // }
-
-  // async componentDidMount() {
-  //   await Font.loadAsync({
-  //     "titillium-light": require("../assets/fonts/TitilliumWeb-Light.ttf")
-  //   });
-  //   this.setState({ fontLoaded: true });
-  // }
-
   render() {
     return (
       <View>
         <Text
-        style={[{fontFamily: 'TitilliumWeb-Regular'}, this.props.style]}
+          style={[{ fontFamily: "TitilliumWeb-Regular" }, this.props.style]}
         >
           {this.props.children}
         </Text>

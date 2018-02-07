@@ -19,26 +19,26 @@ import CustomTabItem from "./CustomTabItem";
 
 class CustomTabBar extends Component {
   _selectUserProfileTab = () => {
-    this.props.navigation.navigate("userProfile", {title: "User Profile"});
-    this.props.navigation.setParams({title: "User Profile"});
+    this.props.navigation.navigate("userProfile", { title: "User Profile" });
+    this.props.navigation.setParams({ title: "User Profile" });
     this.props.setInsetTabUI("userProfile");
   };
 
   _selectMapTab = () => {
-    this.props.navigation.navigate("map", {title: "Map"});
-    this.props.navigation.setParams({title: "Map"});
+    this.props.navigation.navigate("map", { title: "Map" });
+    this.props.navigation.setParams({ title: "Map" });
     this.props.setInsetTabUI("map");
   };
 
   _selectStatisticsTab = () => {
-    this.props.navigation.navigate("statistics", {title: "Statistics"});
-    this.props.navigation.setParams({title: "Statistics"});
+    this.props.navigation.navigate("statistics", { title: "Statistics" });
+    this.props.navigation.setParams({ title: "Statistics" });
     this.props.setInsetTabUI("statistics");
   };
 
   _selectCausesTab = () => {
-    this.props.navigation.navigate("causes", {title: "Cause List"});
-    this.props.navigation.setParams({title: "Cause List"});
+    this.props.navigation.navigate("causes", { title: "Cause List" });
+    this.props.navigation.setParams({ title: "Cause List" });
     this.props.setInsetTabUI("causes");
   };
 

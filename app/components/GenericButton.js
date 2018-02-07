@@ -4,11 +4,9 @@ import React, { Component } from "react";
 import { Text, StyleSheet, TouchableHighlight, View } from "react-native";
 
 import { SCREEN_WIDTH } from "../constants/dimensions";
-import TextFontTitillium from "./TextFontTitillium"
+import TextFontTitillium from "./TextFontTitillium";
 
 class GenericButton extends Component {
-
-
   render() {
     return (
       <TouchableHighlight
@@ -16,10 +14,10 @@ class GenericButton extends Component {
         underlayColor={"gray"}
         onPress={this.props.onPress}
       >
-      <View>
-        <TextFontTitillium >
-          {this.props.text ? this.props.text : "Text Needed!"}{" "}
-        </TextFontTitillium>
+        <View>
+          <TextFontTitillium>
+            {this.props.text ? this.props.text : "Text Needed!"}{" "}
+          </TextFontTitillium>
         </View>
       </TouchableHighlight>
     );

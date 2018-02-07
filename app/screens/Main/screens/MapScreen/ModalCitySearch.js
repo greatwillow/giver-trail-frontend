@@ -17,18 +17,10 @@ import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../../../constants/dimensions";
 import commonColors from "../../../../constants/colors";
 import GoogleAutocompleteSearch from "./GoogleAutocompleteSearch";
 
-
 class ModalCitySearch extends Component {
   _onRequestClose = () => {
     this.props.modalCitySearch(false);
   };
-
-  // _onPressGetCity = (data, details) => {
-  //   this.props.modalCitySearch(false);
-  //   console.log("Data is ", data);
-  //   console.log("Details are ", details);
-  //   this.props.setUserCity(details.name);
-  // };
 
   render() {
     return (
@@ -39,16 +31,18 @@ class ModalCitySearch extends Component {
         >
           <View style={styles.outerContainer}>
             {/* <KeyboardAvoidingView behavior="padding"> */}
-              <View style={styles.innerContainer}>
-                <View style={styles.listContainer}>
+            <View style={styles.innerContainer}>
+              <View style={styles.listContainer}>
                 <GoogleAutocompleteSearch
                   {...this.props}
                   wantGeocoding={true}
-                  explicitSetMapRegion={(region) => this.props.explicitSetMapRegion(region)} 
+                  explicitSetMapRegion={region =>
+                    this.props.explicitSetMapRegion(region)
+                  }
                 />
-                </View>
               </View>
-              <View style={{ height: 50 }} />
+            </View>
+            <View style={{ height: 50 }} />
             {/* </KeyboardAvoidingView> */}
           </View>
         </Modal>

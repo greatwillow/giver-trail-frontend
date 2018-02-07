@@ -44,7 +44,7 @@ const defaultStyles = {
     width: SCREEN_WIDTH / 6 * 4,
     borderWidth: 1,
     borderColor: "black",
-    borderRadius: 5,
+    borderRadius: 5
   },
   row: {
     padding: 13,

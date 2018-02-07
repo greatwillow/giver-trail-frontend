@@ -6,39 +6,31 @@ import BackgroundTimer from "react-native-background-timer";
 
 function calculateIndividualTrailLength(trail) {
   const trailIncrementDistances = new Promise(resolve => {
-    let trailIncrement = trail.coordinates.map(
-      (coordinate, i, arr) => {
-        if (i < arr.length - 1) {
-          return euclideanDistance(
-            arr[i][0],
-            arr[i][1],
-            arr[i + 1][0],
-            arr[i + 1][1]
-          );
-        }
-        return;
-      })
-    resolve(trailIncrement)
-  }
-  );
+    let trailIncrement = trail.coordinates.map((coordinate, i, arr) => {
+      if (i < arr.length - 1) {
+        return euclideanDistance(
+          arr[i][0],
+          arr[i][1],
+          arr[i + 1][0],
+          arr[i + 1][1]
+        );
+      }
+      return;
+    });
+    resolve(trailIncrement);
+  });
 
   function individualTrailLength() {
     return Promise.all(trailIncrementDistances).then(results => {
       return results.reduce((a, b) => {
         if (a !== undefined && b !== undefined) {
           const c = Number(a) + Number(b);
-          console.log('====================================');
-          console.log("C IS ",c);
-          console.log('====================================');
           return c;
         }
       });
     });
   }
 
-  console.log("====================================");
-  console.log("UNZIP ", individualTrailLength());
-  console.log("====================================");
   return individualTrailLength();
 }
 
@@ -53,16 +45,9 @@ export function calculateTrailLength(trails) {
     );
 
     const finalDistance = totalDistance.then(results => {
-      console.log("====================================");
-      console.log("RESULTS 2 ARE ", results);
-      console.log("====================================");
       return Promise.all(results).then(innerResults => {
         return innerResults.reduce((a, b) => {
           if (a !== undefined && b !== undefined) {
-            console.log("====================================");
-            console.log("A2 is ", a);
-            console.log("RED2 IS ", Number(a) + Number(b));
-            console.log("====================================");
             return Number(a) + Number(b);
           }
           return;
@@ -70,10 +55,6 @@ export function calculateTrailLength(trails) {
       });
     });
 
-    console.log("====================================");
-    console.log("TOTAL IS ", totalDistance);
-    console.log("Final dist is ", finalDistance);
-    console.log("====================================");
     return finalDistance;
   }
 }
