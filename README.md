@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # GiverTrail FrontEnd
 
 - [giver-trail-front-end](#giver-trail-front-end)
@@ -29,6 +28,3 @@ To run the app, use:
 This app has been made with an offline first approach, using redux-persist within redux-offline.  The mapping implementation was made with MapBox and geolocation is persisted in the background with a background timer.  GiverTrail is a work in progress that should only be used for personal use cases and should not be used or expanded upon for commercial purposes unless explicitly speciefied by written consent from the author.  
 
 
-=======
-# giver-trail-frontend
->>>>>>> 24a3d1958f5030375ed01dad800fe04a089182fb
