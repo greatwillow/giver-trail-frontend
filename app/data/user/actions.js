@@ -198,10 +198,8 @@ const attemptGettingUserData = userID => (dispatch, getState) => {
   })
     .then(res => {
       if (res.status == 200) {
-        console.log("RESPONSE GOOD For GET Request ", res);
         return res.json();
       } else {
-        console.log("RESPONSE BAD for GET Request", res);
         throw new Error("Something wrong with the server!");
       }
     })
@@ -251,9 +249,6 @@ export const attemptUserSignIn = (userEmail, userPassword) => (
       }
     })
     .then(data => {
-      console.log("====================================");
-      console.log("DATA is ", data);
-      console.log("====================================");
 
       dispatch(actions.setUserEmail(data.email));
       dispatch(actions.setUserAge(data.age));

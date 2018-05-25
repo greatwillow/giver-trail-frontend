@@ -7,7 +7,6 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 class MenuIcon extends Component {
   _drawerToggle = () => {
-    console.log("props are: ", this.props);
     this.props.navigation.navigate("DrawerToggle");
   };
 

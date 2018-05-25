@@ -5,24 +5,16 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import commonColors from "../../../../constants/colors";
 
 class MapButtons extends Component {
-  //--------------------------------------------------
-  // PRESS MODAL UI SEARCH
-  //--------------------------------------------------
 
+  // ============================ PRESS MODAL UI SEARCH =============================
   _onPressUserLocationSearch = () => {
     this.props.modalCitySearch(true);
   };
 
-  //--------------------------------------------------
-  // PRESS SAVE TRAILS
-  //--------------------------------------------------
-
+  // ============================ PRESS SAVE TRAILS =============================
   _onPressSaveTrailsToServer = () => {};
 
-  //--------------------------------------------------
-  // PRESS START NEW TRAIL
-  //--------------------------------------------------
-
+  // ============================ PRESS START NEW TRAIL =============================
   _onPressStartNewTrail = () => {
     this.props.addTrailToTrails(this.props.trail);
     this.props.generateNewTrail();
@@ -31,15 +23,24 @@ class MapButtons extends Component {
   render() {
     return (
       <View style={styles.topButtonContainer}>
+
+      {/* ============================ SEARCH ICON ============================= */}
+
         <TouchableOpacity
           style={styles.icon}
           onPress={this._onPressUserLocationSearch}
         >
           <Icon name="search-web" size={40} color={commonColors.GREEN} />
         </TouchableOpacity>
+
+        {/* ============================ SAVE ICON ============================= */}
+
         <TouchableOpacity style={styles.icon} onPress={this._onPressSaveTrails}>
           <Icon name="content-save" size={40} color={commonColors.GREEN} />
         </TouchableOpacity>
+
+        {/* ============================ WALK ICON ============================= */}
+
         <TouchableOpacity
           style={styles.icon}
           onPress={this.props.onPressToggleFollowMode}
@@ -54,12 +55,18 @@ class MapButtons extends Component {
             }
           />
         </TouchableOpacity>
+
+        {/* ============================ PLUS ICON ============================= */}
+
         <TouchableOpacity
           style={styles.icon}
           onPress={this._onPressStartNewTrail}
         >
           <Icon name="map-marker-plus" size={40} color={commonColors.GREEN} />
         </TouchableOpacity>
+
+        {/* ============================ PLAY/PAUSE ICON ============================= */}
+
         <TouchableOpacity
           style={styles.icon}
           onPress={this.props.onPressToggleTracking}

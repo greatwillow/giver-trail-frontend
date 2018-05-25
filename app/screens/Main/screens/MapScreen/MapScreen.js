@@ -65,7 +65,6 @@ class MapScreen extends Component {
     //TODO: May still need the following for IOS?
     // Permissions.request("location").then(response => {
     //   alert('Permission is ',response)
-    //   console.log("PERMISSION IS ", response)
     //   this.setState({
     //     locationPermission: response
     //   });
@@ -164,7 +163,7 @@ class MapScreen extends Component {
               this.addTrailPoint(position);
             }
           },
-          error => console.log("ERROR IN GEOLOCATOR IS: ", error),
+          error => console.error("ERROR IN GEOLOCATOR IS: ", error),
           {
             enableHighAccuracy: true,
             timeout: 20000,

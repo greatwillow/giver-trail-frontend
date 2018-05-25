@@ -27,7 +27,6 @@ class DrawerScreen extends Component {
   _handleNavToStatistics = () => {
     this.props.navigation.navigate("statistics");
     this.props.setInsetTabUI("statistics");
-    console.log("INSET TAB UI ", this.props.insetTabUI);
   };
 
   _handleNavToCauses = () => {
@@ -49,6 +48,9 @@ class DrawerScreen extends Component {
     return (
       <View style={styles.mainContainer}>
         <View style={styles.innerTopContainer}>
+
+        {/* ============================ BACKGROUND IMAGE ============================= */}
+
           <ImageBackground
             source={require("../../../../assets/images/red-sky.jpeg")}
             style={{
@@ -57,11 +59,17 @@ class DrawerScreen extends Component {
               justifyContent: "center"
             }}
           >
+
+          {/* ============================ TITLE ============================= */}
+
             <TextFontTitillium style={styles.title}>
               ~ GiverTrail ~
             </TextFontTitillium>
           </ImageBackground>
         </View>
+
+        {/* ============================ DRAWER ITEMS ============================= */}
+
         <View style={styles.innerBottomContainer}>
           <DrawerItem
             {...this.props}

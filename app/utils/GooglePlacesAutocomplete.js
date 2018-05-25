@@ -236,7 +236,6 @@ export default class GooglePlacesAutocomplete extends Component {
           placeid: rowData.place_id,
           language: this.props.query.language
         });
-      console.log("TEST URI ", TEST_URI);
 
       request.open("GET", TEST_URI);
 

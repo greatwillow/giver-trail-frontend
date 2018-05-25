@@ -34,13 +34,10 @@ const user = (state = initialState, action) => {
         case actionTypes.REMOVE_FROM_USER_PASSIONS_LIST:
             return removeFromUserPassionsList(state, action.passionItem);
         case actionTypes.POST_NEW_USER_SIGNUP:
-            console.log("USER SIGNING UP!");
             return postNewUserSignup(state, action);
         case actionTypes.NEW_USER_SIGNUP_SUCEEDED:
-            console.log("USER SIGN Up SUCCESS!");
             return newUserSignupSuceeded(state, action);
         case actionTypes.NEW_USER_SIGNUP_FAILED:
-            console.log("USER SIGN Up FAIL!");
             return newUserSignupFailed(state, action);
         default:
             return state;

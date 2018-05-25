@@ -29,7 +29,7 @@ class GoogleAutocompleteSearch extends Component {
         this.props.explicitSetMapRegion(formattedLocation);
       },
       error => {
-        console.log("GEOCODING ERROR ", error);
+        console.error("GEOCODING ERROR ", error);
       }
     );
   };

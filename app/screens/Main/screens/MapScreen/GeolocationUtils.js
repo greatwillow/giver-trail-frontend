@@ -14,7 +14,6 @@ function calculateIndividualTrailLength(trail) {
           arr[i + 1][0],
           arr[i + 1][1]
         );
-        console.log("INDIV RETURNED DISTANCE IS ", distance);
         return distance;
       }
       return;
@@ -25,11 +24,9 @@ function calculateIndividualTrailLength(trail) {
   function individualTrailLength() {
     return Promise.all(trailIncrementDistances)
       .then(results => {
-        console.log("RESULTS ARE ", results);
         return results.reduce((a, b) => {
           if (a !== undefined && b !== undefined) {
             const c = Number(a) + Number(b);
-            console.log("C IS ", c);
             return c;
           }
         }, 0);
@@ -46,13 +43,6 @@ export function calculateTrailLength(trails) {
   if (trails.trails.length > 0) {
     totalDistance = Promise.all(
       trails.trails.map(trail => {
-        console.log("TRAIL IS ", trail);
-        console.log(
-          "INDIV TRAIL LENGTH ",
-          calculateIndividualTrailLength(trail).then(res =>
-            console.log("RES IS ", res)
-          )
-        );
         return calculateIndividualTrailLength(trail);
       })
     ).catch(err =>

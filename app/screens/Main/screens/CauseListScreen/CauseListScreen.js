@@ -46,6 +46,7 @@ class CauseListScreen extends Component {
   }
 
   _onSnapToItem = index => {};
+
   _onScroll = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     this.setState({
@@ -104,6 +105,8 @@ class CauseListScreen extends Component {
     }
   };
 
+  // ============================ RENDERING =============================
+
   _renderCarousel = ({ item, index }) => {
     return (
       <TouchableWithoutFeedback onPress={this._onPressSelectItem}>
@@ -156,6 +159,9 @@ class CauseListScreen extends Component {
   render() {
     return (
       <View style={styles.layoutStyle}>
+
+      {/* ============================ BACKGROUND ============================= */}
+
         <Animated.Image
           source={this.state.pageBackgroundImage}
           style={{
@@ -189,12 +195,18 @@ class CauseListScreen extends Component {
               borderRadius: 10
             }}
           >
+
+            {/* ============================ DESCRIPTION ============================= */}
+
             <ScrollView>
               <TextFontTitillium style={{ color: "#f6f6f6", fontSize: 15 }}>
                 {"     "}
                 {this.state.pageDescriptionText}
               </TextFontTitillium>
             </ScrollView>
+
+            {/* ============================ BUTTONS ============================= */}
+
             <Animated.View
               style={{
                 height: 60,
@@ -217,6 +229,9 @@ class CauseListScreen extends Component {
             </Animated.View>
           </Animated.View>
         </View>
+
+        {/* ============================ CAROUSEL ============================= */}
+
         <View
           style={{
             flex: 1,
@@ -240,6 +255,8 @@ class CauseListScreen extends Component {
     );
   }
 }
+
+
 
 const styles = StyleSheet.create({
   layoutStyle: {

@@ -5,10 +5,8 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import commonColors from "../../../../constants/colors";
 
 class MapButtonsZoom extends Component {
-  //--------------------------------------------------
-  // PRESS ZOOM
-  //--------------------------------------------------
 
+  // ============================ PRESS ZOOM =============================
   _onPressMapZoomIn = () => {
     this.props.setMapZoom(this.props.mapUI.mapZoom + 1);
   };

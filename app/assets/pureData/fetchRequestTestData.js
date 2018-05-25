@@ -1,6 +1,5 @@
 //--------------------------------POST-------------
 fetchRequestPostTest() {
-  console.log("pressed post");
 
   const TEST_USER = {
     email: "fasdy@gmail.com",
@@ -20,13 +19,9 @@ fetchRequestPostTest() {
     body: JSON.stringify(TEST_USER)
   })
     .then(res => {
-      console.log("response is: ", res);
-      console.log(res.status);
-      console.log(res.statusText);
       if (res.status == 200) {
         return res.json();
       } else {
-        console.log(res.text());
         throw new Error("Something wrong with the server!");
       }
     })
@@ -39,16 +34,10 @@ fetchRequestPostTest() {
 }
 //--------------------------------GET-------------
 fetchRequestGetTest() {
-  console.log("pressed get");
-
   return fetch(USER_GET_URI, {
     method: "GET"
   })
     .then(response => {
-      console.log("response is: ", response);
-      console.log("Is ok?: ", response.ok);
-      console.log("Status?: ", response.status);
-      //console.log("JSON?: ",response.json());
       if (response.status == 200) return response.json();
       else throw new Error("Something wrong with the server!");
     })
